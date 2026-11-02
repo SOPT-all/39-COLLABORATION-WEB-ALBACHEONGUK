@@ -6,45 +6,45 @@
 
 ## 함께하는 사람들
 
-| 이름 | GitHub |
-| --- | --- |
+| 이름          | GitHub                                       |
+| ------------- | -------------------------------------------- |
 | 심민식 · 리드 | [@minsik1014](https://github.com/minsik1014) |
-| 손승현 | 확인 후 추가 |
-| 이지연 | 확인 후 추가 |
-| 금고은 | 확인 후 추가 |
+| 손승현        | 확인 후 추가                                 |
+| 이지연        | 확인 후 추가                                 |
+| 금고은        | 확인 후 추가                                 |
 
 작업별 담당과 목표일은 [업무 분담](https://app.notion.com/p/40b828481af881438bebf8ff47d4afd3)에서 관리합니다.
 
 ## 프로젝트 자료
 
-| 자료 | 링크 |
-| --- | --- |
-| 프로젝트 노션 | [일정·문서·과제 안내](https://app.notion.com/p/40b828481af880c6b072e73b768e4128) |
-| 킥오프 FigJam | [논의 보드](https://www.figma.com/board/URXA8pMmgp5wz2A5WvLS0x?node-id=0-1) |
-| 리디자인 | [화면 디자인](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5) |
-| 디자인 시스템 | [디자인 시스템](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-4) |
-| PRD | [기능 요구사항](https://app.notion.com/p/sopt-official/PRD-4011e48dd9608000be8fecc0c94fa2a5) |
+| 자료          | 링크                                                                                         |
+| ------------- | -------------------------------------------------------------------------------------------- |
+| 프로젝트 노션 | [일정·문서·과제 안내](https://app.notion.com/p/40b828481af880c6b072e73b768e4128)             |
+| 킥오프 FigJam | [논의 보드](https://www.figma.com/board/URXA8pMmgp5wz2A5WvLS0x?node-id=0-1)                  |
+| 리디자인      | [화면 디자인](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5)               |
+| 디자인 시스템 | [디자인 시스템](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-4)             |
+| PRD           | [기능 요구사항](https://app.notion.com/p/sopt-official/PRD-4011e48dd9608000be8fecc0c94fa2a5) |
 
 ## 진행 현황
 
 - GitHub 저장소 생성 및 협업 문서·FigJam 준비
-- 킥오프에서 기술·컨벤션·초기 세팅 담당 논의 예정
-- 프로젝트 코드와 실행 환경은 초기 세팅 후 반영 예정
+- React·TypeScript·Vite 실행 환경 구성
+- ESLint·타입 검사·빌드·Prettier 검사와 GitHub Actions CI 구성
 - 구현 화면·API·배포 주소·시연 결과는 개발 진행에 따라 추가
 
 ## 기술 스택
 
-| 항목 | 사용 기술 |
-| --- | --- |
-| 기본 구성 | React · TypeScript · Vite |
-| 패키지 매니저 | pnpm |
-| 라우팅 | React Router |
-| 스타일링 | CSS Modules |
-| API 통신 | Axios 공통 인스턴스 |
-| 화면 상태 | 우선 useState 중심 · 로딩/빈 결과/오류 처리 |
-| 코드 검사·포맷 | ESLint · Prettier |
-| Node.js·패키지 버전 | 초기 세팅 시 확정 |
-| 배포 | 논의 후 결정 |
+| 항목           | 사용 기술                                   |
+| -------------- | ------------------------------------------- |
+| 기본 구성      | React · TypeScript · Vite                   |
+| 패키지 매니저  | pnpm                                        |
+| 라우팅         | React Router · 화면 구현 시 추가            |
+| 스타일링       | CSS Modules                                 |
+| API 통신       | Axios 공통 인스턴스 · API 연동 시 추가      |
+| 화면 상태      | 우선 useState 중심 · 로딩/빈 결과/오류 처리 |
+| 코드 검사·포맷 | ESLint · Prettier                           |
+| 실행 환경      | Node.js 22.15.0 · pnpm 12.6.0               |
+| 배포           | 논의 후 결정                                |
 
 선택 이유와 논의 사항은 [기술 선택과 이유](https://app.notion.com/p/644828481af88256941c015ec4c4fd03)에 기록합니다.
 
@@ -67,7 +67,7 @@ src/
 
 ## 협업 규칙
 
-브랜치 보호 규칙·자동 검사·템플릿은 초기 세팅에서 적용합니다.
+PR과 main·develop 브랜치의 push에서 자동 검사를 실행합니다. 브랜치 보호 규칙과 Issue·PR 템플릿은 추후 설정합니다.
 
 - **브랜치:** `main`은 배포 기준, `develop`은 작업 통합에 사용합니다.
 - **작업 브랜치:** `유형/이슈번호-작업설명` — 예: `feat/15-job-list-api`
@@ -79,20 +79,55 @@ src/
 
 ## 주요 일정
 
-| 일정 | 내용 |
-| --- | --- |
-| 11/3(화) 20:00 | 웹 킥오프 |
-| 11/6(금) 23:59 | 1차 과제 제출 |
-| 11/7(토) | 합동 세미나 · 구현 범위/UI/API 분담 확정 · 2차 과제 |
-| 11/7~27 | 구현·API 연동·QA |
-| 11/20(금) | 3차 과제 · 멘토링 질문 — 상세 마감 시각 확인 필요 |
-| 11/27(금) 23:59 | 4차 과제 · 최종 결과 제출 |
+| 일정            | 내용                                                |
+| --------------- | --------------------------------------------------- |
+| 11/3(화) 20:00  | 웹 킥오프                                           |
+| 11/6(금) 23:59  | 1차 과제 제출                                       |
+| 11/7(토)        | 합동 세미나 · 구현 범위/UI/API 분담 확정 · 2차 과제 |
+| 11/7~27         | 구현·API 연동·QA                                    |
+| 11/20(금)       | 3차 과제 · 멘토링 질문 — 상세 마감 시각 확인 필요   |
+| 11/27(금) 23:59 | 4차 과제 · 최종 결과 제출                           |
 
 세부 일정과 제출 확인은 [차수별 과제](https://app.notion.com/p/b03828481af882dc97b281abea2bab10)에서 관리합니다.
 
 ## 실행 방법
 
-프로젝트 초기 세팅 전입니다. Node.js·pnpm 버전과 실제 설치·개발·검사·빌드 명령을 검증한 뒤 이곳에 추가합니다.
+Node.js 버전은 `.nvmrc`, pnpm 버전은 `package.json`의 `packageManager`를 기준으로 맞춥니다.
 
-초기 세팅 작업과 환경변수 안내는 [프로젝트 시작하기](https://app.notion.com/p/a41828481af8832f99c881b47aa20498)에서 확인할 수 있습니다.
+```bash
+nvm install
+nvm use
+npm install --global pnpm@12.6.0
+pnpm install --frozen-lockfile
+pnpm dev
+```
 
+nvm을 사용하지 않는 경우 Node.js 22.15.0을 직접 설치한 뒤 진행합니다.
+
+| 목적                | 명령                |
+| ------------------- | ------------------- |
+| 개발 서버           | `pnpm dev`          |
+| 린트                | `pnpm lint`         |
+| 타입 검사           | `pnpm typecheck`    |
+| 배포용 빌드         | `pnpm build`        |
+| 빌드 결과 미리 보기 | `pnpm preview`      |
+| 코드 포맷 적용      | `pnpm format`       |
+| 포맷 검사           | `pnpm format:check` |
+| 전체 검사           | `pnpm check`        |
+
+현재 기본 화면에는 API 연결과 환경변수가 필요하지 않습니다. API 연동 시 환경변수 예시와 설정 방법을 추가합니다.
+
+## 자동 검사
+
+[CI 워크플로](.github/workflows/ci.yml)는 main·develop 대상 PR과 해당 브랜치의 push에서 실행됩니다.
+
+1. 고정된 Node.js·pnpm 버전을 준비합니다.
+2. `pnpm install --frozen-lockfile`로 잠금 파일에 맞춰 설치합니다.
+3. 린트 → 타입 검사 → 빌드 → 포맷 검사를 실행합니다.
+4. 실패한 검사는 PR의 Checks와 저장소 Actions 탭에서 확인합니다.
+
+로컬에서는 `pnpm check`로 같은 검사들을 실행할 수 있습니다. 포맷 검사에 실패하면 `pnpm format`을 실행하고 변경 내용을 확인합니다.
+
+자동 검사는 화면의 디자인 일치 여부나 실제 API 동작을 대신 확인하지 않으므로 직접 실행해 주요 흐름을 점검합니다.
+
+초기 세팅 작업은 [프로젝트 시작하기](https://app.notion.com/p/a41828481af8832f99c881b47aa20498)에서 확인할 수 있습니다.
