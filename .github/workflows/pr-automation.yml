@@ -1,0 +1,90 @@
+name: PR metadata
+
+on:
+  pull_request_target:
+    branches: [main, develop]
+    types: [opened, reopened, ready_for_review, edited]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: pr-metadata-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v9
+        env:
+          AUTHOR_LABELS_JSON: ${{ vars.AUTHOR_LABELS_JSON }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pull_number = context.payload.pull_request.number;
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number });
+            const authorLabels = JSON.parse(process.env.AUTHOR_LABELS_JSON || '{}');
+            if (
+              Object.keys(authorLabels).length !== 4 ||
+              Object.keys(authorLabels).some(
+                (login) => !/^[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?$/i.test(login),
+              )
+            ) {
+              throw new Error('AUTHOR_LABELS_JSON에 실제 GitHub 계정명을 입력하세요.');
+            }
+            const author = pr.user.login;
+            const authorLabel = authorLabels[author];
+
+            if (!authorLabel) {
+              core.warning('작성자 계정의 라벨 매핑을 먼저 확인하세요.');
+              return;
+            }
+
+            const typeLabels = ['feat', 'fix', 'refactor', 'style', 'docs', 'chore'];
+            const type = pr.title.match(/^(feat|fix|refactor|style|docs|chore):\s+/)?.[1];
+            const issue = { owner, repo, issue_number: pull_number };
+
+            await github.rest.issues.addLabels({
+              ...issue,
+              labels: type ? [authorLabel, type] : [authorLabel],
+            });
+
+            if (type) {
+              const currentLabels = await github.paginate(github.rest.issues.listLabelsOnIssue, issue);
+              for (const label of currentLabels) {
+                if (typeLabels.includes(label.name) && label.name !== type) {
+                  await github.rest.issues.removeLabel({ ...issue, name: label.name });
+                }
+              }
+            } else {
+              core.warning('PR 제목은 feat: 작업 내용 등의 형식으로 적어주세요.');
+            }
+
+            const assignEvents = ['opened', 'reopened', 'ready_for_review'];
+            if (!assignEvents.includes(context.payload.action) || pr.draft || pr.state !== 'open') return;
+
+            const reviews = await github.paginate(github.rest.pulls.listReviews, {
+              owner, repo, pull_number,
+            });
+            const alreadyRequested = new Set(
+              pr.requested_reviewers.map((reviewer) => reviewer.login),
+            );
+            const alreadyReviewed = new Set(
+              reviews
+                .filter((review) => review.state !== 'DISMISSED')
+                .map((review) => review.user?.login),
+            );
+            const reviewers = Object.keys(authorLabels).filter(
+              (login) =>
+                login !== author &&
+                !alreadyRequested.has(login) &&
+                !alreadyReviewed.has(login),
+            );
+            if (reviewers.length > 0) {
+              await github.rest.pulls.requestReviewers({
+                owner, repo, pull_number, reviewers,
+              });
+            }
