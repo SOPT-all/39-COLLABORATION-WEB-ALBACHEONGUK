@@ -13,6 +13,7 @@ permissions:
 concurrency:
   group: pr-metadata-${{ github.event.pull_request.number }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   metadata:
