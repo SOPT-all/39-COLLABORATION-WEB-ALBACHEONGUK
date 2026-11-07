@@ -1,6 +1,6 @@
 @theme {
   /* 색상 */
-  --color-alba-yellow-400: #fff230;
+  --color-alba-yellow-100: #fffff0;
   --color-alba-yellow-400: #fff230;
   --color-alba-yellow-500: #ffe000;
   --color-alba-yellow-600: #ffd000;
@@ -37,6 +37,7 @@
   --color-alba-brown: #cd7c2f;
 
   /* 글꼴 */
+  --font-pretendard: 'Pretendard', sans-serif;
   --text-display-24sb: 24px;
   --text-display-24sb--font-weight: 600;
   --text-display-24sb--line-height: 1.4;
