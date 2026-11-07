@@ -1,9 +1,18 @@
+import { Route, Routes } from 'react-router';
+import HomePage from './pages/HomePage.tsx';
+import SearchPage from './pages/SearchPage.tsx';
+import NotFoundPage from './pages/NotFoundPage.tsx';
+import Layout from './components/Layout.tsx';
+
 function App() {
   return (
-    <main>
-      <h1>알바천국</h1>
-      <p>39기 PLAY SOPT 합동 세미나 · 데스크톱 웹 2조</p>
-    </main>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="search" element={<SearchPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
 }
 
