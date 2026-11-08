@@ -1,10 +1,9 @@
-* {
-  box-sizing: border-box;
-}
+@import 'tailwindcss';
+@import './styles/font.css';
+@import './styles/theme.css';
 
 body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: var(--font-pretendard);
 }
 
 main {

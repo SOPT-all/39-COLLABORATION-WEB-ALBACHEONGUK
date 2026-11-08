@@ -1,0 +1,90 @@
+@theme {
+  /* 색상 */
+  --color-alba-yellow-100: #fffff0;
+  --color-alba-yellow-400: #fff230;
+  --color-alba-yellow-500: #ffe000;
+  --color-alba-yellow-600: #ffd000;
+  --color-alba-yellow-700: #f0c000;
+
+  --color-alba-blue-100: #ecf5ff;
+  --color-alba-blue-600: #3396fe;
+  --color-alba-blue-700: #2e89e5;
+
+  --color-alba-gray-100: #f9fbfe;
+  --color-alba-gray-200: #f7f8fa;
+  --color-alba-gray-300: #e5e8ec;
+  --color-alba-gray-400: #8f959f;
+  --color-alba-gray-500: #747a84;
+  --color-alba-gray-600: #595e69;
+  --color-alba-gray-700: #4c515b;
+  --color-alba-gray-800: #3b3d43;
+
+  --color-alba-black: #000000;
+  --color-alba-white: #ffffff;
+
+  --color-alba-purple-100: #e0e1fb;
+  --color-alba-purple-200: #ab44e3;
+  --color-alba-pink-100: #fcddde;
+  --color-alba-pink-200: #ff5757;
+  --color-alba-green-100: #cbe8d3;
+  --color-alba-green-200: #19891e;
+
+  --color-alba-red: #c25353;
+  --color-alba-teal: #248192;
+  --color-alba-light-blue: #55a0f0;
+  --color-alba-dark-blue: #232950;
+  --color-alba-light-yellow: #fff159;
+  --color-alba-brown: #cd7c2f;
+
+  /* 글꼴 */
+  --font-pretendard: 'Pretendard', sans-serif;
+  --text-display-24sb: 24px;
+  --text-display-24sb--font-weight: 600;
+  --text-display-24sb--line-height: 1.4;
+  --text-display-24sb--letter-spacing: -0.01em;
+
+  --text-display-20sb: 20px;
+  --text-display-20sb--font-weight: 600;
+  --text-display-20sb--line-height: 1.4;
+  --text-display-20sb--letter-spacing: -0.01em;
+
+  --text-title-18sb: 18px;
+  --text-title-18sb--font-weight: 600;
+  --text-title-18sb--line-height: 1.4;
+  --text-title-18sb--letter-spacing: -0.01em;
+
+  --text-title-18r: 18px;
+  --text-title-18r--font-weight: 400;
+  --text-title-18r--line-height: 1.4;
+  --text-title-18r--letter-spacing: -0.01em;
+
+  --text-body-16b: 16px;
+  --text-body-16b--font-weight: 700;
+  --text-body-16b--line-height: 1.5;
+  --text-body-16b--letter-spacing: -0.01em;
+
+  --text-body-16r: 16px;
+  --text-body-16r--font-weight: 400;
+  --text-body-16r--line-height: 1.5;
+  --text-body-16r--letter-spacing: -0.01em;
+
+  --text-body-14b: 14px;
+  --text-body-14b--font-weight: 700;
+  --text-body-14b--line-height: 1.5;
+  --text-body-14b--letter-spacing: -0.01em;
+
+  --text-body-14r: 14px;
+  --text-body-14r--font-weight: 400;
+  --text-body-14r--line-height: 1.5;
+  --text-body-14r--letter-spacing: -0.01em;
+
+  --text-caption-12b: 12px;
+  --text-caption-12b--font-weight: 700;
+  --text-caption-12b--line-height: 1.5;
+  --text-caption-12b--letter-spacing: 0;
+
+  --text-caption-12r: 12px;
+  --text-caption-12r--font-weight: 400;
+  --text-caption-12r--line-height: 1.5;
+  --text-caption-12r--letter-spacing: 0;
+}
