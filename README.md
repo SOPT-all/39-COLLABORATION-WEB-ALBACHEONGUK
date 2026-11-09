@@ -17,7 +17,6 @@
 ## 프로젝트
 
 메인에서 검색 조건을 설정하고, 검색 결과에서 공고를 비교한 뒤 이력서 기반 추천과 지원으로 이어지는 흐름을 개발합니다.
-현재는 초기 세팅을 바탕으로 공통 컴포넌트와 화면을 구현하는 단계입니다.
 
 ## 데스크탑 웹 2조 팀원
 
@@ -59,12 +58,13 @@
 |                                       컴포넌트·타입·개발 환경                                        |                                                                                                          경로·URL 조건·디자인 토큰                                                                                                          |                                                                                                                                                                                           API 요청·조회 캐시·공유 상태                                                                                                                                                                                            |
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=git,githubactions,nodejs,pnpm" height="36" alt="Git, GitHub Actions, Node.js, pnpm" /><br/>
-  Git · GitHub Actions · Node.js · pnpm · ESLint · Prettier
+  <img src="https://skillicons.dev/icons?i=git,githubactions,vercel,nodejs,pnpm" height="36" alt="Git, GitHub Actions, Vercel, Node.js, pnpm" /><br/>
+  Git · GitHub Actions · Vercel · Node.js · pnpm · ESLint · Prettier
 </p>
 
-Query·Zustand 기본 구성은 [PR #18](https://github.com/SOPT-all/39-COLLABORATION-WEB-ALBACHEONGUK/pull/18)로 `develop`에 반영했습니다.
-Vercel 배포를 사용하며 Actions → Vercel CLI 자동 배포는 아직 `develop`에 반영되지 않았습니다.
+- React·TypeScript로 화면을 구성하고, Tailwind CSS의 공통 토큰으로 색상·서체를 맞춥니다.
+- 검색 조건은 URL, 서버 데이터는 TanStack Query, 공유하는 클라이언트 상태는 Zustand로 관리합니다.
+- GitHub Actions로 코드를 검사하고, Vercel에 배포합니다.
 
 ## 설치·실행
 
@@ -86,7 +86,7 @@ pnpm dev
 ```
 
 nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
-`.env.local`의 `VITE_API_BASE_URL`에는 서버와 합의한 API 기본 주소를 입력합니다. 현재 `.env.example`은 빈 값이며 실제 API 주소는 별도로 전달합니다. 로컬 환경변수 파일은 커밋하지 않습니다.
+`.env.local`의 `VITE_API_BASE_URL`에는 서버와 합의한 API 기본 주소를 입력합니다. 실제 값은 별도로 공유하며 로컬 환경변수 파일은 커밋하지 않습니다.
 
 ## 명령어
 
@@ -100,6 +100,22 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 | `pnpm format`       | 포맷 적용                     |
 | `pnpm format:check` | 포맷 검사                     |
 | `pnpm check`        | 린트·타입·빌드·포맷 전체 검사 |
+
+## 자동 검사·배포
+
+| 구분       | 기준                                                     |
+| ---------- | -------------------------------------------------------- |
+| 코드 검사  | PR과 `main`·`develop` push에서 린트·타입·빌드·포맷 검사  |
+| Preview    | 같은 저장소의 Draft가 아닌 PR에서 검사 후 변경 화면 배포 |
+| Production | `main`에 반영된 코드를 검사 후 운영 환경에 배포          |
+
+```text
+개발: 작업 브랜치 → PR → 자동 검사·Preview → 리뷰·승인 → develop
+운영: develop → main 반영 → 자동 검사 → Production 배포
+```
+
+배포는 GitHub Actions에서 Vercel CLI로 진행합니다. Preview 주소는 해당 Actions 실행의 Summary에서 확인합니다.
+API 환경변수는 Preview·Production 환경에 각각 등록하며, 라우팅 경로로 직접 접근하거나 새로고침해도 앱을 표시하도록 SPA rewrite를 적용합니다.
 
 ## 협업 컨벤션
 
@@ -160,7 +176,7 @@ docs: 팀 소개와 개발 범위를 README에 반영
 5. 본인 외 1명 승인·필수 CI 통과·미해결 대화 해소 후 Squash merge합니다. 이후 작업 브랜치를 삭제합니다.
 
 작성자 라벨은 `👻 민식` · `⚽ 승현` · `🍋 고은` · `🍎 지연`, 유형 라벨은 `feat/fix/refactor/style/docs/chore`를 사용합니다.
-PR과 `main`·`develop` push에서 [CI](.github/workflows/ci.yml)가 린트·타입·빌드·포맷을 검사합니다.
+자동 검사의 세부 설정은 [CI 워크플로](.github/workflows/ci.yml)에서 관리합니다.
 
 </details>
 
@@ -193,7 +209,7 @@ src/
 ├── pages/                # 페이지와 페이지 전용 컴포넌트
 │   ├── home/
 │   ├── search/
-│   ├── setup/            # 초기 세팅 확인용 임시 화면
+│   ├── setup/            # 라우팅·조회·상태 관리 확인 화면
 │   └── NotFoundPage.tsx
 ├── stores/               # Zustand 공유 상태
 ├── styles/               # 폰트 등록·디자인 토큰
