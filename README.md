@@ -181,15 +181,29 @@ PR과 `main`·`develop` push에서 [CI](.github/workflows/ci.yml)가 린트·타
 <details>
 <summary>폴더 배치와 컴포넌트 예시</summary>
 
-| 위치                        | 책임                                      |
-| --------------------------- | ----------------------------------------- |
-| `src/components`            | 여러 화면에서 재사용하는 컴포넌트         |
-| `src/pages`                 | 페이지와 해당 페이지 전용 컴포넌트        |
-| `src/apis`                  | 공통 Axios 인스턴스·요청 함수·QueryClient |
-| `src/hooks`                 | 공통 조회·동작 훅                         |
-| `src/stores`                | Zustand 공유 상태                         |
-| `src/types`                 | 공통 타입·API 응답 타입                   |
-| `src/assets` · `src/styles` | 이미지·폰트와 전역 스타일·디자인 토큰     |
+```text
+src/
+├── apis/                 # Axios 클라이언트·요청 함수·QueryClient
+├── assets/               # 이미지·아이콘·폰트
+│   └── fonts/
+├── components/           # 여러 화면에서 재사용하는 컴포넌트
+│   ├── Header.tsx
+│   └── Layout.tsx
+├── hooks/                # 공통 조회·동작 훅
+├── pages/                # 페이지와 페이지 전용 컴포넌트
+│   ├── home/
+│   ├── search/
+│   ├── setup/            # 초기 세팅 확인용 임시 화면
+│   └── NotFoundPage.tsx
+├── stores/               # Zustand 공유 상태
+├── styles/               # 폰트 등록·디자인 토큰
+│   ├── font.css
+│   └── theme.css
+├── types/                # 공통 타입·API 응답 타입
+├── App.tsx               # 라우팅 구성
+├── index.css             # 전역 스타일
+└── main.tsx              # 앱 진입점·Provider 연결
+```
 
 페이지 전용 코드는 해당 페이지 폴더에 둡니다. 공통 사용이 생겼을 때 옮기며 빈 폴더를 미리 늘리지 않습니다. 기본 라우팅은 현재 `App.tsx`, 라우터 Provider는 `main.tsx`에 있습니다.
 
