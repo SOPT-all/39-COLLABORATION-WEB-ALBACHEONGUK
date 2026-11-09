@@ -6,6 +6,7 @@
 </p>
 
 <p align="center">
+  <a href="https://39-collaboration-web-albacheonguk.vercel.app">서비스 바로가기</a> ·
   <a href="https://app.notion.com/p/40b828481af880c6b072e73b768e4128">팀 노션</a> ·
   <a href="https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5">Figma</a> ·
   <a href="https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=6-11">기능명세서</a> ·
