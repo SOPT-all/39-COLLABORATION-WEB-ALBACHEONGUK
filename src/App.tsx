@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router';
 import HomePage from './pages/home/HomePage.tsx';
 import SearchPage from './pages/search/SearchPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
+import SetupPage from './pages/setup/SetupPage.tsx';
 import Layout from './components/Layout.tsx';
 
 function App() {
@@ -12,6 +13,8 @@ function App() {
         <Route path="search" element={<SearchPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
+      {/* Query·Zustand 세팅 확인용 임시 화면*/}
+      <Route path="setup" element={<SetupPage />} />
     </Routes>
   );
 }
