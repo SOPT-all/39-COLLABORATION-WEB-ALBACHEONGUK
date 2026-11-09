@@ -64,6 +64,13 @@ jobs:
               core.warning('PR 제목은 feat: 작업 내용 등의 형식으로 적어주세요.');
             }
 
+            if (['opened', 'reopened'].includes(context.payload.action) && pr.assignees.length === 0) {
+              await github.rest.issues.addAssignees({
+                ...issue,
+                assignees: [author],
+              });
+            }
+
             const assignEvents = ['opened', 'reopened', 'ready_for_review'];
             if (!assignEvents.includes(context.payload.action) || pr.draft || pr.state !== 'open') return;
 
