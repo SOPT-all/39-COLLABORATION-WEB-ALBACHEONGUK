@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import defaultLogo from '../assets/images/job-row/default-logo.png';
+import defaultThumbnail from '../assets/images/job-row/thumbnail-default.png';
 
 type JobThumbnailProps = {
   src?: string;
@@ -21,14 +21,14 @@ function JobThumbnail({ src, companyName }: JobThumbnailProps) {
           onError={() => setFailedSrc(src ?? null)}
         />
       ) : (
-        <div className="relative h-[44px] w-[39px] overflow-hidden" aria-hidden="true">
-          {/* Figma 원본 스프라이트에서 기본 로고 영역만 표시합니다. */}
-          <img
-            src={defaultLogo}
-            alt=""
-            className="absolute top-[-1600%] left-[-1444.18%] h-[4214.66%] w-[5472.74%] max-w-none"
-          />
-        </div>
+        <img
+          src={defaultThumbnail}
+          alt=""
+          aria-hidden="true"
+          width={32}
+          height={32}
+          className="size-8 object-cover"
+        />
       )}
     </div>
   );
