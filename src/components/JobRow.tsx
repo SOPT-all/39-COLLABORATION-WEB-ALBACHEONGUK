@@ -75,7 +75,7 @@ function JobRow({
       : variant === 'highlighted'
         ? 'bg-alba-yellow-100'
         : 'bg-alba-white';
-  const columnSpacingClass = hasThumbnail ? 'ml-[18px]' : isClosed ? 'ml-px' : 'ml-2.5';
+  const columnSpacingClass = hasThumbnail ? 'ml-[18px]' : 'ml-2.5';
   const primaryTextClass = isClosed ? 'text-alba-gray-600' : 'text-alba-black';
   const secondaryTextClass = isClosed ? 'text-alba-gray-600' : 'text-alba-gray-500';
 
@@ -83,13 +83,17 @@ function JobRow({
     <article
       aria-labelledby={titleId}
       data-job-status={isClosed ? 'closed' : 'open'}
-      className={`w-full min-w-0 border-b border-alba-gray-300 py-6 pr-5 ${hasWidePadding ? 'pl-5' : 'pl-4'} ${backgroundClass}`}
+      className={`w-full min-w-0 border-b border-alba-gray-300 py-6 ${hasThumbnail ? 'pr-[18px]' : 'pr-5'} ${hasWidePadding ? 'pl-5' : 'pl-4'} ${backgroundClass}`}
     >
-      <div className="flex h-[82px] items-center">
+      <div
+        className={`flex h-[82px] w-full items-center ${hasThumbnail ? 'max-w-[762px]' : 'max-w-[760px]'}`}
+      >
         <div className={`flex min-w-0 flex-1 items-center ${hasThumbnail ? 'gap-4' : ''}`}>
           {hasThumbnail && <JobThumbnail src={job.thumbnailUrl} companyName={job.companyName} />}
           <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <div className="flex min-w-0 flex-col gap-1">
+            <div
+              className={`flex min-w-0 flex-col gap-1 ${hasThumbnail ? 'w-[calc(100%+33px)] max-w-[357px]' : ''}`}
+            >
               <div className="flex min-w-0 items-center gap-1">
                 <p
                   title={job.companyName}
@@ -119,7 +123,7 @@ function JobRow({
                 {job.workHours}
               </span>
               <img src={separatorIcon} alt="" width={2} height={2} className="shrink-0" />
-              <span className="truncate" title={deadlineText}>
+              <span className="w-[95.45px] shrink-0 truncate" title={deadlineText}>
                 {deadlineText}
               </span>
             </div>
@@ -132,12 +136,12 @@ function JobRow({
           {salaryContent ?? (
             <>
               <span
-                className={`text-body-14b h-[17px] ${isClosed ? 'text-alba-gray-600' : 'text-alba-teal'}`}
+                className={`text-body-14b h-[17px] w-[26px] ${isClosed ? 'text-alba-gray-600' : 'text-alba-teal'}`}
               >
                 {job.salaryType}
               </span>
               <span
-                className={`text-body-16b ${isClosed ? 'text-alba-gray-600' : 'text-alba-gray-700'}`}
+                className={`text-body-16b w-full ${isClosed ? 'text-alba-gray-600' : 'text-alba-gray-700'}`}
               >
                 {job.salaryText.trim() || '협의'}
               </span>
@@ -154,20 +158,20 @@ function JobRow({
               aria-label={isClosed ? '마감된 공고' : `등록일 ${postedAtText}`}
             >
               {isClosed ? (
-                <span className="text-body-14b bg-alba-white rounded px-2 py-1">마감</span>
+                <span className="text-body-14b text-alba-closed-badge bg-alba-white rounded px-2 py-1">
+                  마감
+                </span>
               ) : (
                 <>
                   <span className="text-caption-12b">등록일</span>
-                  <span className="text-body-14r">{postedAtText}</span>
+                  <span className="text-caption-12r">{postedAtText}</span>
                 </>
               )}
             </div>
           )}
         </div>
 
-        <div
-          className={`flex shrink-0 items-center gap-1 ${hasThumbnail ? 'ml-[18px]' : 'ml-[31px]'}`}
-        >
+        <div className={`flex shrink-0 items-center gap-1 ${hasThumbnail ? 'ml-[18px]' : 'ml-8'}`}>
           {scrapAction ?? (
             <button
               type="button"
@@ -193,7 +197,11 @@ function JobRow({
       </div>
 
       {children != null && (
-        <div id={contentId} hidden={!isExpanded} className="mt-4">
+        <div
+          id={contentId}
+          hidden={!isExpanded}
+          className={`mt-4 ${hasThumbnail ? 'w-[calc(100%+1px)]' : ''}`}
+        >
           {children}
         </div>
       )}

@@ -39,9 +39,11 @@ function JobRowDetails({ details }: JobRowDetailsProps) {
             {details.stations.map((station) => (
               <li key={station.id} className="flex items-center gap-1.5">
                 <span
-                  className={`text-alba-white flex size-[18px] shrink-0 items-center justify-center rounded-full text-[11px] leading-[14px] font-bold ${STATION_COLORS[station.color]}`}
+                  className={`font-station text-alba-white relative size-[18px] shrink-0 rounded-full text-[11px] leading-[14px] font-bold tracking-normal ${STATION_COLORS[station.color]}`}
                 >
-                  {station.line}
+                  <span className="absolute inset-x-0 top-[1.25px] text-center">
+                    {station.line}
+                  </span>
                 </span>
                 <span>{station.name}</span>
               </li>
@@ -56,7 +58,7 @@ function JobRowDetails({ details }: JobRowDetailsProps) {
   ];
 
   return (
-    <dl className="border-alba-gray-300 bg-alba-white space-y-3.5 rounded-xl border px-[60px] py-6">
+    <dl className="border-alba-detail-border bg-alba-white space-y-3.5 rounded-xl border px-[60px] py-6">
       {rows
         .filter(({ label }) => label !== '인근지하철' || details.stations.length > 0)
         .map(({ label, value }) => (
