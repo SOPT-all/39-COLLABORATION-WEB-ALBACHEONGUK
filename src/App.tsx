@@ -21,7 +21,9 @@ function App() {
         {canShowComponentPreview && (
           <Route path="setup/job-row/design" element={<JobRowDesignAuditPage />} />
         )}
-        {canShowComponentPreview && <Route path="setup/job-card" element={<JobCardPreviewPage />} />}
+        {canShowComponentPreview && (
+          <Route path="setup/job-card" element={<JobCardPreviewPage />} />
+        )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       {/* Query·Zustand 세팅 확인용 임시 화면*/}
