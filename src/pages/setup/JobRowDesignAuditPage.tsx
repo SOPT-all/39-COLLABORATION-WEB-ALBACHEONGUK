@@ -20,8 +20,8 @@ function JobRowDesignAuditPage() {
       <div>
         <h1 className="text-display-24sb">공고 행 디자인 대조</h1>
         <p className="text-body-14r text-alba-gray-500">
-          피그마 14개 variant와 동일한 문구·원본 폭으로 비교하는 개발용 화면입니다. 원본의 상태
-          모순과 정책 차이는 검수 문서에 기록합니다.
+          피그마 14개 상태를 확인하는 화면입니다. 사진 없는 공고는 디자이너가 추가한 공통 기본
+          썸네일을 사용합니다. 반영 내역과 명세 기준은 검수 문서에 기록합니다.
         </p>
       </div>
       {JOB_ROW_DESIGN_CASES.map((item) => (

@@ -59,7 +59,11 @@ const EXAMPLES: JobRowExample[] = [
     job: { ...EXAMPLE_JOB, id: 'highlighted' },
     variant: 'highlighted',
   },
-  { label: '썸네일 공고 · 800px', job: { ...EXAMPLE_JOB, id: 'thumbnail' }, showThumbnail: true },
+  {
+    label: '사진 없음 · 새 기본 썸네일',
+    job: { ...EXAMPLE_JOB, id: 'thumbnail' },
+    showThumbnail: true,
+  },
   {
     label: '이력서 매칭 공고 · 800px',
     job: { ...EXAMPLE_JOB, id: 'recommended' },
@@ -72,8 +76,8 @@ const EXAMPLES: JobRowExample[] = [
     showThumbnail: true,
   },
   {
-    label: '썸네일 오류 복구',
-    // 잘못된 이미지가 전달됐을 때 기본 로고로 바뀌는지 확인하는 목데이터입니다.
+    label: '이미지 오류 · 새 기본 썸네일',
+    // 잘못된 이미지가 전달됐을 때 공통 기본 썸네일로 바뀌는지 확인하는 목데이터입니다.
     job: { ...EXAMPLE_JOB, id: 'broken-thumbnail', thumbnailUrl: 'data:image/png;base64,broken' },
   },
   { label: '일반 마감 공고', job: { ...EXAMPLE_JOB, id: 'closed', isClosed: true } },
