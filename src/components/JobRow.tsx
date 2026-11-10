@@ -6,7 +6,7 @@ import scrapOffIcon from '../assets/icons/job-row/scrap-off.svg';
 import scrapOnIcon from '../assets/icons/job-row/scrap-on.svg';
 import separatorIcon from '../assets/icons/job-row/separator.svg';
 import { useKstNow } from '../hooks/useKstNow.ts';
-import { getJobDeadline } from '../utils/jobDeadline.ts';
+import { getJobDeadlineText } from '../utils/jobDeadline.ts';
 import { getJobPostedAt } from '../utils/jobPostedAt.ts';
 
 import JobThumbnail from './JobThumbnail.tsx';
@@ -24,8 +24,8 @@ export type JobRowData = {
   postedAt: string;
   salaryType: string;
   salaryText: string;
-  // API에서 전달받은 채용 완료 여부입니다. 날짜 경과 마감과 함께 판정합니다.
-  isClosed?: boolean;
+  // 서버가 한국 날짜 기준으로 판정한 모집 마감 여부입니다.
+  isClosed: boolean;
   thumbnailUrl?: string;
 };
 
@@ -63,12 +63,11 @@ function JobRow({
   const contentId = useId();
   const titleId = useId();
   const now = useKstNow(referenceNow);
-  const deadline = getJobDeadline(job.deadlineDate, job.isClosed ?? false, now);
-  // 서버가 내려준 모집 상태를 우선 사용합니다. 미연결 예시만 날짜로 보완합니다.
-  const isClosed = job.isClosed ?? deadline.status === 'closed';
+  const deadlineText = getJobDeadlineText(job.deadlineDate);
+  const isClosed = job.isClosed;
   const postedAtText = getJobPostedAt(job.postedAt, now);
   const hasThumbnail = showThumbnail || Boolean(job.thumbnailUrl) || variant === 'recommended';
-  const isWide = hasThumbnail || variant !== 'default';
+  const hasWidePadding = hasThumbnail || variant !== 'default';
   const backgroundClass = isClosed
     ? 'bg-alba-gray-300'
     : variant === 'recommended'
@@ -84,12 +83,10 @@ function JobRow({
     <article
       aria-labelledby={titleId}
       data-job-status={isClosed ? 'closed' : 'open'}
-      className={`shrink-0 border-b border-alba-gray-300 py-6 pr-5 ${isWide ? 'w-[800px] pl-5' : 'w-[796px] pl-4'} ${backgroundClass}`}
+      className={`w-full min-w-0 border-b border-alba-gray-300 py-6 pr-5 ${hasWidePadding ? 'pl-5' : 'pl-4'} ${backgroundClass}`}
     >
       <div className="flex h-[82px] items-center">
-        <div
-          className={`flex min-w-0 items-center ${hasThumbnail ? 'w-[444px] shrink-0 gap-4' : isClosed ? 'w-[444px] shrink-0' : 'flex-1'}`}
-        >
+        <div className={`flex min-w-0 flex-1 items-center ${hasThumbnail ? 'gap-4' : ''}`}>
           {hasThumbnail && <JobThumbnail src={job.thumbnailUrl} companyName={job.companyName} />}
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <div className="flex min-w-0 flex-col gap-1">
@@ -114,16 +111,16 @@ function JobRow({
             </div>
 
             <div className={`text-body-14r flex min-w-0 items-center gap-2 ${secondaryTextClass}`}>
-              <span className="min-w-0 max-w-[120px] shrink-0 truncate" title={job.workDays}>
+              <span className="min-w-0 max-w-[120px] truncate" title={job.workDays}>
                 {job.workDays}
               </span>
               <img src={separatorIcon} alt="" width={2} height={2} className="shrink-0" />
-              <span className="min-w-0 max-w-[120px] shrink-0 truncate" title={job.workHours}>
+              <span className="min-w-0 max-w-[120px] truncate" title={job.workHours}>
                 {job.workHours}
               </span>
               <img src={separatorIcon} alt="" width={2} height={2} className="shrink-0" />
-              <span className="truncate" title={deadline.dateText}>
-                {deadline.dateText}
+              <span className="truncate" title={deadlineText}>
+                {deadlineText}
               </span>
             </div>
           </div>

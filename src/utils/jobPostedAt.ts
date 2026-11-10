@@ -1,4 +1,4 @@
-import { parseCalendarDate } from './jobDeadline.ts';
+import { parseCalendarDate } from './jobDate.ts';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;

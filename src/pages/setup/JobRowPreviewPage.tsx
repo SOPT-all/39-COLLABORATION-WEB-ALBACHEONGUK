@@ -4,7 +4,7 @@ import JobRow from '../../components/JobRow.tsx';
 import type { JobRowData, JobRowVariant } from '../../components/JobRow.tsx';
 import JobRowDetails from '../../components/JobRowDetails.tsx';
 import type { JobRowDetailsData } from '../../components/JobRowDetails.tsx';
-import { getJobDeadline } from '../../utils/jobDeadline.ts';
+import { getJobDeadlineText } from '../../utils/jobDeadline.ts';
 
 const PREVIEW_NOW = new Date('2026-11-10T12:00:00+09:00');
 
@@ -17,6 +17,7 @@ const EXAMPLE_JOB: JobRowData = {
   workHours: '18:00~22:00',
   deadlineDate: '2026-11-17',
   postedAt: '2026-11-07',
+  isClosed: false,
   salaryType: '시급',
   salaryText: '10,500',
 };
@@ -29,7 +30,7 @@ const EXAMPLE_DETAILS: JobRowDetailsData = {
   workHours: EXAMPLE_JOB.workHours,
   periodAndDays: `3개월 ~ 6개월, ${EXAMPLE_JOB.workDays}`,
   applicationMethod: '문자지원',
-  deadline: getJobDeadline(EXAMPLE_JOB.deadlineDate, false, PREVIEW_NOW).dateText,
+  deadline: getJobDeadlineText(EXAMPLE_JOB.deadlineDate),
 };
 
 type JobRowExample = {
@@ -161,26 +162,29 @@ function JobRowPreviewPage() {
         <section key={job.id} className="space-y-2" aria-label={label}>
           <h2 className="text-body-14b text-alba-gray-700">{label}</h2>
           <div className="overflow-x-auto">
-            <JobRow
-              job={job}
-              referenceNow={PREVIEW_NOW}
-              variant={variant}
-              showThumbnail={showThumbnail}
-              isScrapped={scrappedIds.includes(job.id)}
-              isExpanded={expandedIds.includes(job.id)}
-              onToggleScrap={() => handleToggleScrap(job.id)}
-              onToggleExpand={() => handleToggleExpand(job.id)}
+            <div
+              className={`w-full min-w-[640px] ${showThumbnail || job.thumbnailUrl || (variant && variant !== 'default') ? 'max-w-[800px]' : 'max-w-[796px]'}`}
             >
-              <JobRowDetails
-                details={
-                  details ?? {
-                    ...EXAMPLE_DETAILS,
-                    deadline: getJobDeadline(job.deadlineDate, job.isClosed ?? false, PREVIEW_NOW)
-                      .dateText,
+              <JobRow
+                job={job}
+                referenceNow={PREVIEW_NOW}
+                variant={variant}
+                showThumbnail={showThumbnail}
+                isScrapped={scrappedIds.includes(job.id)}
+                isExpanded={expandedIds.includes(job.id)}
+                onToggleScrap={() => handleToggleScrap(job.id)}
+                onToggleExpand={() => handleToggleExpand(job.id)}
+              >
+                <JobRowDetails
+                  details={
+                    details ?? {
+                      ...EXAMPLE_DETAILS,
+                      deadline: getJobDeadlineText(job.deadlineDate),
+                    }
                   }
-                }
-              />
-            </JobRow>
+                />
+              </JobRow>
+            </div>
           </div>
         </section>
       ))}

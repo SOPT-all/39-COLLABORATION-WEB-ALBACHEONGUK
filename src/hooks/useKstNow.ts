@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getMillisecondsUntilNextKstDay } from '../utils/jobDeadline.ts';
+import { getMillisecondsUntilNextKstDay } from '../utils/jobDate.ts';
 
 export function useKstNow(referenceNow?: Date): Date {
   const [now, setNow] = useState(() => new Date());
