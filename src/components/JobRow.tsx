@@ -1,14 +1,15 @@
-import { useId, useState } from 'react';
+import { useId } from 'react';
 import type { ReactNode } from 'react';
 
 import chevronIcon from '../assets/icons/job-row/chevron.svg';
 import scrapOffIcon from '../assets/icons/job-row/scrap-off.svg';
 import scrapOnIcon from '../assets/icons/job-row/scrap-on.svg';
 import separatorIcon from '../assets/icons/job-row/separator.svg';
-import defaultLogo from '../assets/images/job-row/default-logo.png';
 import { useKstNow } from '../hooks/useKstNow.ts';
 import { getJobDeadline } from '../utils/jobDeadline.ts';
 import { getJobPostedAt } from '../utils/jobPostedAt.ts';
+
+import JobThumbnail from './JobThumbnail.tsx';
 
 // 화면 표시용 데이터입니다. 실제 API 응답은 화면에서 이 형태로 변환합니다.
 export type JobRowData = {
@@ -66,10 +67,8 @@ function JobRow({
   // 서버가 내려준 모집 상태를 우선 사용합니다. 미연결 예시만 날짜로 보완합니다.
   const isClosed = job.isClosed ?? deadline.status === 'closed';
   const postedAtText = getJobPostedAt(job.postedAt, now);
-  const [failedThumbnailUrl, setFailedThumbnailUrl] = useState<string | null>(null);
   const hasThumbnail = showThumbnail || Boolean(job.thumbnailUrl) || variant === 'recommended';
   const isWide = hasThumbnail || variant !== 'default';
-  const canShowThumbnail = job.thumbnailUrl && failedThumbnailUrl !== job.thumbnailUrl;
   const backgroundClass = isClosed
     ? 'bg-alba-gray-300'
     : variant === 'recommended'
@@ -77,6 +76,7 @@ function JobRow({
       : variant === 'highlighted'
         ? 'bg-alba-yellow-100'
         : 'bg-alba-white';
+  const columnSpacingClass = hasThumbnail ? 'ml-[18px]' : isClosed ? 'ml-px' : 'ml-2.5';
   const primaryTextClass = isClosed ? 'text-alba-gray-600' : 'text-alba-black';
   const secondaryTextClass = isClosed ? 'text-alba-gray-600' : 'text-alba-gray-500';
 
@@ -90,26 +90,7 @@ function JobRow({
         <div
           className={`flex min-w-0 items-center ${hasThumbnail ? 'w-[444px] shrink-0 gap-4' : isClosed ? 'w-[444px] shrink-0' : 'flex-1'}`}
         >
-          {hasThumbnail && (
-            <div className="border-alba-gray-300 bg-alba-white flex h-[68px] w-[104px] shrink-0 items-center justify-center rounded-lg border p-2.5">
-              {canShowThumbnail ? (
-                <img
-                  src={job.thumbnailUrl}
-                  alt={`${job.companyName} 로고`}
-                  className="max-h-full max-w-full object-contain"
-                  onError={() => setFailedThumbnailUrl(job.thumbnailUrl ?? null)}
-                />
-              ) : (
-                <div className="relative h-[44px] w-[39px] overflow-hidden" aria-hidden="true">
-                  <img
-                    src={defaultLogo}
-                    alt=""
-                    className="absolute top-[-1600%] left-[-1444.18%] h-[4214.66%] w-[5472.74%] max-w-none"
-                  />
-                </div>
-              )}
-            </div>
-          )}
+          {hasThumbnail && <JobThumbnail src={job.thumbnailUrl} companyName={job.companyName} />}
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <div className="flex min-w-0 flex-col gap-1">
               <div className="flex min-w-0 items-center gap-1">
@@ -149,7 +130,7 @@ function JobRow({
         </div>
 
         <div
-          className={`flex w-[122px] shrink-0 flex-col items-center justify-center gap-0.5 text-center ${hasThumbnail ? 'ml-[18px]' : isClosed ? 'ml-px' : 'ml-2.5'}`}
+          className={`flex w-[122px] shrink-0 flex-col items-center justify-center gap-0.5 text-center ${columnSpacingClass}`}
         >
           {salaryContent ?? (
             <>
@@ -168,7 +149,7 @@ function JobRow({
         </div>
 
         <div
-          className={`flex w-[90px] shrink-0 flex-col items-center justify-center ${hasThumbnail ? 'ml-[18px]' : isClosed ? 'ml-px' : 'ml-2.5'} ${secondaryTextClass}`}
+          className={`flex w-[90px] shrink-0 flex-col items-center justify-center ${columnSpacingClass} ${secondaryTextClass}`}
         >
           {dateContent ?? (
             <div
