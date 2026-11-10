@@ -1,6 +1,8 @@
 import JobCard from '../../components/JobCard.tsx';
 import type { JobCardData } from '../../components/JobCard.tsx';
 
+const PREVIEW_NOW = new Date('2026-11-10T12:00:00+09:00');
+
 function createPreviewImage(color: string) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="259" height="200"><rect width="100%" height="100%" fill="${color}"/></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
@@ -15,7 +17,7 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       address: '서울 성동구 성수이로 93',
       salaryType: '월급',
       salaryText: '3,120,000',
-      postedAtText: '3일 전',
+      postedAt: '2026-11-07',
       imageUrl: createPreviewImage('#c9b79c'),
     },
   },
@@ -27,7 +29,7 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       address: '서울 마포구 서강로 75-16',
       salaryType: '시급',
       salaryText: '10,320',
-      postedAtText: '오늘',
+      postedAt: '2026-11-10',
       imageUrl: createPreviewImage('#a7c7a1'),
     },
   },
@@ -39,7 +41,7 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       address: '서울 중구 을지로 264',
       salaryType: '연봉',
       salaryText: '25,882,560',
-      postedAtText: '1달 전',
+      postedAt: '2026-10-10',
       imageUrl: createPreviewImage('#f5d76e'),
     },
   },
@@ -51,7 +53,7 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       address: '서울 동대문구 왕산로 200 청량리역 롯데캐슬 SKY-L65 지하 1층 101호',
       salaryType: '시급',
       salaryText: '12,400',
-      postedAtText: '3일 전',
+      postedAt: '2026-11-07',
       imageUrl: createPreviewImage('#d98c7a'),
     },
   },
@@ -63,7 +65,7 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       address: '서울 영등포구 가마산로 476',
       salaryType: '월급',
       salaryText: '2,156,880',
-      postedAtText: '3일 전',
+      postedAt: '2026-11-07',
     },
   },
   {
@@ -74,7 +76,7 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       address: '서울 양천구 목동로 234',
       salaryType: '월급',
       salaryText: '3,000,000',
-      postedAtText: '3일 전',
+      postedAt: '2026-11-07',
       imageUrl: '/not-found-image.png',
     },
   },
@@ -86,7 +88,7 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       address: '서울 금천구 디지털로 185',
       salaryType: '월급',
       salaryText: '',
-      postedAtText: '3일 전',
+      postedAt: '2026-11-07',
       imageUrl: createPreviewImage('#e3a857'),
     },
   },
@@ -103,7 +105,7 @@ function JobCardPreviewPage() {
         {previewJobs.map(({ label, job }) => (
           <li key={job.id}>
             <p className="text-caption-12b text-alba-gray-500 mb-2">{label}</p>
-            <JobCard job={job} />
+            <JobCard job={job} referenceNow={PREVIEW_NOW} />
           </li>
         ))}
       </ul>

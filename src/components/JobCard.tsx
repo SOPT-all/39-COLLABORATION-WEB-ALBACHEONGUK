@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
-import defaultThumbnail from '../assets/images/job-card/thumbnail-default.png';
+import defaultThumbnail from '../assets/images/job-row/thumbnail-default.png';
+import { useKstNow } from '../hooks/useKstNow.ts';
+import { getJobPostedAt } from '../utils/jobPostedAt.ts';
 
 export type JobCardData = {
   id: string;
@@ -8,12 +10,13 @@ export type JobCardData = {
   address: string;
   salaryType: string;
   salaryText: string;
-  postedAtText: string;
+  postedAt: string;
   imageUrl?: string;
 };
 
 type JobCardProps = {
   job: JobCardData;
+  referenceNow?: Date;
 };
 
 const SALARY_TYPE_COLOR_CLASS: Record<string, string> = {
@@ -22,8 +25,10 @@ const SALARY_TYPE_COLOR_CLASS: Record<string, string> = {
   연봉: 'text-alba-purple-200',
 };
 
-function JobCard({ job }: JobCardProps) {
+function JobCard({ job, referenceNow }: JobCardProps) {
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
+  const now = useKstNow(referenceNow);
+  const postedAtText = getJobPostedAt(job.postedAt, now);
   const canShowImage = job.imageUrl && failedImageUrl !== job.imageUrl;
   const salaryTypeColorClass = SALARY_TYPE_COLOR_CLASS[job.salaryType] ?? 'text-alba-gray-700';
 
@@ -65,7 +70,7 @@ function JobCard({ job }: JobCardProps) {
             {job.salaryText.trim() || '협의'}
           </span>
         </p>
-        <p className="text-body-14r text-alba-gray-400 shrink-0">등록 {job.postedAtText}</p>
+        <p className="text-body-14r text-alba-gray-400 shrink-0">등록 {postedAtText}</p>
       </div>
     </article>
   );
