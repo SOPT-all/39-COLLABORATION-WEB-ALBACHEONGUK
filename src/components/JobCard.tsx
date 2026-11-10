@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import defaultThumbnail from '../assets/images/job-card/thumbnail-default.png';
+
 export type JobCardData = {
   id: string;
   title: string;
@@ -27,13 +29,22 @@ function JobCard({ job }: JobCardProps) {
 
   return (
     <article className="border-alba-gray-300 bg-alba-white hover:bg-alba-yellow-500 flex h-[376px] w-full flex-col rounded-xl border px-[18px] pt-5 pb-5 transition-colors hover:border-transparent hover:shadow-[0_4px_12px_rgba(0,0,0,0.25)]">
-      <div className="bg-alba-gray-200 h-[200px] w-full shrink-0 overflow-hidden rounded-lg">
-        {canShowImage && (
+      <div className="bg-alba-gray-200 flex h-[200px] w-full shrink-0 items-center justify-center overflow-hidden rounded-lg">
+        {canShowImage ? (
           <img
             src={job.imageUrl}
             alt={`${job.title} 대표 이미지`}
             className="size-full object-cover"
             onError={() => setFailedImageUrl(job.imageUrl ?? null)}
+          />
+        ) : (
+          <img
+            src={defaultThumbnail}
+            alt=""
+            aria-hidden="true"
+            width={64}
+            height={64}
+            className="size-16 object-contain"
           />
         )}
       </div>
