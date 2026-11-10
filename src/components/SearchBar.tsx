@@ -44,7 +44,7 @@ function SearchBar({
       role="search"
       aria-label={ariaLabel}
       onSubmit={handleSubmit}
-      className="border-alba-gray-300 bg-alba-white focus-within:border-alba-gray-500 flex w-full min-w-0 items-center gap-8 rounded-full border py-2 pr-2 pl-5"
+      className="border-alba-gray-300 bg-alba-white has-[input:focus]:border-alba-gray-500 flex w-full min-w-0 items-center gap-8 rounded-[100px] border py-2 pr-2 pl-5"
     >
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <img src={searchIcon} alt="" className="shrink-0" />
@@ -63,13 +63,13 @@ function SearchBar({
           onCompositionEnd={() => {
             isComposing.current = false;
           }}
-          className="text-title-18sb text-alba-black placeholder:text-alba-gray-400 caret-alba-yellow-500 min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
+          className="text-title-18sb text-alba-black placeholder:text-alba-gray-400 caret-alba-yellow-600 min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
         />
       </div>
       <button
         type="submit"
         disabled={!canSearch}
-        className="bg-alba-yellow-400 text-alba-black text-body-16b focus-visible:outline-alba-blue-600 disabled:bg-alba-gray-200 disabled:text-alba-gray-400 h-10 w-28 shrink-0 cursor-pointer rounded-full px-5 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
+        className="bg-alba-yellow-400 text-alba-black text-body-16b focus-visible:outline-alba-blue-600 disabled:bg-alba-gray-200 disabled:text-alba-gray-400 h-10 w-28 shrink-0 cursor-pointer tracking-normal rounded-[100px] px-5 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
       >
         검색하기
       </button>
