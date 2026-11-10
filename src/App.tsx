@@ -4,6 +4,7 @@ import SearchPage from './pages/search/SearchPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import SetupPage from './pages/setup/SetupPage.tsx';
 import Layout from './components/Layout.tsx';
+import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="search" element={<SearchPage />} />
+        {import.meta.env.DEV && <Route path="setup/job-row" element={<JobRowPreviewPage />} />}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       {/* Query·Zustand 세팅 확인용 임시 화면*/}
