@@ -4,6 +4,14 @@ import SearchPage from './pages/search/SearchPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import SetupPage from './pages/setup/SetupPage.tsx';
 import Layout from './components/Layout.tsx';
+import ButtonPreviewPage from './pages/setup/ButtonPreviewPage.tsx';
+import InputPreviewPage from './pages/setup/InputPreviewPage.tsx';
+import CheckboxPreviewPage from './pages/setup/CheckboxPreviewPage.tsx';
+import RadioPreviewPage from './pages/setup/RadioPreviewPage.tsx';
+import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
+
+const canShowComponentPreview =
+  import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
 
 function App() {
   return (
@@ -11,6 +19,15 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="search" element={<SearchPage />} />
+        {canShowComponentPreview && <Route path="setup/button" element={<ButtonPreviewPage />} />}
+        {canShowComponentPreview && <Route path="setup/input" element={<InputPreviewPage />} />}
+        {canShowComponentPreview && (
+          <Route path="setup/checkbox" element={<CheckboxPreviewPage />} />
+        )}
+        {canShowComponentPreview && <Route path="setup/radio" element={<RadioPreviewPage />} />}
+        {canShowComponentPreview && (
+          <Route path="setup/select-list-item" element={<SelectListItemPreviewPage />} />
+        )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       {/* Query·Zustand 세팅 확인용 임시 화면*/}
