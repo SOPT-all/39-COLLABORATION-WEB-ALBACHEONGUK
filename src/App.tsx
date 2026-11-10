@@ -7,14 +7,18 @@ import Layout from './components/Layout.tsx';
 import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
 
+// Vercel Preview도 배포 빌드이므로 별도 빌드 플래그로 허용합니다.
+const canShowComponentPreview =
+  import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
+
 function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="search" element={<SearchPage />} />
-        {import.meta.env.DEV && <Route path="setup/job-row" element={<JobRowPreviewPage />} />}
-        {import.meta.env.DEV && (
+        {canShowComponentPreview && <Route path="setup/job-row" element={<JobRowPreviewPage />} />}
+        {canShowComponentPreview && (
           <Route path="setup/job-row/design" element={<JobRowDesignAuditPage />} />
         )}
         <Route path="*" element={<NotFoundPage />} />
