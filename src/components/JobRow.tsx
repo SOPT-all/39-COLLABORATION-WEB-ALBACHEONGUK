@@ -13,6 +13,18 @@ import { getJobPostedAt } from '../utils/jobPostedAt.ts';
 
 import JobThumbnail from './JobThumbnail.tsx';
 
+// Figma의 Default/closed × Plus/Minus 원본 변환값입니다.
+const EXPAND_BUTTON_STATES = {
+  open: {
+    collapsed: { src: chevronIcon, className: 'translate-y-[1.5px]' },
+    expanded: { src: chevronIcon, className: 'rotate-180' },
+  },
+  closed: {
+    collapsed: { src: chevronClosedIcon, className: 'translate-y-[1.5px]' },
+    expanded: { src: chevronClosedIcon, className: '-translate-y-[1.5px] rotate-180' },
+  },
+};
+
 // 화면 표시용 데이터입니다. 실제 API 응답은 화면에서 이 형태로 변환합니다.
 export type JobRowData = {
   id: string;
@@ -70,7 +82,8 @@ function JobRow({
   const postedAtText = getJobPostedAt(job.postedAt, now);
   const hasThumbnail = showThumbnail || Boolean(job.thumbnailUrl) || variant === 'recommended';
   const scrapIcon = isScrapped ? scrapOnIcon : isClosed ? scrapClosedIcon : scrapOffIcon;
-  const expandIcon = isClosed ? chevronClosedIcon : chevronIcon;
+  const expandButton =
+    EXPAND_BUTTON_STATES[isClosed ? 'closed' : 'open'][isExpanded ? 'expanded' : 'collapsed'];
   const hasWidePadding = hasThumbnail || variant !== 'default';
   const backgroundClass = isClosed
     ? 'bg-alba-gray-300'
@@ -195,7 +208,7 @@ function JobRow({
             onClick={onToggleExpand}
             className="focus-visible:outline-alba-blue-600 flex size-6 cursor-pointer items-center justify-center rounded focus-visible:outline-2 focus-visible:outline-offset-2"
           >
-            <img src={expandIcon} alt="" className={isExpanded ? 'rotate-180' : undefined} />
+            <img src={expandButton.src} alt="" className={expandButton.className} />
           </button>
         </div>
       </div>

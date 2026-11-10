@@ -82,8 +82,17 @@ const EXAMPLES: JobRowExample[] = [
   },
   { label: '일반 마감 공고', job: { ...EXAMPLE_JOB, id: 'closed', isClosed: true } },
   {
+    label: '일반 마감 공고 · 펼침',
+    job: { ...EXAMPLE_JOB, id: 'closed-expanded', isClosed: true },
+  },
+  {
     label: '매칭 마감 공고',
     job: { ...EXAMPLE_JOB, id: 'recommended-closed', isClosed: true },
+    variant: 'recommended',
+  },
+  {
+    label: '매칭 마감 공고 · 펼침',
+    job: { ...EXAMPLE_JOB, id: 'recommended-closed-expanded', isClosed: true },
     variant: 'recommended',
   },
   {
@@ -133,6 +142,8 @@ function JobRowPreviewPage() {
   const [expandedIds, setExpandedIds] = useState<string[]>([
     'expanded',
     'recommended-expanded',
+    'closed-expanded',
+    'recommended-closed-expanded',
     'long-company',
     'empty-details',
   ]);
