@@ -1,5 +1,6 @@
 import JobCard from '../../components/JobCard.tsx';
 import type { JobCardData } from '../../components/JobCard.tsx';
+import nyunyuHousePhoto from '../../assets/images/job-card/preview-nyunyu-house.jpg';
 
 const PREVIEW_NOW = new Date('2026-11-10T12:00:00+09:00');
 
@@ -18,7 +19,7 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       salaryType: '월급',
       salaryText: '3,120,000',
       postedAt: '2026-11-07',
-      imageUrl: createPreviewImage('#c9b79c'),
+      imageUrl: nyunyuHousePhoto,
     },
   },
   {
@@ -31,6 +32,18 @@ const previewJobs: { label: string; job: JobCardData }[] = [
       salaryText: '10,320',
       postedAt: '2026-11-10',
       imageUrl: createPreviewImage('#a7c7a1'),
+    },
+  },
+  {
+    label: '일급 (피그마 예시 X · 색상 확인용)',
+    job: {
+      id: '8',
+      title: '쿠팡 송파 물류센터 하루 단기 알바',
+      address: '서울 송파구 송파대로 55',
+      salaryType: '일급',
+      salaryText: '120,000',
+      postedAt: '2026-11-09',
+      imageUrl: createPreviewImage('#9fb7d6'),
     },
   },
   {
@@ -99,7 +112,8 @@ function JobCardPreviewPage() {
     <section aria-label="공고 카드 미리보기">
       <h1 className="text-display-24sb mb-2">공고 카드 미리보기</h1>
       <p className="text-body-14r text-alba-gray-500 mb-8">
-        카드에 마우스를 올리면 hover 상태를 확인할 수 있습니다. 개발용 화면입니다.
+        카드에 마우스를 올리면 hover 상태를 확인할 수 있습니다. 로컬 개발 환경과 Vercel
+        Preview에서만 열리는 확인용 화면입니다.
       </p>
       <ul className="grid grid-cols-[repeat(auto-fill,297px)] gap-6">
         {previewJobs.map(({ label, job }) => (

@@ -20,6 +20,7 @@ type JobCardProps = {
 };
 
 const SALARY_TYPE_COLOR_CLASS: Record<string, string> = {
+  일급: 'text-alba-green-200',
   시급: 'text-alba-teal',
   월급: 'text-alba-red',
   연봉: 'text-alba-purple-200',
@@ -33,8 +34,8 @@ function JobCard({ job, referenceNow }: JobCardProps) {
   const salaryTypeColorClass = SALARY_TYPE_COLOR_CLASS[job.salaryType] ?? 'text-alba-gray-700';
 
   return (
-    <article className="border-alba-gray-300 bg-alba-white hover:bg-alba-yellow-500 flex h-[376px] w-full flex-col rounded-xl border px-[18px] pt-5 pb-5 transition-colors hover:border-transparent hover:shadow-[0_4px_12px_rgba(0,0,0,0.25)]">
-      <div className="bg-alba-gray-200 flex h-[200px] w-full shrink-0 items-center justify-center overflow-hidden rounded-lg">
+    <article className="border-alba-gray-300 bg-alba-white hover:bg-alba-yellow-500 flex h-[376px] w-full flex-col rounded-[15px] border px-[18px] pt-5 pb-5 transition-colors hover:border-transparent hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]">
+      <div className="bg-alba-gray-200 flex h-[200px] w-full shrink-0 items-center justify-center overflow-hidden rounded-xl">
         {canShowImage ? (
           <img
             src={job.imageUrl}
@@ -54,8 +55,8 @@ function JobCard({ job, referenceNow }: JobCardProps) {
         )}
       </div>
 
-      <div className="mt-6 flex min-w-0 flex-col gap-1">
-        <h3 className="text-title-18sb text-alba-gray-800 truncate" title={job.title}>
+      <div className="mt-[25px] flex min-w-0 flex-col gap-0.5">
+        <h3 className="text-display-20sb text-alba-gray-800 truncate" title={job.title}>
           {job.title}
         </h3>
         <p className="text-body-16r text-alba-gray-500 truncate" title={job.address}>
@@ -63,14 +64,17 @@ function JobCard({ job, referenceNow }: JobCardProps) {
         </p>
       </div>
 
-      <div className="mt-auto flex min-w-0 items-center gap-6">
+      <div className="mt-auto flex min-w-0 items-center gap-[25px]">
         <p className="flex min-w-0 items-center gap-1.5">
           <span className={`text-body-14b shrink-0 ${salaryTypeColorClass}`}>{job.salaryType}</span>
           <span className="text-display-20sb text-alba-gray-700 truncate">
             {job.salaryText.trim() || '협의'}
           </span>
         </p>
-        <p className="text-body-14r text-alba-gray-400 shrink-0">등록 {postedAtText}</p>
+        <p className="flex shrink-0 items-center gap-1">
+          <span className="text-body-14b text-alba-gray-400">등록</span>
+          <span className="text-body-14r text-alba-gray-500">{postedAtText}</span>
+        </p>
       </div>
     </article>
   );
