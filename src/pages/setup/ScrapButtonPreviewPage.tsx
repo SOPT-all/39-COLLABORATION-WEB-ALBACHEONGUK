@@ -1,6 +1,5 @@
-import { useState } from 'react';
-
 import ScrapButton from '../../components/ScrapButton.tsx';
+import { useJobScrap } from '../../hooks/useJobScrap.ts';
 
 const FIXED_STATES = [
   { label: 'Default', isScrapped: false, isClosed: false },
@@ -9,12 +8,13 @@ const FIXED_STATES = [
 ];
 
 type ToggleExampleProps = {
+  jobId: string;
   label: string;
   isClosed?: boolean;
 };
 
-function ToggleExample({ label, isClosed = false }: ToggleExampleProps) {
-  const [isScrapped, setIsScrapped] = useState(false);
+function ToggleExample({ jobId, label, isClosed = false }: ToggleExampleProps) {
+  const { isScrapped, toggleScrap } = useJobScrap(jobId);
 
   return (
     <li className="flex items-center gap-3">
@@ -22,7 +22,7 @@ function ToggleExample({ label, isClosed = false }: ToggleExampleProps) {
         label={`${label} 스크랩`}
         isScrapped={isScrapped}
         isClosed={isClosed}
-        onToggle={() => setIsScrapped((prev) => !prev)}
+        onToggle={toggleScrap}
       />
       <span className="text-body-14r text-alba-gray-500">
         {label} · {isScrapped ? '스크랩됨' : '스크랩 안 함'}
@@ -55,10 +55,13 @@ function ScrapButtonPreviewPage() {
         ))}
       </ul>
 
-      <h2 className="text-title-18sb mb-4">눌러서 확인</h2>
+      <h2 className="text-title-18sb mb-1">눌러서 확인</h2>
+      <p className="text-body-14r text-alba-gray-500 mb-4">
+        스크랩 상태는 브라우저에 저장되어 새로고침해도 유지됩니다.
+      </p>
       <ul className="flex flex-col gap-4">
-        <ToggleExample label="모집 중 공고" />
-        <ToggleExample label="마감 공고" isClosed />
+        <ToggleExample jobId="scrap-preview-open" label="모집 중 공고" />
+        <ToggleExample jobId="scrap-preview-closed" label="마감 공고" isClosed />
       </ul>
     </section>
   );
