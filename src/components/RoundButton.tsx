@@ -27,7 +27,7 @@ function RoundButton({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex h-10 items-center justify-center gap-2.5 rounded-full px-5 py-2 text-base ${isFullWidth ? 'w-full' : ''} ${COLOR_CLASS[color]} disabled:cursor-not-allowed disabled:bg-alba-gray-200 disabled:text-alba-gray-400`}
+      className={`inline-flex h-10 cursor-pointer items-center justify-center gap-2.5 rounded-full px-5 py-2 text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alba-blue-600 ${isFullWidth ? 'w-full' : ''} ${COLOR_CLASS[color]} disabled:cursor-not-allowed disabled:bg-alba-gray-200 disabled:text-alba-gray-400`}
     >
       {children}
     </button>

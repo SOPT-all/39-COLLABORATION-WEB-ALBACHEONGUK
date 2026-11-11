@@ -26,7 +26,7 @@ function RectButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex items-center justify-center gap-2.5 rounded-lg border px-5 py-2.5 text-base disabled:cursor-not-allowed ${isFullWidth ? 'w-full' : ''} ${VARIANT_CLASS[variant]}`}
+      className={`inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-lg border px-5 py-2.5 text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alba-blue-600 disabled:cursor-not-allowed ${isFullWidth ? 'w-full' : ''} ${VARIANT_CLASS[variant]}`}
     >
       {children}
     </button>
