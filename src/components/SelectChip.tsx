@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef } from 'react';
+
 export type SelectChipIcon = {
   default: string;
   hover: string;
@@ -12,6 +14,27 @@ type SelectChipProps = {
 };
 
 function SelectChip({ label, isSelected, onSelect, icon }: SelectChipProps) {
+  const labelRef = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const labelElement = labelRef.current;
+    if (!labelElement) return;
+
+    let isActive = true;
+    const roundUpLabelWidth = () => {
+      if (!isActive) return;
+      labelElement.style.width = '';
+      labelElement.style.width = `${Math.ceil(labelElement.getBoundingClientRect().width)}px`;
+    };
+
+    roundUpLabelWidth();
+    void document.fonts.ready.then(roundUpLabelWidth);
+
+    return () => {
+      isActive = false;
+    };
+  }, [label]);
+
   const stateClass = isSelected
     ? 'border-alba-yellow-500 bg-alba-yellow-500 text-alba-gray-700'
     : 'border-alba-gray-300 bg-alba-gray-200 text-alba-gray-400 hover:border-alba-gray-400 hover:bg-alba-gray-400 hover:text-alba-gray-600';
@@ -44,7 +67,9 @@ function SelectChip({ label, isSelected, onSelect, icon }: SelectChipProps) {
             />
           </>
         ))}
-      {label}
+      <span ref={labelRef} className="inline-block">
+        {label}
+      </span>
     </button>
   );
 }
