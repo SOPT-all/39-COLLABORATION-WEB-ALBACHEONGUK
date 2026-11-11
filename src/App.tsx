@@ -7,6 +7,7 @@ import Layout from './components/Layout.tsx';
 import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
 import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
+import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
 
 const canShowComponentPreview =
   import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
@@ -23,6 +24,9 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/job-card" element={<JobCardPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/scrap-button" element={<ScrapButtonPreviewPage />} />
         )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
