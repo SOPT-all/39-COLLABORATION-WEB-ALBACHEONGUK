@@ -6,6 +6,7 @@ import SetupPage from './pages/setup/SetupPage.tsx';
 import Layout from './components/Layout.tsx';
 import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
+import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
 import SelectChipPreviewPage from './pages/setup/SelectChipPreviewPage.tsx';
 
 const canShowComponentPreview =
@@ -20,6 +21,9 @@ function App() {
         {canShowComponentPreview && <Route path="setup/job-row" element={<JobRowPreviewPage />} />}
         {canShowComponentPreview && (
           <Route path="setup/job-row/design" element={<JobRowDesignAuditPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/job-card" element={<JobCardPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/select-chip" element={<SelectChipPreviewPage />} />
