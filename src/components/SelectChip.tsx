@@ -21,7 +21,7 @@ function SelectChip({ label, isSelected, onSelect, icon }: SelectChipProps) {
       type="button"
       aria-pressed={isSelected}
       onClick={onSelect}
-      className={`group text-title-18sb focus-visible:outline-alba-blue-600 inline-flex h-[52px] shrink-0 cursor-pointer items-center gap-2.5 rounded-full border px-[26px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${stateClass}`}
+      className={`group text-display-20sb focus-visible:outline-alba-blue-600 inline-flex ${icon ? 'h-[52px]' : 'h-[50px]'} shrink-0 cursor-pointer items-center gap-2.5 rounded-full border px-[25px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${stateClass}`}
     >
       {icon &&
         (isSelected ? (
