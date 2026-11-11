@@ -2,10 +2,9 @@ import RectButton from '../../components/RectButton.tsx';
 import RoundButton from '../../components/RoundButton.tsx';
 import TextImage from '../../components/TextImage.tsx';
 import resumeRegisterText from '../../assets/text/button/resume-register.svg';
-import jobRegisterText from '../../assets/text/button/job-register.svg'
-import applyText from '../../assets/text/button/apply.svg'
-import cancelText from '../../assets/text/button/cancel.svg'
-
+import jobRegisterText from '../../assets/text/button/job-register.svg';
+import applyText from '../../assets/text/button/apply.svg';
+import cancelText from '../../assets/text/button/cancel.svg';
 
 function ButtonPreviewPage() {
   return (
