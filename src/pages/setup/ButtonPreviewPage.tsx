@@ -1,5 +1,11 @@
 import RectButton from '../../components/RectButton.tsx';
 import RoundButton from '../../components/RoundButton.tsx';
+import TextImage from '../../components/TextImage.tsx';
+import resumeRegisterText from '../../assets/text/button/resume-register.svg';
+import jobRegisterText from '../../assets/text/button/job-register.svg'
+import applyText from '../../assets/text/button/apply.svg'
+import cancelText from '../../assets/text/button/cancel.svg'
+
 
 function ButtonPreviewPage() {
   return (
@@ -8,16 +14,16 @@ function ButtonPreviewPage() {
         <h2 className="text-title-18sb">RoundButton</h2>
         <div className="grid grid-cols-[repeat(4,112px)] gap-4">
           <RoundButton color="yellow" isFullWidth>
-            이력서 등록
+            <TextImage src={resumeRegisterText} label="이력서 등록" width={76} height={24} />
           </RoundButton>
           <RoundButton color="blue" isFullWidth>
-            공고 등록
-          </RoundButton>
-          <RoundButton color="yellow" isFullWidth disabled>
-            이력서 등록
+            <TextImage src={jobRegisterText} label="공고 등록" width={62} height={24} />
           </RoundButton>
           <RoundButton color="blue" isFullWidth disabled>
-            공고 등록
+            <TextImage src={resumeRegisterText} label="이력서 등록" width={76} height={24} />
+          </RoundButton>
+          <RoundButton color="blue" isFullWidth disabled>
+            <TextImage src={jobRegisterText} label="공고 등록" width={62} height={24} />
           </RoundButton>
         </div>
       </section>
@@ -27,17 +33,17 @@ function ButtonPreviewPage() {
         <div className="flex gap-4">
           <div className="w-[148px]">
             <RectButton variant="primary" isFullWidth>
-              적용
+              <TextImage src={applyText} label="적용" width={29} height={24} />
             </RectButton>
           </div>
           <div className="w-[148px]">
             <RectButton variant="secondary" isFullWidth>
-              취소
+              <TextImage src={cancelText} label="취소" width={29} height={24} />
             </RectButton>
           </div>
           <div className="w-[148px]">
             <RectButton variant="primary" isFullWidth disabled>
-              적용
+              <TextImage src={applyText} label="적용" width={29} height={24} />
             </RectButton>
           </div>
         </div>
