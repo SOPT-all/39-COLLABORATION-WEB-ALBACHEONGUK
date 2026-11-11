@@ -17,7 +17,7 @@
 
 ## 프로젝트
 
-메인에서 검색 조건을 설정하고, 검색 결과에서 공고를 비교한 뒤 이력서 기반 추천과 지원으로 이어지는 흐름을 개발합니다.
+메인에서 검색 조건을 설정하고, 검색 결과에서 공고를 비교하고 이력서 기반 추천을 확인하는 흐름을 개발합니다.
 
 ## 데스크탑 웹 2조 팀원
 
@@ -25,7 +25,7 @@
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [<img src="https://avatars.githubusercontent.com/u/110793639?v=4&amp;s=192" width="96" height="96" alt="심민식 GitHub 프로필" />](https://github.com/minsik1014) | [<img src="https://avatars.githubusercontent.com/u/203110950?v=4&amp;s=192" width="96" height="96" alt="손승현 GitHub 프로필" />](https://github.com/son0131) | [<img src="https://avatars.githubusercontent.com/u/130419004?v=4&amp;s=192" width="96" height="96" alt="금고은 GitHub 프로필" />](https://github.com/eunigo) | [<img src="https://avatars.githubusercontent.com/u/109638255?v=4&amp;s=192" width="96" height="96" alt="이지연 GitHub 프로필" />](https://github.com/jiyeoniii) |
 |                                                           [@minsik1014](https://github.com/minsik1014)                                                           |                                                            [@son0131](https://github.com/son0131)                                                             |                                                             [@eunigo](https://github.com/eunigo)                                                             |                                                           [@jiyeoniii](https://github.com/jiyeoniii)                                                            |
-|                                                  공고 행·검색·URL<br/>결과 목록·정렬·페이지<br/>공고 조회 연동                                                   |                                           헤더·프로필·지역/업직종 필터<br/>하단 추천·최근 검색<br/>이력서 선택·조회                                           |                                                 드롭다운·모달<br/>근무조건·급여 필터<br/>지원 팝업·지원 연동                                                 |                                                         공고 카드<br/>이력서 매칭·추천 조회<br/>스크랩                                                          |
+|                                                      검색 결과 조립·공고 목록 조회<br/>공고 행·검색창·헤더                                                       |                                                필터 조립·이력서 조회<br/>프로필·최근 검색·지역 필터·기본 폼 UI                                                |                                                         공통 드롭다운<br/>업직종·근무조건·급여 필터                                                          |                                                 메인 조립·이력서 기반 추천 조회<br/>공고 카드·스크랩·하단 추천                                                  |
 
 작업별 담당·마감·진행 상태는 [노션 역할 분담](https://app.notion.com/p/40b828481af881438bebf8ff47d4afd3)에서 관리합니다.
 
@@ -36,14 +36,13 @@
 | 검색      | 검색어·지역·업직종·근무조건·급여, 선택 태그·초기화 | 적용 조건은 URL로 유지          |
 | 비교      | 목록·총 건수·정렬·진행중 토글·페이지·펼치기        | 공고 조회 API                   |
 | 매칭      | 이력서 선택, 추천 공고 최대 3건                    | AI 모델 없이 조건별 점수 기반   |
-| 지원      | 확인 팝업·제출·중복/마감/오류 처리                 | 공고 지원 API                   |
 | 저장      | 스크랩·최근 검색                                   | 브라우저 저장                   |
 | 하단 탐색 | 지역별·테마별·대상별 추천                          | 목데이터. 테마·대상 카드는 고정 |
 
 <details>
 <summary>축소한 범위</summary>
 
-- 로그인·이력서 작성/수정·별도 공고 상세창·위치 권한/IP 추정은 구현하지 않습니다.
+- 로그인·공고 지원·지원 확인 팝업·이력서 작성/수정·별도 공고 상세창·위치 권한/IP 추정은 구현하지 않습니다. 로그인과 지원 버튼은 화면에 표시하는 경우 비활성으로 둡니다.
 - 하단 추천의 테마·대상 칩은 클릭 상태만 처리하며 실제 공고를 다시 조회하지 않습니다.
 - 알바스토리 이하 영역은 이미지로 대체합니다.
 - 스켈레톤은 후순위이며 기본 로딩·빈 결과·오류 처리를 먼저 구현합니다.
@@ -91,16 +90,17 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 
 ## 명령어
 
-| 명령어              | 용도                          |
-| ------------------- | ----------------------------- |
-| `pnpm dev`          | 개발 서버                     |
-| `pnpm build`        | 배포용 빌드                   |
-| `pnpm preview`      | 빌드 결과 확인                |
-| `pnpm lint`         | 코드 규칙 검사                |
-| `pnpm typecheck`    | 타입 검사                     |
-| `pnpm format`       | 포맷 적용                     |
-| `pnpm format:check` | 포맷 검사                     |
-| `pnpm check`        | 린트·타입·빌드·포맷 전체 검사 |
+| 명령어              | 용도                                 |
+| ------------------- | ------------------------------------ |
+| `pnpm dev`          | 개발 서버                            |
+| `pnpm build`        | 배포용 빌드                          |
+| `pnpm preview`      | 빌드 결과 확인                       |
+| `pnpm lint`         | 코드 규칙 검사                       |
+| `pnpm typecheck`    | 타입 검사                            |
+| `pnpm format`       | 포맷 적용                            |
+| `pnpm format:check` | 포맷 검사                            |
+| `pnpm test`         | 날짜 등 로직 테스트                  |
+| `pnpm check`        | 린트·타입·테스트·빌드·포맷 전체 검사 |
 
 ## 자동 검사·배포
 
@@ -174,7 +174,8 @@ docs: 팀 소개와 개발 범위를 README에 반영
 2. [PR 양식](.github/pull_request_template.md)에 관련 Issue·변경 이유·확인 방법·리뷰 요청을 작성합니다. UI 변경은 화면 자료를 첨부합니다.
 3. 작업 Issue는 `Closes #번호`로 연결합니다. 상위 Issue는 전체 하위 작업·통합 확인 후 닫습니다.
 4. 작성자 외 3명 모두에게 리뷰를 요청합니다. Draft는 Ready for review 전환 시 요청합니다.
-5. 본인 외 1명 승인·필수 CI 통과·미해결 대화 해소 후 Squash merge합니다. 이후 작업 브랜치를 삭제합니다.
+5. 리뷰 코멘트 앞에 `[P0]`(즉시 수정), `[P1]`(머지 전 수정), `[P2]`(개선 제안)를 붙입니다. 자세한 기준은 [Git · Issue · PR 가이드](https://app.notion.com/p/d35828481af883ffab9101cb84f217d5)에 있습니다.
+6. 본인 외 1명 승인·필수 CI 통과·미해결 대화 해소 후 Squash merge합니다. 이후 작업 브랜치를 삭제합니다.
 
 작성자 라벨은 `👻 민식` · `⚽ 승현` · `🍋 고은` · `🍎 지연`, 유형 라벨은 `feat/fix/refactor/style/docs/chore`를 사용합니다.
 자동 검사의 세부 설정은 [CI 워크플로](.github/workflows/ci.yml)에서 관리합니다.
@@ -267,7 +268,6 @@ export default JobCard;
 - 조회 키는 실제 응답에 영향을 주는 사용자·이력서·검색 조건을 구분합니다.
 - 일반 목록과 추천의 로딩·오류·재시도를 분리합니다. 추천 오류가 검색 결과를 지우지 않게 합니다.
 - API 경로·응답 타입·마감 판정·추천 점수는 서버 계약에 맞춥니다. 예시 타입을 실제 계약으로 사용하지 않습니다.
-- 최신 v2.1 기준 로그인·지원 기능은 구현하지 않습니다. 관련 버튼은 동작하지 않으며 지원 확인 팝업도 만들지 않습니다.
 
 </details>
 
@@ -276,5 +276,5 @@ export default JobCard;
 - [노션 · 일정·업무 분담·과제](https://app.notion.com/p/40b828481af880c6b072e73b768e4128)
 - [코딩 컨벤션](https://app.notion.com/p/8eb828481af883d79323013b119a0fe2) · [Git · Issue · PR 가이드](https://app.notion.com/p/d35828481af883ffab9101cb84f217d5)
 - [킥오프 FigJam](https://www.figma.com/board/URXA8pMmgp5wz2A5WvLS0x?node-id=0-1)
-- [리디자인](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5) · [디자인 시스템](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-4)
-- [화면설계서·기능명세서](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=6-11) · [PRD](https://app.notion.com/p/sopt-official/PRD-4011e48dd9608000be8fecc0c94fa2a5)
+- [리디자인](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5) · [디자인 시스템](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-3)
+- [화면설계서·기능명세서](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=6-11) · [PRD](https://app.notion.com/p/sopt-official/40d1e48dd96080d39db1d023ebbdaf5e)
