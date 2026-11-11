@@ -8,7 +8,6 @@ import ButtonPreviewPage from './pages/setup/ButtonPreviewPage.tsx';
 import InputPreviewPage from './pages/setup/InputPreviewPage.tsx';
 import CheckboxPreviewPage from './pages/setup/CheckboxPreviewPage.tsx';
 import RadioPreviewPage from './pages/setup/RadioPreviewPage.tsx';
-import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
 
 const canShowComponentPreview =
   import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
@@ -25,9 +24,6 @@ function App() {
           <Route path="setup/checkbox" element={<CheckboxPreviewPage />} />
         )}
         {canShowComponentPreview && <Route path="setup/radio" element={<RadioPreviewPage />} />}
-        {canShowComponentPreview && (
-          <Route path="setup/select-list-item" element={<SelectListItemPreviewPage />} />
-        )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       {/* Query·Zustand 세팅 확인용 임시 화면*/}
