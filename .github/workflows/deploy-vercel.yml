@@ -47,6 +47,7 @@ jobs:
 
       - name: Build and deploy
         env:
+          VITE_ENABLE_COMPONENT_PREVIEW: ${{ env.DEPLOY_TARGET == 'preview' && 'true' || 'false' }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

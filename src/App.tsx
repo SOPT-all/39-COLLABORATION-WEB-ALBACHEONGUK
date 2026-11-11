@@ -8,6 +8,9 @@ import ButtonPreviewPage from './pages/setup/ButtonPreviewPage.tsx';
 import InputPreviewPage from './pages/setup/InputPreviewPage.tsx';
 import CheckboxPreviewPage from './pages/setup/CheckboxPreviewPage.tsx';
 import RadioPreviewPage from './pages/setup/RadioPreviewPage.tsx';
+import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
+import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
+import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
 
 const canShowComponentPreview =
   import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
@@ -24,6 +27,13 @@ function App() {
           <Route path="setup/checkbox" element={<CheckboxPreviewPage />} />
         )}
         {canShowComponentPreview && <Route path="setup/radio" element={<RadioPreviewPage />} />}
+        {canShowComponentPreview && <Route path="setup/job-row" element={<JobRowPreviewPage />} />}
+        {canShowComponentPreview && (
+          <Route path="setup/job-row/design" element={<JobRowDesignAuditPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/job-card" element={<JobCardPreviewPage />} />
+        )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       {/* Query·Zustand 세팅 확인용 임시 화면*/}
