@@ -108,16 +108,19 @@ function FilterTags({ tags, onRemove, onReset }: FilterTagsProps) {
           >
             <ul ref={listRef} aria-label="선택한 검색 조건" className="flex w-max gap-2">
               {tags.map((tag) => (
-                <li key={`${tag.kind}:${tag.id}`}>
+                <li
+                  key={`${tag.kind}:${tag.id}`}
+                  className="border-alba-gray-300 bg-alba-white text-alba-black text-body-16r flex h-[42px] items-center gap-2 rounded-lg border pr-2.5 pl-3 whitespace-nowrap"
+                >
+                  <span className={`${LABEL_WIDTH} ${LABEL_MIN_WIDTHS[tag.label] ?? ''}`}>
+                    {tag.label}
+                  </span>
                   <button
                     type="button"
                     aria-label={`${FILTER_KIND_LABELS[tag.kind]} ${tag.label} 조건 삭제`}
-                    className={`border-alba-gray-300 bg-alba-white text-alba-black text-body-16r flex h-[42px] cursor-pointer items-center gap-2 rounded-lg border pr-2.5 pl-3 whitespace-nowrap ${FOCUS_OUTLINE}`}
+                    className={`size-5 shrink-0 cursor-pointer rounded-sm ${FOCUS_OUTLINE}`}
                     onClick={() => onRemove(tag)}
                   >
-                    <span className={`${LABEL_WIDTH} ${LABEL_MIN_WIDTHS[tag.label] ?? ''}`}>
-                      {tag.label}
-                    </span>
                     <img src={removeIcon} alt="" width={20} height={20} />
                   </button>
                 </li>
