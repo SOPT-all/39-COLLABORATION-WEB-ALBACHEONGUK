@@ -36,7 +36,11 @@
   --color-alba-light-yellow: #fff159;
   --color-alba-brown: #cd7c2f;
 
+  --color-alba-detail-border: #e5e8eb;
+  --color-alba-closed-badge: #64748b;
+
   /* 글꼴 */
+  --font-station: 'Noto Sans KR Station', 'Pretendard', sans-serif;
   --font-pretendard: 'Pretendard', sans-serif;
   --text-display-24sb: 24px;
   --text-display-24sb--font-weight: 600;
