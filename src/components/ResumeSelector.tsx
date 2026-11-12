@@ -20,7 +20,7 @@ function ResumeSelector({ resumes, selectedResumeId }: ResumeSelectorProps) {
   return (
     <section
       aria-label="내 이력서 선택"
-      className="inline-flex items-center gap-12 rounded-lg bg-alba-gray-200 px-4 py-3"
+      className="inline-flex w-fit items-center gap-12 rounded-lg bg-alba-gray-200 px-4 py-3"
     >
       <div className="flex items-center gap-2 text-alba-gray-600">
         <img src={folderIcon} alt="" className="size-7" />
