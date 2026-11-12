@@ -46,9 +46,6 @@ function FilterPreview({ title, label, icon, appliedIcon, children }: FilterPrev
 }
 
 function DropdownPreviewPage() {
-  const [sort, setSort] = useState('정확도순');
-  const [pageSize, setPageSize] = useState('20개씩 보기');
-
   return (
     <div className="flex flex-col gap-10 text-alba-black">
       <header className="flex flex-col gap-2">
@@ -58,6 +55,7 @@ function DropdownPreviewPage() {
           표시이며 선택·취소·적용은 아직 연결하지 않았습니다.
         </p>
       </header>
+
       <div className="flex flex-wrap items-start gap-8">
         <FilterPreview
           title="지역 패널"
@@ -67,6 +65,7 @@ function DropdownPreviewPage() {
         >
           <DropdownRegionJob />
         </FilterPreview>
+
         <FilterPreview
           title="근무조건 패널"
           label="근무시간"
@@ -75,6 +74,7 @@ function DropdownPreviewPage() {
         >
           <DropdownPeriod />
         </FilterPreview>
+
         <FilterPreview
           title="급여 패널"
           label="급여조건"
@@ -84,20 +84,30 @@ function DropdownPreviewPage() {
           <DropdownMoney />
         </FilterPreview>
       </div>
+
       <section className="flex flex-col gap-4">
         <h2 className="text-title-18sb">정렬·표시 개수</h2>
         <p className="text-body-14r">
           항목을 선택하면 버튼 글자·선택 배경·체크가 바뀌고 목록이 닫힙니다. 두 목록의 선택은 서로
           독립적이며 실제 공고 조회에는 연결되지 않습니다.
         </p>
+
         <div className="flex flex-wrap items-start gap-8">
           <div className="flex flex-col gap-2">
             <h3 className="text-body-16b">정렬</h3>
-            <DropdownSelect options={SORT_OPTIONS} onChange={setSort} />
+            <DropdownSelect
+              options={SORT_OPTIONS}
+              onChange={(value) => console.log('선택한 정렬:', value)}
+            />
           </div>
+
           <div className="flex flex-col gap-2">
             <h3 className="text-body-16b">표시 개수</h3>
-            <DropdownSelect variant="pageSize" options={PAGE_SIZE_OPTIONS} onChange={setPageSize} />
+            <DropdownSelect
+              variant="pageSize"
+              options={PAGE_SIZE_OPTIONS}
+              onChange={(value) => console.log('선택한 표시 개수:', value)}
+            />
           </div>
         </div>
       </section>

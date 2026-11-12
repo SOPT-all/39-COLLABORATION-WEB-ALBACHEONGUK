@@ -8,9 +8,17 @@ type DropdownProps = {
   icon: string;
   appliedIcon?: string;
   isApplied?: boolean;
+  trigger?: ReactNode;
 };
 
-function Dropdown({ label, children, icon, appliedIcon, isApplied = false }: DropdownProps) {
+function Dropdown({
+  label,
+  children,
+  icon,
+  appliedIcon,
+  isApplied = false,
+  trigger,
+}: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div>
@@ -27,17 +35,21 @@ function Dropdown({ label, children, icon, appliedIcon, isApplied = false }: Dro
               : 'border-alba-gray-300'
         }`}
       >
-        <img
-          src={isApplied ? (appliedIcon ?? icon) : icon}
-          alt=""
-          className="size-[24px] shrink-0"
-        />
-        <span
-          className={`flex-1 text-left text-body-16b line-clamp-1
+        {trigger ?? (
+          <>
+            <img
+              src={isApplied ? (appliedIcon ?? icon) : icon}
+              alt=""
+              className="size-[24px] shrink-0"
+            />
+            <span
+              className={`flex-1 text-left text-body-16b line-clamp-1
           ${isApplied || isOpen ? 'text-alba-gray-800' : 'text-alba-gray-500'}`}
-        >
-          {label}
-        </span>
+            >
+              {label}
+            </span>{' '}
+          </>
+        )}
         <img
           src={triangleDownIcon}
           alt=""
