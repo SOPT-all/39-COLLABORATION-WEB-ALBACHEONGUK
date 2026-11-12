@@ -94,12 +94,10 @@ function DropdownPreviewPage() {
           <div className="flex flex-col gap-2">
             <h3 className="text-body-16b">정렬</h3>
             <DropdownSelect options={SORT_OPTIONS} onChange={setSort} />
-            <p className="text-body-14r">선택값: {sort}</p>
           </div>
           <div className="flex flex-col gap-2">
             <h3 className="text-body-16b">표시 개수</h3>
             <DropdownSelect variant="pageSize" options={PAGE_SIZE_OPTIONS} onChange={setPageSize} />
-            <p className="text-body-14r">선택값: {pageSize}</p>
           </div>
         </div>
       </section>
