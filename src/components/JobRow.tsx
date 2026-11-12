@@ -3,11 +3,9 @@ import type { ReactNode } from 'react';
 
 import chevronIcon from '../assets/icons/job-row/chevron.svg';
 import chevronClosedIcon from '../assets/icons/job-row/chevron-closed.svg';
-import scrapClosedIcon from '../assets/icons/job-row/scrap-closed.svg';
-import scrapOffIcon from '../assets/icons/job-row/scrap-off.svg';
-import scrapOnIcon from '../assets/icons/job-row/scrap-on.svg';
 import separatorIcon from '../assets/icons/job-row/separator.svg';
 import { useKstNow } from '../hooks/useKstNow.ts';
+import ScrapButton from './ScrapButton.tsx';
 import { getJobDeadlineText } from '../utils/jobDeadline.ts';
 import { getJobPostedAt } from '../utils/jobPostedAt.ts';
 
@@ -81,7 +79,6 @@ function JobRow({
   const isClosed = job.isClosed;
   const postedAtText = getJobPostedAt(job.postedAt, now);
   const hasThumbnail = showThumbnail || Boolean(job.thumbnailUrl) || variant === 'recommended';
-  const scrapIcon = isScrapped ? scrapOnIcon : isClosed ? scrapClosedIcon : scrapOffIcon;
   const expandButton =
     EXPAND_BUTTON_STATES[isClosed ? 'closed' : 'open'][isExpanded ? 'expanded' : 'collapsed'];
   const hasWidePadding = hasThumbnail || variant !== 'default';
@@ -190,15 +187,12 @@ function JobRow({
 
         <div className={`flex shrink-0 items-center gap-1 ${hasThumbnail ? 'ml-[18px]' : 'ml-8'}`}>
           {scrapAction ?? (
-            <button
-              type="button"
-              aria-label={`${job.title} 스크랩`}
-              aria-pressed={isScrapped}
-              onClick={onToggleScrap}
-              className="focus-visible:outline-alba-blue-600 flex size-6 cursor-pointer items-center justify-center rounded focus-visible:outline-2 focus-visible:outline-offset-2"
-            >
-              <img src={scrapIcon} alt="" width={24} height={24} />
-            </button>
+            <ScrapButton
+              label={`${job.title} 스크랩`}
+              isScrapped={isScrapped}
+              isClosed={isClosed}
+              onToggle={onToggleScrap}
+            />
           )}
           <button
             type="button"
