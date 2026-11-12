@@ -4,6 +4,10 @@ import SearchPage from './pages/search/SearchPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import SetupPage from './pages/setup/SetupPage.tsx';
 import Layout from './components/Layout.tsx';
+import DropdownPreviewPage from './pages/setup/DropdownPreviewPage.tsx';
+
+const canShowComponentPreview =
+  import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
 
 function App() {
   return (
@@ -11,6 +15,9 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="search" element={<SearchPage />} />
+        {canShowComponentPreview && (
+          <Route path="setup/dropdown" element={<DropdownPreviewPage />} />
+        )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       {/* Query·Zustand 세팅 확인용 임시 화면*/}
