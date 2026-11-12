@@ -7,6 +7,7 @@ import Layout from './components/Layout.tsx';
 import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
 import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
+import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage.tsx';
 import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
 import SelectChipPreviewPage from './pages/setup/SelectChipPreviewPage.tsx';
 
@@ -25,6 +26,9 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/job-card" element={<JobCardPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/popular-searches" element={<PopularSearchesPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/scrap-button" element={<ScrapButtonPreviewPage />} />
