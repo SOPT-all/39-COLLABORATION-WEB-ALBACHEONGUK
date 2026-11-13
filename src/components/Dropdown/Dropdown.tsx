@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import triangleDownIcon from '../../assets/icons/triangle.svg';
 
@@ -20,8 +20,28 @@ function Dropdown({
   trigger,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function handleOutsideClick(event: PointerEvent) {
+      const target = event.target;
+
+      if (target instanceof Node && dropdownRef.current && !dropdownRef.current.contains(target)) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('pointerdown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('pointerdown', handleOutsideClick);
+    };
+  }, [isOpen]);
+
   return (
-    <div>
+    <div ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import triangleDownIcon from '../../assets/icons/triangle.svg';
 import checkIcon from '../../assets/icons/check.svg';
 
@@ -19,9 +19,28 @@ function DropdownSelect({
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(initialValue ?? defaultValue);
   const width = variant === 'pageSize' ? 136 : 128;
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function handleOutsideClick(event: PointerEvent) {
+      const target = event.target;
+
+      if (target instanceof Node && dropdownRef.current && !dropdownRef.current.contains(target)) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('pointerdown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('pointerdown', handleOutsideClick);
+    };
+  }, [isOpen]);
 
   return (
-    <div className="flex flex-col  gap-[4px]" style={{ width }}>
+    <div ref={dropdownRef} className="flex flex-col  gap-[4px]" style={{ width }}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
