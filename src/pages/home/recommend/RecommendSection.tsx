@@ -11,7 +11,10 @@ type RecommendSectionProps = {
   chips: ReactNode;
   jobs: JobCardData[];
   spacingClassName: string;
+  onViewAll?: () => void;
 };
+
+const VIEW_ALL_CLASS_NAME = 'text-body-14r text-alba-gray-700 flex items-center gap-1';
 
 function RecommendSection({
   title,
@@ -20,7 +23,15 @@ function RecommendSection({
   chips,
   jobs,
   spacingClassName,
+  onViewAll,
 }: RecommendSectionProps) {
+  const viewAllContent = (
+    <>
+      전체보기
+      <img src={chevronRightSmallIcon} alt="" width={10} height={24} />
+    </>
+  );
+
   return (
     <section className={`flex flex-col ${spacingClassName}`}>
       <div className="flex items-center justify-between">
@@ -31,14 +42,17 @@ function RecommendSection({
           </h2>
           <p className="text-body-14r text-alba-gray-700 self-end pb-0.5">{description}</p>
         </div>
-        {/* 이동할 화면이 정해지지 않아 모양만 구현했습니다. */}
-        <button
-          type="button"
-          className="text-body-14r text-alba-gray-700 focus-visible:outline-alba-blue-600 flex cursor-pointer items-center gap-1 focus-visible:outline-2 focus-visible:outline-offset-2"
-        >
-          전체보기
-          <img src={chevronRightSmallIcon} alt="" width={10} height={24} />
-        </button>
+        {onViewAll ? (
+          <button
+            type="button"
+            onClick={onViewAll}
+            className={`${VIEW_ALL_CLASS_NAME} focus-visible:outline-alba-blue-600 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2`}
+          >
+            {viewAllContent}
+          </button>
+        ) : (
+          <span className={VIEW_ALL_CLASS_NAME}>{viewAllContent}</span>
+        )}
       </div>
 
       {chips}

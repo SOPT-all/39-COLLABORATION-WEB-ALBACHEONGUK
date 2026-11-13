@@ -6,6 +6,8 @@ import SelectChip from '../../../components/SelectChip.tsx';
 
 import type { ChipOption } from './recommendChips.ts';
 
+const FIRST_PAGE_CHIP_COUNT = 11;
+
 type RegionChipSliderProps = {
   options: ChipOption[];
   selectedLabel: string;
@@ -14,18 +16,27 @@ type RegionChipSliderProps = {
 
 function RegionChipSlider({ options, selectedLabel, onSelect }: RegionChipSliderProps) {
   const [isSecondPage, setIsSecondPage] = useState(false);
+  const pages = [options.slice(0, FIRST_PAGE_CHIP_COUNT), options.slice(FIRST_PAGE_CHIP_COUNT)];
 
   return (
     <div className="flex items-center gap-[5px]">
       <div className="h-[50px] w-[1157px] shrink-0 overflow-clip">
         <div className={`flex w-max gap-5 ${isSecondPage ? '-translate-x-[1177px]' : ''}`}>
-          {options.map((option) => (
-            <SelectChip
-              key={option.label}
-              label={option.label}
-              isSelected={selectedLabel === option.label}
-              onSelect={() => onSelect(option.label)}
-            />
+          {pages.map((pageOptions, pageIndex) => (
+            <div
+              key={pageIndex}
+              className="flex gap-5"
+              inert={pageIndex !== (isSecondPage ? 1 : 0)}
+            >
+              {pageOptions.map((option) => (
+                <SelectChip
+                  key={option.label}
+                  label={option.label}
+                  isSelected={selectedLabel === option.label}
+                  onSelect={() => onSelect(option.label)}
+                />
+              ))}
+            </div>
           ))}
         </div>
       </div>
