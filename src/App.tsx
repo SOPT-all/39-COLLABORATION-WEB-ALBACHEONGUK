@@ -11,6 +11,7 @@ import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage
 import SalaryTextPreviewPage from './pages/setup/SalaryTextPreviewPage.tsx';
 import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
 import SelectChipPreviewPage from './pages/setup/SelectChipPreviewPage.tsx';
+import HeaderPreviewPage from './pages/setup/HeaderPreviewPage.tsx';
 
 const canShowComponentPreview =
   import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
@@ -42,6 +43,7 @@ function App() {
         )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
+      {canShowComponentPreview && <Route path="setup/header" element={<HeaderPreviewPage />} />}
       {/* Query·Zustand 세팅 확인용 임시 화면*/}
       <Route path="setup" element={<SetupPage />} />
     </Routes>
