@@ -20,6 +20,7 @@ function DropdownSelect({
   const [selected, setSelected] = useState(initialValue ?? defaultValue);
   const width = variant === 'pageSize' ? 136 : 128;
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -42,7 +43,9 @@ function DropdownSelect({
   return (
     <div ref={dropdownRef} className="flex flex-col  gap-[4px]" style={{ width }}>
       <button
+        ref={triggerRef}
         type="button"
+        aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-between w-full h-[40px] pl-[12px] pr-[10px] rounded-[8px] overflow-hidden text-alba-gray-800 text-body-14r border border-alba-gray-300 `}
       >
@@ -64,6 +67,7 @@ function DropdownSelect({
                 setSelected(option);
                 onChange(option);
                 setIsOpen(false);
+                triggerRef.current?.focus();
               }}
               className={`flex items-center justify-between w-full h-[40px] pl-[12px] pr-[10px] text-body-14r text-alba-gray-800 ${
                 selected === option ? 'bg-alba-blue-100' : 'bg-alba-white'
