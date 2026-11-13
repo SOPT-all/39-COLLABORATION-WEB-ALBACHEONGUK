@@ -63,7 +63,7 @@ function DropdownRegionJob() {
           </div>
         </RegionColumn>
       </div>
-      <div className="border-t border-t-alba-gray-300 py-[20px]">
+      <div className="h-[87px] shrink-0 border-t border-t-alba-gray-300 py-[20px]">
         {/* 취소·적용 버튼을 넣을 자리 */}
       </div>
     </DropdownPanel>
