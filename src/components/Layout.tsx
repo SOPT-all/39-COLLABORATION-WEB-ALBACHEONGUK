@@ -1,10 +1,14 @@
 import { Outlet } from 'react-router';
 import Header from './Header.tsx';
 
-function Layout() {
+type LayoutProps = {
+  isSignedIn?: boolean;
+};
+
+function Layout({ isSignedIn = false }: LayoutProps) {
   return (
     <>
-      <Header />
+      <Header isSignedIn={isSignedIn} />
       <main>
         <Outlet />
       </main>
