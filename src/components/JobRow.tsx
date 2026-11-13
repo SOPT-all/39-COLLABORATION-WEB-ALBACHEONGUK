@@ -5,6 +5,7 @@ import chevronIcon from '../assets/icons/job-row/chevron.svg';
 import chevronClosedIcon from '../assets/icons/job-row/chevron-closed.svg';
 import separatorIcon from '../assets/icons/job-row/separator.svg';
 import { useKstNow } from '../hooks/useKstNow.ts';
+import SalaryText from './SalaryText.tsx';
 import ScrapButton from './ScrapButton.tsx';
 import { getJobDeadlineText } from '../utils/jobDeadline.ts';
 import { getJobPostedAt } from '../utils/jobPostedAt.ts';
@@ -148,18 +149,7 @@ function JobRow({
           className={`flex w-[122px] shrink-0 flex-col items-center justify-center gap-0.5 text-center ${columnSpacingClass}`}
         >
           {salaryContent ?? (
-            <>
-              <span
-                className={`text-body-14b h-[17px] w-[26px] ${isClosed ? 'text-alba-gray-600' : 'text-alba-teal'}`}
-              >
-                {job.salaryType}
-              </span>
-              <span
-                className={`text-body-16b w-full ${isClosed ? 'text-alba-gray-600' : 'text-alba-gray-700'}`}
-              >
-                {job.salaryText.trim() || '협의'}
-              </span>
-            </>
+            <SalaryText salaryType={job.salaryType} salaryText={job.salaryText} layout="vertical" />
           )}
         </div>
 
