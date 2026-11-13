@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import removeIcon from '../assets/icons/recent-searches/remove.svg';
 import searchIcon from '../assets/icons/search-bar/search.svg';
 
@@ -6,6 +7,7 @@ type RecentSearchesProps = {
   onSearch: (keyword: string) => void;
   onRemove: (keyword: string) => void;
   onClear: () => void;
+  onEmptyAfterDelete: () => void;
 };
 
 const FOCUS_CLASS = 'focus-visible:outline-2 focus-visible:outline-alba-blue-600';
@@ -13,12 +15,36 @@ const MAX_VISIBLE_CHARACTERS = 8;
 
 function formatKeyword(keyword: string) {
   const characters = Array.from(keyword);
-  return characters.length > MAX_VISIBLE_CHARACTERS
+  return characters.length >= MAX_VISIBLE_CHARACTERS
     ? `${characters.slice(0, MAX_VISIBLE_CHARACTERS).join('')}...`
     : keyword;
 }
 
-function RecentSearches({ keywords, onSearch, onRemove, onClear }: RecentSearchesProps) {
+function RecentSearches({
+  keywords,
+  onSearch,
+  onRemove,
+  onClear,
+  onEmptyAfterDelete,
+}: RecentSearchesProps) {
+  const searchButtons = useRef(new Map<string, HTMLButtonElement>());
+
+  function handleRemove(keyword: string, index: number) {
+    const adjacentKeyword = keywords[index + 1] ?? keywords[index - 1];
+    const adjacentButton = searchButtons.current.get(adjacentKeyword);
+    if (adjacentButton) {
+      adjacentButton.focus();
+    } else {
+      onEmptyAfterDelete();
+    }
+    onRemove(keyword);
+  }
+
+  function handleClear() {
+    onEmptyAfterDelete();
+    onClear();
+  }
+
   return (
     <section
       aria-label="최근 검색"
@@ -29,7 +55,7 @@ function RecentSearches({ keywords, onSearch, onRemove, onClear }: RecentSearche
         {keywords.length > 0 && (
           <button
             type="button"
-            onClick={onClear}
+            onClick={handleClear}
             className={`text-caption-12r text-alba-gray-500 cursor-pointer rounded-sm hover:underline ${FOCUS_CLASS}`}
           >
             전체 삭제
@@ -43,9 +69,15 @@ function RecentSearches({ keywords, onSearch, onRemove, onClear }: RecentSearche
         </p>
       ) : (
         <ul className="flex flex-col gap-2">
-          {keywords.map((keyword) => (
+          {keywords.map((keyword, index) => (
             <li key={keyword} className="flex h-[34px] items-center gap-2">
               <button
+                ref={(button) => {
+                  if (button) searchButtons.current.set(keyword, button);
+                  return () => {
+                    searchButtons.current.delete(keyword);
+                  };
+                }}
                 type="button"
                 aria-label={`${keyword} 다시 검색`}
                 title={keyword}
@@ -58,7 +90,7 @@ function RecentSearches({ keywords, onSearch, onRemove, onClear }: RecentSearche
               <button
                 type="button"
                 aria-label={`${keyword} 삭제`}
-                onClick={() => onRemove(keyword)}
+                onClick={() => handleRemove(keyword, index)}
                 className={`grid size-6 shrink-0 cursor-pointer place-items-center rounded-sm ${FOCUS_CLASS}`}
               >
                 <img src={removeIcon} alt="" width={20} height={20} />

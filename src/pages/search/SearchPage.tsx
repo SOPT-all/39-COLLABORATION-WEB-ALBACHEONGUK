@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import RecentSearches from '../../components/RecentSearches.tsx';
 import SearchBar from '../../components/SearchBar.tsx';
@@ -12,6 +12,7 @@ type SearchKeywordInputProps = {
 function SearchKeywordInput({ keyword, onSearch }: SearchKeywordInputProps) {
   const [value, setValue] = useState(keyword);
   const [previousKeyword, setPreviousKeyword] = useState(keyword);
+  const inputRef = useRef<HTMLInputElement>(null);
   const keywords = useRecentSearchStore((state) => state.keywords);
   const removeKeyword = useRecentSearchStore((state) => state.removeKeyword);
   const clearKeywords = useRecentSearchStore((state) => state.clearKeywords);
@@ -29,13 +30,19 @@ function SearchKeywordInput({ keyword, onSearch }: SearchKeywordInputProps) {
   return (
     <>
       <div className="max-w-[853px]">
-        <SearchBar value={value} onValueChange={setValue} onSearch={handleSearch} />
+        <SearchBar
+          inputRef={inputRef}
+          value={value}
+          onValueChange={setValue}
+          onSearch={handleSearch}
+        />
       </div>
       <RecentSearches
         keywords={keywords}
         onSearch={handleSearch}
         onRemove={removeKeyword}
         onClear={clearKeywords}
+        onEmptyAfterDelete={() => inputRef.current?.focus()}
       />
     </>
   );
