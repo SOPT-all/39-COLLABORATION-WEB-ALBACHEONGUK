@@ -5,6 +5,7 @@ import type { JobRowData, JobRowVariant } from '../../components/JobRow.tsx';
 import JobRowDetails from '../../components/JobRowDetails.tsx';
 import type { JobRowDetailsData } from '../../components/JobRowDetails.tsx';
 import { getJobDeadlineText } from '../../utils/jobDeadline.ts';
+import { useScrapStore } from '../../stores/useScrapStore.ts';
 
 const PREVIEW_NOW = new Date('2026-11-10T12:00:00+09:00');
 
@@ -138,7 +139,8 @@ const EXAMPLES: JobRowExample[] = [
 ];
 
 function JobRowPreviewPage() {
-  const [scrappedIds, setScrappedIds] = useState<string[]>([]);
+  const scrappedJobIds = useScrapStore((state) => state.scrappedJobIds);
+  const toggleScrap = useScrapStore((state) => state.toggleScrap);
   const [expandedIds, setExpandedIds] = useState<string[]>([
     'expanded',
     'recommended-expanded',
@@ -150,9 +152,7 @@ function JobRowPreviewPage() {
   const [lastAction, setLastAction] = useState('아직 누른 버튼이 없습니다.');
 
   function handleToggleScrap(id: string) {
-    setScrappedIds((ids) =>
-      ids.includes(id) ? ids.filter((value) => value !== id) : [...ids, id],
-    );
+    toggleScrap(id);
     setLastAction(`${id}: 스크랩 이벤트`);
   }
 
@@ -168,8 +168,8 @@ function JobRowPreviewPage() {
       <div className="space-y-2">
         <h1 className="text-display-24sb">공고 행 컴포넌트</h1>
         <p className="text-body-14r text-alba-gray-500">
-          최신 v2.1 SCR-02-09·10·15·16 확인용 목데이터입니다. 날짜 예시는 2026.11.10 기준이며 API와
-          스크랩 저장은 연결하지 않았습니다.
+          최신 v2.1 SCR-02-09·10·15·16 확인용 목데이터입니다. 날짜 예시는 2026.11.10 기준이며 API는
+          연결하지 않았고, 스크랩은 브라우저에 저장되어 새로고침 후에도 유지됩니다.
         </p>
       </div>
 
@@ -185,7 +185,7 @@ function JobRowPreviewPage() {
                 referenceNow={PREVIEW_NOW}
                 variant={variant}
                 showThumbnail={showThumbnail}
-                isScrapped={scrappedIds.includes(job.id)}
+                isScrapped={scrappedJobIds.includes(job.id)}
                 isExpanded={expandedIds.includes(job.id)}
                 onToggleScrap={() => handleToggleScrap(job.id)}
                 onToggleExpand={() => handleToggleExpand(job.id)}
