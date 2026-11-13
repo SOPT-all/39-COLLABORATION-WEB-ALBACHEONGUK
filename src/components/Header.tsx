@@ -5,6 +5,7 @@ import logo from '../assets/header/logo.png';
 import menuDivider from '../assets/header/menu-divider.svg';
 import menuIcon from '../assets/header/menu.svg';
 import resumeRegister from '../assets/text/button/resume-register.svg';
+import { useMockSessionStore } from '../stores/useMockSessionStore.ts';
 
 const ALBA_SITE = 'https://www.alba.co.kr';
 
@@ -19,11 +20,8 @@ const MENU_ITEMS = [
 const FOCUS_STYLE =
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alba-blue-600';
 
-type HeaderProps = {
-  isSignedIn: boolean;
-};
-
-function Header({ isSignedIn }: HeaderProps) {
+function Header() {
+  const isSignedIn = useMockSessionStore((state) => state.isSignedIn);
   const [accountAction, accountDestination] = isSignedIn
     ? ['로그아웃', '내 정보']
     : ['로그인', '회원가입'];
