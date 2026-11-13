@@ -13,6 +13,7 @@ import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
 import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
 import FilterTagsPreviewPage from './pages/setup/FilterTagsPreviewPage.tsx';
+import MainProfileCardPreviewPage from './pages/setup/MainProfileCardPreviewPage.tsx';
 import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
 import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage.tsx';
 import SalaryTextPreviewPage from './pages/setup/SalaryTextPreviewPage.tsx';
@@ -48,6 +49,9 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/filter-tags" element={<FilterTagsPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/main-profile-card" element={<MainProfileCardPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/popular-searches" element={<PopularSearchesPreviewPage />} />
