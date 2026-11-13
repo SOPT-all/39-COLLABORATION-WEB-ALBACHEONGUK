@@ -4,6 +4,7 @@ import SearchPage from './pages/search/SearchPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import SetupPage from './pages/setup/SetupPage.tsx';
 import Layout from './components/Layout.tsx';
+import DropdownPreviewPage from './pages/setup/DropdownPreviewPage.tsx';
 import ButtonPreviewPage from './pages/setup/ButtonPreviewPage.tsx';
 import InputPreviewPage from './pages/setup/InputPreviewPage.tsx';
 import CheckboxPreviewPage from './pages/setup/CheckboxPreviewPage.tsx';
@@ -26,6 +27,10 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="search" element={<SearchPage />} />
+
+        {canShowComponentPreview && (
+          <Route path="setup/dropdown" element={<DropdownPreviewPage />} />
+        )}
         {canShowComponentPreview && <Route path="setup/button" element={<ButtonPreviewPage />} />}
         {canShowComponentPreview && <Route path="setup/input" element={<InputPreviewPage />} />}
         {canShowComponentPreview && (
@@ -51,12 +56,13 @@ function App() {
         {canShowComponentPreview && (
           <Route path="setup/select-chip" element={<SelectChipPreviewPage />} />
         )}
+
         {canShowComponentPreview && (
           <Route path="setup/select-list-item" element={<SelectListItemPreviewPage />} />
         )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
-      {/* Query·Zustand 세팅 확인용 임시 화면*/}
+      {/* Query·Zustand 세팅 확인용 임시 화면 */}
       <Route path="setup" element={<SetupPage />} />
     </Routes>
   );
