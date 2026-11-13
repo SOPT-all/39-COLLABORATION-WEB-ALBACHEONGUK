@@ -12,6 +12,7 @@ import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
 import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
 import ResumeSelectorPreviewPage from './pages/setup/ResumeSelectorPreviewPage.tsx';
+import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
 import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage.tsx';
 import SalaryTextPreviewPage from './pages/setup/SalaryTextPreviewPage.tsx';
 import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
@@ -50,6 +51,9 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/select-chip" element={<SelectChipPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/select-list-item" element={<SelectListItemPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/resume-selector" element={<ResumeSelectorPreviewPage />} />
