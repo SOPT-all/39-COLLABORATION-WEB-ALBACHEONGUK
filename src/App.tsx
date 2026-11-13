@@ -16,6 +16,7 @@ import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.t
 import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage.tsx';
 import SalaryTextPreviewPage from './pages/setup/SalaryTextPreviewPage.tsx';
 import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
+import SearchBarPreviewPage from './pages/setup/SearchBarPreviewPage.tsx';
 import SelectChipPreviewPage from './pages/setup/SelectChipPreviewPage.tsx';
 
 const canShowComponentPreview =
@@ -52,6 +53,9 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/scrap-button" element={<ScrapButtonPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/search-bar" element={<SearchBarPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/select-chip" element={<SelectChipPreviewPage />} />
