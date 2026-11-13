@@ -22,10 +22,12 @@ type FilterPreviewProps = {
   icon: string;
   appliedIcon: string;
   children: ReactNode;
+  width?: number;
 };
 
-function FilterPreview({ title, label, icon, appliedIcon, children }: FilterPreviewProps) {
+function FilterPreview({ title, label, icon, appliedIcon, children, width }: FilterPreviewProps) {
   const [isApplied, setIsApplied] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <section className="flex flex-col items-start gap-4">
@@ -38,9 +40,24 @@ function FilterPreview({ title, label, icon, appliedIcon, children }: FilterPrev
         />
         적용된 버튼 스타일 확인 (실제 필터 적용 아님)
       </label>
-      <Dropdown label={label} icon={icon} appliedIcon={appliedIcon} isApplied={isApplied}>
+      <Dropdown
+        label={label}
+        icon={icon}
+        appliedIcon={appliedIcon}
+        isApplied={isApplied}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        width={width}
+      >
         {children}
       </Dropdown>
+      <button
+        type="button"
+        onClick={() => setIsOpen(false)}
+        className="rounded border border-alba-gray-300 px-3 py-2"
+      >
+        닫기 확인
+      </button>
     </section>
   );
 }
@@ -63,7 +80,12 @@ function DropdownPreviewPage() {
           icon={regionOffIcon}
           appliedIcon={regionOnIcon}
         >
-          <DropdownRegionJob />
+          <DropdownRegionJob
+            leftTitle="시·도"
+            rightTitle="구·군"
+            leftContent={<div className="p-3">왼쪽 목록 자리</div>}
+            rightContent={<div className="p-3">오른쪽 목록 자리</div>}
+          />
         </FilterPreview>
 
         <FilterPreview
@@ -71,6 +93,8 @@ function DropdownPreviewPage() {
           label="근무시간"
           icon={periodOffIcon}
           appliedIcon={periodOnIcon}
+          //실행 확인을 위한 조건
+          width={194}
         >
           <DropdownPeriod />
         </FilterPreview>

@@ -9,6 +9,9 @@ type DropdownProps = {
   appliedIcon?: string;
   isApplied?: boolean;
   trigger?: ReactNode;
+  width?: number;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 function Dropdown({
@@ -18,9 +21,22 @@ function Dropdown({
   appliedIcon,
   isApplied = false,
   trigger,
+  width = 200,
+  open,
+  onOpenChange,
 }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  const isOpen = open ?? internalOpen;
+
+  function changeOpen(nextOpen: boolean) {
+    if (open === undefined) {
+      setInternalOpen(nextOpen);
+    }
+
+    onOpenChange?.(nextOpen);
+  }
 
   useEffect(() => {
     if (!isOpen) return;
@@ -29,7 +45,11 @@ function Dropdown({
       const target = event.target;
 
       if (target instanceof Node && dropdownRef.current && !dropdownRef.current.contains(target)) {
-        setIsOpen(false);
+        if (open === undefined) {
+          setInternalOpen(false);
+        }
+
+        onOpenChange?.(false);
       }
     }
 
@@ -38,15 +58,16 @@ function Dropdown({
     return () => {
       document.removeEventListener('pointerdown', handleOutsideClick);
     };
-  }, [isOpen]);
+  }, [isOpen, open, onOpenChange]);
 
   return (
     <div ref={dropdownRef}>
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => changeOpen(!isOpen)}
         aria-expanded={isOpen}
-        className={`flex items-center gap-[8px] w-[200px] pr-[6px] pl-[12px] py-[12px] bg-alba-white rounded-[8px] border ${!isApplied ? 'hover:bg-alba-gray-200' : ''}
+        style={{ width }}
+        className={`flex items-center gap-[8px] pr-[6px] pl-[12px] py-[12px] bg-alba-white rounded-[8px] border ${!isApplied ? 'hover:bg-alba-gray-200' : ''}
         ${
           isApplied
             ? 'border-alba-yellow-700'
