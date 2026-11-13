@@ -31,10 +31,6 @@ function SalaryTextPreviewPage() {
                 <SalaryText {...example} layout={layout} />
               </li>
             ))}
-            <li className={boxClass}>
-              <p className="text-caption-12b text-alba-gray-500 mb-1">마감 공고</p>
-              <SalaryText salaryType="시급" salaryText="10,500" layout={layout} isClosed />
-            </li>
           </ul>
         </div>
       ))}
