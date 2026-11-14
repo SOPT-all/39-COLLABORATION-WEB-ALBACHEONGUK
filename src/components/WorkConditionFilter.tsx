@@ -21,6 +21,19 @@ function WorkConditionFilter() {
     workDays: workDays.includes(workDaysFromUrl) ? workDaysFromUrl : '전체',
   };
 
+  const selectedLabels = [
+    ...(appliedCondition.period !== '전체' ? [appliedCondition.period] : []),
+    ...appliedCondition.days,
+    ...(appliedCondition.workDays !== '전체' ? [appliedCondition.workDays] : []),
+  ];
+
+  const buttonLabel =
+    selectedLabels.length === 0
+      ? '근무시간'
+      : selectedLabels.length === 1
+        ? selectedLabels[0]
+        : `${selectedLabels[0]} 외 ${selectedLabels.length - 1}`;
+
   function handleCancel() {
     setIsOpen(false);
   }
@@ -54,7 +67,7 @@ function WorkConditionFilter() {
 
   return (
     <Dropdown
-      label="근무시간"
+      label={buttonLabel}
       icon={periodOffIcon}
       open={isOpen}
       appliedIcon={periodOnIcon}
