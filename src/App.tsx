@@ -13,10 +13,12 @@ import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
 import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
 import ClosedBadgePreviewPage from './pages/setup/ClosedBadgePreviewPage.tsx';
+import FilterTagsPreviewPage from './pages/setup/FilterTagsPreviewPage.tsx';
 import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
 import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage.tsx';
 import SalaryTextPreviewPage from './pages/setup/SalaryTextPreviewPage.tsx';
 import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
+import SearchBarPreviewPage from './pages/setup/SearchBarPreviewPage.tsx';
 import SelectChipPreviewPage from './pages/setup/SelectChipPreviewPage.tsx';
 
 const canShowComponentPreview =
@@ -47,6 +49,7 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/closed-badge" element={<ClosedBadgePreviewPage />} />
+          <Route path="setup/filter-tags" element={<FilterTagsPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/popular-searches" element={<PopularSearchesPreviewPage />} />
@@ -56,6 +59,9 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/scrap-button" element={<ScrapButtonPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/search-bar" element={<SearchBarPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/select-chip" element={<SelectChipPreviewPage />} />
