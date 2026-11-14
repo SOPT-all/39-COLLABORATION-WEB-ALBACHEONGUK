@@ -24,10 +24,11 @@ function RegionFilter() {
       ? [...REGIONS[validSido]]
       : REGIONS[validSido].filter((gugun) => appliedGugunParams.includes(gugun))
     : [];
-  const isApplied = appliedGuguns.length > 0;
+    const isApplied = validSido !== null && (isAppliedAll || appliedGuguns.length > 0);
 
   const guguns = draftSido ? REGIONS[draftSido] : [];
-  const isAllChecked = guguns.length > 0 && draftGuguns.length === guguns.length;
+  const hasGuguns = guguns.length > 0;
+  const isAllChecked = hasGuguns ? draftGuguns.length === guguns.length : draftSido !== null;
 
   const getTriggerLabel = () => {
     if (!validSido || !isApplied) return '지역';
@@ -74,7 +75,7 @@ function RegionFilter() {
       next.delete(REGION_PARAM.SIDO);
       next.delete(REGION_PARAM.GUGUN);
 
-      if (draftSido && draftGuguns.length > 0) {
+      if (draftSido && (isAllChecked || draftGuguns.length > 0)) {
         next.set(REGION_PARAM.SIDO, draftSido);
 
         if (isAllChecked) {
@@ -121,7 +122,12 @@ function RegionFilter() {
             {draftSido && (
             <ul>
               <li className="px-[16px] py-[10px]">
-                <Checkbox label={ALL_GUGUN} checked={isAllChecked} onChange={handleAllChange} />
+                <Checkbox
+                  label={ALL_GUGUN}
+                  checked={isAllChecked}
+                  onChange={handleAllChange}
+                  disabled={!hasGuguns}
+                />
               </li>
               {guguns.map((gugun) => (
                 <li key={gugun} className="px-[16px] py-[10px]">
