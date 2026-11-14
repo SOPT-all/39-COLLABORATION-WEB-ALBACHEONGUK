@@ -48,8 +48,10 @@ function App() {
           <Route path="setup/job-card" element={<JobCardPreviewPage />} />
         )}
         {canShowComponentPreview && (
-          <Route path="setup/closed-badge" element={<ClosedBadgePreviewPage />} />
-          <Route path="setup/filter-tags" element={<FilterTagsPreviewPage />} />
+            <Route path="setup/closed-badge" element={<ClosedBadgePreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+            <Route path="setup/filter-tags" element={<FilterTagsPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/popular-searches" element={<PopularSearchesPreviewPage />} />
