@@ -24,7 +24,7 @@ function RegionFilter() {
       ? [...REGIONS[validSido]]
       : REGIONS[validSido].filter((gugun) => appliedGugunParams.includes(gugun))
     : [];
-    const isApplied = validSido !== null && (isAppliedAll || appliedGuguns.length > 0);
+  const isApplied = validSido !== null && (isAppliedAll || appliedGuguns.length > 0);
 
   const guguns = draftSido ? REGIONS[draftSido] : [];
   const hasGuguns = guguns.length > 0;
@@ -60,9 +60,7 @@ function RegionFilter() {
   };
 
   const handleGugunChange = (gugun: string, checked: boolean) => {
-    setDraftGuguns((prev) =>
-      checked ? [...prev, gugun] : prev.filter((item) => item !== gugun),
-    );
+    setDraftGuguns((prev) => (checked ? [...prev, gugun] : prev.filter((item) => item !== gugun)));
   };
 
   const handleCancel = () => {
@@ -120,26 +118,26 @@ function RegionFilter() {
         rightContent={
           <ul>
             {draftSido && (
-            <ul>
-              <li className="px-[16px] py-[10px]">
-                <Checkbox
-                  label={ALL_GUGUN}
-                  checked={isAllChecked}
-                  onChange={handleAllChange}
-                  disabled={!hasGuguns}
-                />
-              </li>
-              {guguns.map((gugun) => (
-                <li key={gugun} className="px-[16px] py-[10px]">
+              <ul>
+                <li className="px-[16px] py-[10px]">
                   <Checkbox
-                    label={gugun}
-                    checked={draftGuguns.includes(gugun)}
-                    onChange={(checked) => handleGugunChange(gugun, checked)}
+                    label={ALL_GUGUN}
+                    checked={isAllChecked}
+                    onChange={handleAllChange}
+                    disabled={!hasGuguns}
                   />
                 </li>
-              ))}
-            </ul>
-          )}
+                {guguns.map((gugun) => (
+                  <li key={gugun} className="px-[16px] py-[10px]">
+                    <Checkbox
+                      label={gugun}
+                      checked={draftGuguns.includes(gugun)}
+                      onChange={(checked) => handleGugunChange(gugun, checked)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
           </ul>
         }
         onCancel={handleCancel}

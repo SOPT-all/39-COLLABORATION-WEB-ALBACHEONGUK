@@ -2,8 +2,8 @@ import DropdownPanel from './DropdownPanel';
 import type { ReactNode } from 'react';
 import RectButton from '../RectButton';
 import TextImage from '../TextImage';
-import applyText from '../../assets/text/button/apply.svg'
-import cancelText from '../../assets/text/button/cancel.svg'
+import applyText from '../../assets/text/button/apply.svg';
+import cancelText from '../../assets/text/button/cancel.svg';
 
 type RegionColumnProps = {
   title: string;
