@@ -1,5 +1,9 @@
 import DropdownPanel from './DropdownPanel';
 import type { ReactNode } from 'react';
+import RectButton from '../RectButton';
+import TextImage from '../TextImage';
+import applyText from '../../assets/text/button/apply.svg';
+import cancelText from '../../assets/text/button/cancel.svg';
 
 type RegionColumnProps = {
   title: string;
@@ -11,6 +15,8 @@ type DropdownRegionJobProps = {
   rightTitle: string;
   leftContent: ReactNode;
   rightContent: ReactNode;
+  onCancel: () => void;
+  onApply: () => void;
 };
 
 function RegionColumn({ title, children }: RegionColumnProps) {
@@ -30,6 +36,8 @@ function DropdownRegionJob({
   rightTitle,
   leftContent,
   rightContent,
+  onCancel,
+  onApply,
 }: DropdownRegionJobProps) {
   return (
     <DropdownPanel variant="regionJob">
@@ -40,8 +48,17 @@ function DropdownRegionJob({
           <div className="py-[8px]">{rightContent}</div>
         </RegionColumn>
       </div>
-      <div className="h-[87px] shrink-0 border-t border-t-alba-gray-300 py-[20px]">
-        {/* 취소·적용 버튼을 넣을 자리 */}
+      <div className="flex h-[87px] shrink-0 justify-center gap-[8px] border-t border-t-alba-gray-300 py-[20px]">
+        <div className="w-[148px]">
+          <RectButton variant="secondary" isFullWidth onClick={onCancel}>
+            <TextImage src={cancelText} label="취소" width={29} height={24} />
+          </RectButton>
+        </div>
+        <div className="w-[148px]">
+          <RectButton variant="primary" isFullWidth onClick={onApply}>
+            <TextImage src={applyText} label="적용" width={29} height={24} />
+          </RectButton>
+        </div>
       </div>
     </DropdownPanel>
   );

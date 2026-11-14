@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
-
-import regionOffIcon from '../../assets/icons/region-off.svg';
-import regionOnIcon from '../../assets/icons/region-on.svg';
 import periodOffIcon from '../../assets/icons/period-off.svg';
 import periodOnIcon from '../../assets/icons/period_on.svg';
 import moneyOffIcon from '../../assets/icons/money-off.svg';
 import moneyOnIcon from '../../assets/icons/money-on.svg';
 import Dropdown from '../../components/Dropdown/Dropdown.tsx';
-import DropdownRegionJob from '../../components/Dropdown/DropdownRegionJob.tsx';
 import DropdownPeriod from '../../components/Dropdown/DropdownPeriod.tsx';
 import DropdownMoney from '../../components/Dropdown/DropdownMoney.tsx';
 import DropdownSelect from '../../components/Dropdown/DropdownSelect.tsx';
+import RegionFilter from '../../components/RegionFilter.tsx';
 
 const SORT_OPTIONS = ['정확도순', '최신순'];
 const PAGE_SIZE_OPTIONS = ['20개씩 보기', '30개씩 보기', '50개씩 보기'];
@@ -74,19 +71,10 @@ function DropdownPreviewPage() {
       </header>
 
       <div className="flex flex-wrap items-start gap-8">
-        <FilterPreview
-          title="지역 패널"
-          label="지역"
-          icon={regionOffIcon}
-          appliedIcon={regionOnIcon}
-        >
-          <DropdownRegionJob
-            leftTitle="시·도"
-            rightTitle="구·군"
-            leftContent={<div className="p-3">왼쪽 목록 자리</div>}
-            rightContent={<div className="p-3">오른쪽 목록 자리</div>}
-          />
-        </FilterPreview>
+        <section className="flex flex-col items-start gap-4">
+          <h2 className="text-title-18sb">지역 필터</h2>
+          <RegionFilter />
+        </section>
 
         <FilterPreview
           title="근무조건 패널"
