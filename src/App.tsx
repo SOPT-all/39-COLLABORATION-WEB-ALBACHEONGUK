@@ -14,6 +14,7 @@ import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
 import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
 import ClosedBadgePreviewPage from './pages/setup/ClosedBadgePreviewPage.tsx';
 import FilterTagsPreviewPage from './pages/setup/FilterTagsPreviewPage.tsx';
+import MainProfileCardPreviewPage from './pages/setup/MainProfileCardPreviewPage.tsx';
 import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
 import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage.tsx';
 import RecommendPreviewPage from './pages/setup/RecommendPreviewPage.tsx';
@@ -53,6 +54,9 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/filter-tags" element={<FilterTagsPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/main-profile-card" element={<MainProfileCardPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/popular-searches" element={<PopularSearchesPreviewPage />} />
