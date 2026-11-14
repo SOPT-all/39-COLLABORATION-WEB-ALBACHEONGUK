@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 
 import Dropdown from './Dropdown/Dropdown.tsx';
 import DropdownRegionJob from './Dropdown/DropdownRegionJob.tsx';
@@ -9,12 +10,35 @@ import regionOffIcon from '../assets/icons/region-off.svg';
 import regionOnIcon from '../assets/icons/region-on.svg';
 
 function RegionFilter() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [draftSido, setDraftSido] = useState<string | null>(null);
   const [draftGuguns, setDraftGuguns] = useState<string[]>([]);
 
+  const appliedSido = searchParams.get('sido');
+  const appliedGugunParams = searchParams.getAll('gugun');
+
   const guguns = draftSido ? REGIONS[draftSido] : [];
   const isAllChecked = guguns.length > 0 && draftGuguns.length === guguns.length;
+
+  const syncDraftFromUrl = () => {
+    const sido = appliedSido && REGIONS[appliedSido] ? appliedSido : null;
+    const sidoGuguns = sido ? REGIONS[sido] : [];
+
+    setDraftSido(sido);
+    setDraftGuguns(
+      appliedGugunParams.includes('전체')
+        ? [...sidoGuguns]
+        : appliedGugunParams.filter((gugun) => sidoGuguns.includes(gugun)),
+    );
+  };
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) {
+      syncDraftFromUrl();
+    }
+    setIsOpen(nextOpen);
+  };
 
   const handleSidoSelect = (sido: string) => {
     setDraftSido(sido);
@@ -36,6 +60,25 @@ function RegionFilter() {
   };
 
   const handleApply = () => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.delete('sido');
+      next.delete('gugun');
+
+      if (draftSido && draftGuguns.length > 0) {
+        next.set('sido', draftSido);
+
+        if (isAllChecked) {
+          next.append('gugun', '전체');
+        } else {
+          guguns
+            .filter((gugun) => draftGuguns.includes(gugun))
+            .forEach((gugun) => next.append('gugun', gugun));
+        }
+      }
+
+      return next;
+    });
     setIsOpen(false);
   };
 
@@ -45,7 +88,7 @@ function RegionFilter() {
       icon={regionOffIcon}
       appliedIcon={regionOnIcon}
       open={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={handleOpenChange}
     >
       <DropdownRegionJob
         leftTitle="시·도"
