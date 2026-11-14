@@ -17,20 +17,29 @@ function RegionFilter() {
 
   const appliedSido = searchParams.get(REGION_PARAM.SIDO);
   const appliedGugunParams = searchParams.getAll(REGION_PARAM.GUGUN);
+  const validSido = appliedSido && REGIONS[appliedSido] ? appliedSido : null;
+  const isAppliedAll = appliedGugunParams.includes(ALL_GUGUN);
+  const appliedGuguns = validSido
+    ? isAppliedAll
+      ? [...REGIONS[validSido]]
+      : REGIONS[validSido].filter((gugun) => appliedGugunParams.includes(gugun))
+    : [];
+  const isApplied = appliedGuguns.length > 0;
 
   const guguns = draftSido ? REGIONS[draftSido] : [];
   const isAllChecked = guguns.length > 0 && draftGuguns.length === guguns.length;
 
-  const syncDraftFromUrl = () => {
-    const sido = appliedSido && REGIONS[appliedSido] ? appliedSido : null;
-    const sidoGuguns = sido ? REGIONS[sido] : [];
+  const getTriggerLabel = () => {
+    if (!validSido || !isApplied) return '지역';
+    if (isAppliedAll) return `${validSido} ${ALL_GUGUN}`;
 
-    setDraftSido(sido);
-    setDraftGuguns(
-      appliedGugunParams.includes(ALL_GUGUN)
-        ? [...sidoGuguns]
-        : appliedGugunParams.filter((gugun) => sidoGuguns.includes(gugun)),
-    );
+    const [first, ...rest] = appliedGuguns;
+    return rest.length > 0 ? `${first} 외 ${rest.length}` : first;
+  };
+
+  const syncDraftFromUrl = () => {
+    setDraftSido(validSido);
+    setDraftGuguns(appliedGuguns);
   };
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -84,9 +93,10 @@ function RegionFilter() {
 
   return (
     <Dropdown
-      label="지역"
+      label={getTriggerLabel()}
       icon={regionOffIcon}
       appliedIcon={regionOnIcon}
+      isApplied={isApplied}
       open={isOpen}
       onOpenChange={handleOpenChange}
     >
@@ -111,7 +121,7 @@ function RegionFilter() {
             {draftSido && (
             <ul>
               <li className="px-[16px] py-[10px]">
-                <Checkbox label checked={isAllChecked} onChange={handleAllChange} />
+                <Checkbox label={ALL_GUGUN} checked={isAllChecked} onChange={handleAllChange} />
               </li>
               {guguns.map((gugun) => (
                 <li key={gugun} className="px-[16px] py-[10px]">
