@@ -5,6 +5,7 @@ import RectButton from '../RectButton';
 import TextImage from '../TextImage';
 import applyText from '../../assets/text/button/apply.svg';
 import cancelText from '../../assets/text/button/cancel.svg';
+import { PAY_TYPES } from '../../data/payTypes';
 
 type DropdownMoneyProps = {
   appliedPay: string;
@@ -14,12 +15,11 @@ type DropdownMoneyProps = {
 
 function DropdownMoney({ appliedPay, onCancel, onApply }: DropdownMoneyProps) {
   const [draftPay, setDraftPay] = useState(appliedPay);
-  const payTypes = ['전체', '건별', '시급', '일급', '주급', '월급', '연봉'];
 
   return (
     <DropdownPanel variant="money">
       <div className="grid grid-cols-2 p-[12px]">
-        {payTypes.map((pay) => (
+        {PAY_TYPES.map((pay) => (
           <div
             key={pay}
             className={`flex items-center py-[10px] px-[8px]
