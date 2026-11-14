@@ -11,7 +11,7 @@ type RadioProps = {
 
 function Radio({ checked, onChange, label, name, disabled = false }: RadioProps) {
   return (
-    <label className="inline-flex cursor-pointer items-center gap-2 has-[:disabled]:cursor-not-allowed">
+    <label className="relative inline-flex cursor-pointer items-center gap-2 has-[:disabled]:cursor-not-allowed">
       <input
         type="radio"
         name={name}

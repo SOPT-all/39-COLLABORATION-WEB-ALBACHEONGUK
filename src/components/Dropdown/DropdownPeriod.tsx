@@ -1,12 +1,30 @@
+import { useState } from 'react';
+import Radio from '../Radio';
 import DropdownPanel from './DropdownPanel';
-import radioIcon from '../../assets/icons/radio-off.svg';
-import checkboxIcon from '../../assets/icons/checkbox-off.svg';
 import type { ReactNode } from 'react';
+import Checkbox from '../Checkbox';
+import RectButton from '../RectButton';
+import TextImage from '../TextImage';
+import cancelText from '../../assets/text/button/cancel.svg';
+import applyText from '../../assets/text/button/apply.svg';
+import { periods, days, workDays } from '../../data/workConditionOptions';
 
 type FilterSectionProps = {
   title: string;
   children: ReactNode;
   isFirst?: boolean;
+};
+
+export type WorkCondition = {
+  period: string;
+  days: string[];
+  workDays: string;
+};
+
+type DropdownPeriodProps = {
+  appliedCondition: WorkCondition;
+  onCancel: () => void;
+  onApply: (condition: WorkCondition) => void;
 };
 
 function FilterSection({ title, children, isFirst = false }: FilterSectionProps) {
@@ -25,21 +43,22 @@ function FilterSection({ title, children, isFirst = false }: FilterSectionProps)
   );
 }
 
-function DropdownPeriod() {
-  const periods = [
-    '전체',
-    '1일',
-    '1주일이하',
-    '1주일~1개월',
-    '1개월~3개월',
-    '3개월~6개월',
-    '6개월~1년',
-    '1년이상',
-  ];
+function DropdownPeriod({ appliedCondition, onCancel, onApply }: DropdownPeriodProps) {
+  const [draftPeriod, setDraftPeriod] = useState(appliedCondition.period);
+  const [draftWorkDays, setDraftWorkDays] = useState(appliedCondition.workDays);
+  const [draftDays, setDraftDays] = useState<string[]>(appliedCondition.days);
 
-  const days = ['전체', '월', '화', '수', '목', '금', '토', '일'];
-
-  const workDays = ['전체', '주6일', '주5일', '주4일', '주3일', '주2일', '주1일'];
+  function handleDayChange(day: string, checked: boolean) {
+    if (day === '전체') {
+      setDraftDays([]);
+      return;
+    }
+    if (checked) {
+      setDraftDays((prev) => [...prev, day]);
+    } else {
+      setDraftDays((prev) => prev.filter((selectedDay) => selectedDay !== day));
+    }
+  }
 
   return (
     <DropdownPanel variant="period">
@@ -47,9 +66,12 @@ function DropdownPeriod() {
         <FilterSection title="근무기간" isFirst>
           {periods.map((period) => (
             <div key={period} className="flex items-center py-[10px] px-[8px] gap-[8px]">
-              {/* 근무기간 라디오 컴포넌트 */}
-              <img src={radioIcon} alt="" className="size-[24px] shrink-0" />
-              <span className="text-body-16r">{period}</span>
+              <Radio
+                label={period}
+                name="work-period"
+                checked={draftPeriod === period}
+                onChange={() => setDraftPeriod(period)}
+              />
             </div>
           ))}
         </FilterSection>
@@ -57,8 +79,11 @@ function DropdownPeriod() {
         <FilterSection title="근무요일">
           {days.map((day) => (
             <div key={day} className="flex items-center py-[10px] px-[8px] gap-[8px]">
-              <img src={checkboxIcon} alt="" className="size-[24px] shrink-0" />
-              <span className="text-body-16r">{day}</span>
+              <Checkbox
+                label={day}
+                checked={day === '전체' ? draftDays.length === 0 : draftDays.includes(day)}
+                onChange={(checked) => handleDayChange(day, checked)}
+              />
             </div>
           ))}
         </FilterSection>
@@ -71,15 +96,39 @@ function DropdownPeriod() {
                 workday === '전체' ? 'col-span-2' : ''
               }`}
             >
-              <img src={radioIcon} alt="" className="size-[24px] shrink-0" />
-              <span className="text-body-16r">{workday}</span>
+              <Radio
+                label={workday}
+                name="work-days"
+                checked={draftWorkDays === workday}
+                onChange={() => setDraftWorkDays(workday)}
+              />
             </div>
           ))}
         </FilterSection>
       </div>
 
-      <div className="h-[87px] shrink-0 py-[20px] border-t border-t-alba-gray-300">
-        {/* 취소·적용 버튼 */}
+      <div className="flex items-center justify-center gap-[4px] h-[87px] shrink-0 py-[20px] border-t border-t-alba-gray-300">
+        <div className="w-[148px]">
+          <RectButton variant="secondary" isFullWidth onClick={onCancel}>
+            <TextImage src={cancelText} label="취소" width={29} height={24} />
+          </RectButton>
+        </div>
+
+        <div className="w-[148px]">
+          <RectButton
+            variant="primary"
+            isFullWidth
+            onClick={() =>
+              onApply({
+                period: draftPeriod,
+                days: draftDays,
+                workDays: draftWorkDays,
+              })
+            }
+          >
+            <TextImage src={applyText} label="적용" width={29} height={24} />
+          </RectButton>
+        </div>
       </div>
     </DropdownPanel>
   );
