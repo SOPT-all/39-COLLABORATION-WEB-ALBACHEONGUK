@@ -12,6 +12,7 @@ import RadioPreviewPage from './pages/setup/RadioPreviewPage.tsx';
 import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
 import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
 import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
+import ResumeSelectorPreviewPage from './pages/setup/ResumeSelectorPreviewPage.tsx';
 import ClosedBadgePreviewPage from './pages/setup/ClosedBadgePreviewPage.tsx';
 import FilterTagsPreviewPage from './pages/setup/FilterTagsPreviewPage.tsx';
 import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
@@ -71,6 +72,9 @@ function App() {
 
         {canShowComponentPreview && (
           <Route path="setup/select-list-item" element={<SelectListItemPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/resume-selector" element={<ResumeSelectorPreviewPage />} />
         )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
