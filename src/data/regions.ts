@@ -4,3 +4,10 @@ export const REGIONS: Record<string, string[]> = {
 };
 
 export const SIDO_LIST = Object.keys(REGIONS);
+
+export const REGION_PARAM = {
+  SIDO: 'sido',
+  GUGUN: 'gugun',
+} as const;
+
+export const ALL_GUGUN = '전체';

@@ -5,7 +5,7 @@ import Dropdown from './Dropdown/Dropdown.tsx';
 import DropdownRegionJob from './Dropdown/DropdownRegionJob.tsx';
 import SelectListItem from './SelectListItem.tsx';
 import Checkbox from './Checkbox.tsx';
-import { REGIONS, SIDO_LIST } from '../data/regions.ts';
+import { ALL_GUGUN, REGION_PARAM, REGIONS, SIDO_LIST } from '../data/regions.ts';
 import regionOffIcon from '../assets/icons/region-off.svg';
 import regionOnIcon from '../assets/icons/region-on.svg';
 
@@ -15,8 +15,8 @@ function RegionFilter() {
   const [draftSido, setDraftSido] = useState<string | null>(null);
   const [draftGuguns, setDraftGuguns] = useState<string[]>([]);
 
-  const appliedSido = searchParams.get('sido');
-  const appliedGugunParams = searchParams.getAll('gugun');
+  const appliedSido = searchParams.get(REGION_PARAM.SIDO);
+  const appliedGugunParams = searchParams.getAll(REGION_PARAM.GUGUN);
 
   const guguns = draftSido ? REGIONS[draftSido] : [];
   const isAllChecked = guguns.length > 0 && draftGuguns.length === guguns.length;
@@ -27,7 +27,7 @@ function RegionFilter() {
 
     setDraftSido(sido);
     setDraftGuguns(
-      appliedGugunParams.includes('전체')
+      appliedGugunParams.includes(ALL_GUGUN)
         ? [...sidoGuguns]
         : appliedGugunParams.filter((gugun) => sidoGuguns.includes(gugun)),
     );
@@ -62,18 +62,18 @@ function RegionFilter() {
   const handleApply = () => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
-      next.delete('sido');
-      next.delete('gugun');
+      next.delete(REGION_PARAM.SIDO);
+      next.delete(REGION_PARAM.GUGUN);
 
       if (draftSido && draftGuguns.length > 0) {
-        next.set('sido', draftSido);
+        next.set(REGION_PARAM.SIDO, draftSido);
 
         if (isAllChecked) {
-          next.append('gugun', '전체');
+          next.append(REGION_PARAM.GUGUN, ALL_GUGUN);
         } else {
           guguns
             .filter((gugun) => draftGuguns.includes(gugun))
-            .forEach((gugun) => next.append('gugun', gugun));
+            .forEach((gugun) => next.append(REGION_PARAM.GUGUN, gugun));
         }
       }
 
@@ -111,7 +111,7 @@ function RegionFilter() {
             {draftSido && (
             <ul>
               <li className="px-[16px] py-[10px]">
-                <Checkbox label="전체" checked={isAllChecked} onChange={handleAllChange} />
+                <Checkbox label checked={isAllChecked} onChange={handleAllChange} />
               </li>
               {guguns.map((gugun) => (
                 <li key={gugun} className="px-[16px] py-[10px]">
