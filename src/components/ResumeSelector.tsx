@@ -28,7 +28,9 @@ function ResumeSelector({ resumes, selectedResumeId }: ResumeSelectorProps) {
           <TextImage src={myResumeText} label="내 이력서" width={62} height={24} />
         </div>
         <div className="flex items-center">
-          <p className="font-pretendard text-body-14r text-alba-gray-600">{selectedResume?.title}</p>
+          <p className="font-pretendard text-body-14r text-alba-gray-600">
+            {selectedResume?.title}
+          </p>
           <span aria-hidden="true" className="size-6" />
         </div>
       </div>
