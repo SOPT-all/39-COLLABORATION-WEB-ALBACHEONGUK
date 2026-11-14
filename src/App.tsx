@@ -16,6 +16,7 @@ import ClosedBadgePreviewPage from './pages/setup/ClosedBadgePreviewPage.tsx';
 import FilterTagsPreviewPage from './pages/setup/FilterTagsPreviewPage.tsx';
 import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
 import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage.tsx';
+import RecommendPreviewPage from './pages/setup/RecommendPreviewPage.tsx';
 import SalaryTextPreviewPage from './pages/setup/SalaryTextPreviewPage.tsx';
 import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
 import SearchBarPreviewPage from './pages/setup/SearchBarPreviewPage.tsx';
@@ -68,7 +69,9 @@ function App() {
         {canShowComponentPreview && (
           <Route path="setup/select-chip" element={<SelectChipPreviewPage />} />
         )}
-
+        {canShowComponentPreview && (
+          <Route path="setup/recommend" element={<RecommendPreviewPage />} />
+        )}
         {canShowComponentPreview && (
           <Route path="setup/select-list-item" element={<SelectListItemPreviewPage />} />
         )}
