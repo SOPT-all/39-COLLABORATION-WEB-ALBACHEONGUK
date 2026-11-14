@@ -28,12 +28,12 @@ function ResumeSelector({ resumes, selectedResumeId }: ResumeSelectorProps) {
           <TextImage src={myResumeText} label="내 이력서" width={62} height={24} />
         </div>
         <div className="flex items-center">
-          <p className="font-pretendard text-body-14r text-alba-gray-400">{selectedResume?.title}</p>
+          <p className="font-pretendard text-body-14r text-alba-gray-600">{selectedResume?.title}</p>
           <span aria-hidden="true" className="size-6" />
         </div>
       </div>
       <p className="flex items-center gap-1 font-pretendard text-body-14r">
-        <span className="text-alba-gray-400">희망 근무지역</span>
+        <span className="text-alba-gray-600">희망 근무지역</span>
         <span className="text-alba-black">{selectedResume?.desiredRegion}</span>
       </p>
     </section>
