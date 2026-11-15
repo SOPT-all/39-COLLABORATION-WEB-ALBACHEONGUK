@@ -48,7 +48,7 @@ function DropdownRegionJob({
           <div className="py-[8px]">{rightContent}</div>
         </RegionColumn>
       </div>
-      <div className="flex h-[87px] shrink-0 justify-center gap-[8px] border-t border-t-alba-gray-300 py-[20px]">
+      <div className="flex h-[87px] shrink-0 justify-center gap-[4px] border-t border-t-alba-gray-300 py-[20px]">
         <div className="w-[148px]">
           <RectButton variant="secondary" isFullWidth onClick={onCancel}>
             <TextImage src={cancelText} label="취소" width={29} height={24} />
