@@ -21,6 +21,7 @@ import RecommendPreviewPage from './pages/setup/RecommendPreviewPage.tsx';
 import SalaryTextPreviewPage from './pages/setup/SalaryTextPreviewPage.tsx';
 import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
 import SearchBarPreviewPage from './pages/setup/SearchBarPreviewPage.tsx';
+import RecentSearchesPreviewPage from './pages/setup/RecentSearchesPreviewPage.tsx';
 import SelectChipPreviewPage from './pages/setup/SelectChipPreviewPage.tsx';
 import HeaderPreviewPage from './pages/setup/HeaderPreviewPage.tsx';
 
@@ -70,6 +71,9 @@ function App() {
         )}
         {canShowComponentPreview && (
           <Route path="setup/search-bar" element={<SearchBarPreviewPage />} />
+        )}
+        {canShowComponentPreview && (
+          <Route path="setup/recent-searches" element={<RecentSearchesPreviewPage />} />
         )}
         {canShowComponentPreview && (
           <Route path="setup/select-chip" element={<SelectChipPreviewPage />} />
