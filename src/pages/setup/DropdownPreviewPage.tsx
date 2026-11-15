@@ -1,63 +1,11 @@
-import { useState } from 'react';
-import type { ReactNode } from 'react';
-
-import regionOffIcon from '../../assets/icons/region-off.svg';
-import regionOnIcon from '../../assets/icons/region-on.svg';
-import Dropdown from '../../components/Dropdown/Dropdown.tsx';
-import DropdownRegionJob from '../../components/Dropdown/DropdownRegionJob.tsx';
 import DropdownSelect from '../../components/Dropdown/DropdownSelect.tsx';
 import JobCategoryFilter from '../../components/JobCategoryFilter';
 import WorkConditionFilter from '../../components/WorkConditionFilter';
+import RegionFilter from '../../components/RegionFilter.tsx';
 import MoneyFilter from '../../components/Dropdown/MoneyFilter';
 
 const SORT_OPTIONS = ['정확도순', '최신순'];
 const PAGE_SIZE_OPTIONS = ['20개씩 보기', '30개씩 보기', '50개씩 보기'];
-
-type FilterPreviewProps = {
-  title: string;
-  label: string;
-  icon: string;
-  appliedIcon: string;
-  children: ReactNode | ((close: () => void) => ReactNode);
-  width?: number;
-};
-
-function FilterPreview({ title, label, icon, appliedIcon, children, width }: FilterPreviewProps) {
-  const [isApplied, setIsApplied] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <section className="flex flex-col items-start gap-4">
-      <h2 className="text-title-18sb">{title}</h2>
-      <label className="flex items-center gap-2 text-body-14r">
-        <input
-          type="checkbox"
-          checked={isApplied}
-          onChange={(event) => setIsApplied(event.target.checked)}
-        />
-        적용된 버튼 스타일 확인 (실제 필터 적용 아님)
-      </label>
-      <Dropdown
-        label={label}
-        icon={icon}
-        appliedIcon={appliedIcon}
-        isApplied={isApplied}
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        width={width}
-      >
-        {typeof children === 'function' ? children(() => setIsOpen(false)) : children}
-      </Dropdown>
-      <button
-        type="button"
-        onClick={() => setIsOpen(false)}
-        className="rounded border border-alba-gray-300 px-3 py-2"
-      >
-        닫기 확인
-      </button>
-    </section>
-  );
-}
 
 function DropdownPreviewPage() {
   return (
@@ -70,23 +18,10 @@ function DropdownPreviewPage() {
       </header>
 
       <div className="flex flex-wrap items-start gap-8">
-        <FilterPreview
-          title="지역 패널"
-          label="지역"
-          icon={regionOffIcon}
-          appliedIcon={regionOnIcon}
-        >
-          {(close) => (
-            <DropdownRegionJob
-              onCancel={close}
-              onApply={close}
-              leftTitle="시·도"
-              rightTitle="구·군"
-              leftContent={<div className="p-3">왼쪽 목록 자리</div>}
-              rightContent={<div className="p-3">오른쪽 목록 자리</div>}
-            />
-          )}
-        </FilterPreview>
+        <section className="flex flex-col items-start gap-4">
+          <h2 className="text-title-18sb">지역 필터</h2>
+          <RegionFilter />
+        </section>
 
         <section className="flex flex-col items-start gap-4">
           <h2 className="text-title-18sb">업직종 패널</h2>
