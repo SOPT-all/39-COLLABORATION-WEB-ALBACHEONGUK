@@ -21,14 +21,14 @@ function RegionFilter() {
   const isAppliedAll = appliedGugunParams.includes(ALL_GUGUN);
   const appliedGuguns = validSido
     ? isAppliedAll
-      ? [...REGIONS[validSido]]
+      ? [ALL_GUGUN]
       : REGIONS[validSido].filter((gugun) => appliedGugunParams.includes(gugun))
     : [];
   const isApplied = validSido !== null && (isAppliedAll || appliedGuguns.length > 0);
 
   const guguns = draftSido ? REGIONS[draftSido] : [];
   const hasGuguns = guguns.length > 0;
-  const isAllChecked = hasGuguns ? draftGuguns.length === guguns.length : draftSido !== null;
+  const isAllChecked = hasGuguns ? draftGuguns.includes(ALL_GUGUN) : draftSido !== null;
 
   const getTriggerLabel = () => {
     if (!validSido || !isApplied) return '지역';
@@ -57,12 +57,15 @@ function RegionFilter() {
     setDraftGuguns([]);
   };
 
-  const handleAllChange = (checked: boolean) => {
-    setDraftGuguns(checked ? [...guguns] : []);
+   const handleAllChange = (checked: boolean) => {
+    setDraftGuguns(checked ? [ALL_GUGUN] : []);
   };
 
   const handleGugunChange = (gugun: string, checked: boolean) => {
-    setDraftGuguns((prev) => (checked ? [...prev, gugun] : prev.filter((item) => item !== gugun)));
+    setDraftGuguns((prev) => {
+      const rest = prev.filter((item) => item !== ALL_GUGUN);
+      return checked ? [...rest, gugun] : rest.filter((item) => item !== gugun);
+    });
   };
 
   const handleCancel = () => {
