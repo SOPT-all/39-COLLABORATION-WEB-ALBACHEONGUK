@@ -90,13 +90,13 @@ function DropdownPreviewPage() {
 
         <section className="flex flex-col items-start gap-4">
           <h2 className="text-title-18sb">업직종 패널</h2>
-  <JobCategoryFilter />
-</section>
+          <JobCategoryFilter />
+        </section>
 
-<section className="flex flex-col items-start gap-4">
-  <h2 className="text-title-18sb">근무조건 패널</h2>
-  <WorkConditionFilter />
-</section>
+        <section className="flex flex-col items-start gap-4">
+          <h2 className="text-title-18sb">근무조건 패널</h2>
+          <WorkConditionFilter />
+        </section>
 
         <section className="flex flex-col items-start gap-4">
           <h2 className="text-title-18sb">급여 패널</h2>
