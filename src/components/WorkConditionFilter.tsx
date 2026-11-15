@@ -27,9 +27,14 @@ function WorkConditionFilter() {
     ...(appliedCondition.workDays !== '전체' ? [appliedCondition.workDays] : []),
   ];
 
+  const hasAppliedCondition =
+    searchParams.has('period') || searchParams.has('days') || searchParams.has('workDays');
+
   const buttonLabel =
     selectedLabels.length === 0
-      ? '근무시간'
+      ? hasAppliedCondition
+        ? '전체'
+        : '근무시간'
       : selectedLabels.length === 1
         ? selectedLabels[0]
         : `${selectedLabels[0]} 외 ${selectedLabels.length - 1}`;
@@ -42,26 +47,23 @@ function WorkConditionFilter() {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
 
-      if (condition.period === '전체') {
-        next.delete('period');
-      } else {
-        next.set('period', condition.period);
-      }
+      next.set('period', condition.period === '전체' ? '' : condition.period);
 
       next.delete('days');
 
-      condition.days.forEach((day) => {
-        next.append('days', day);
-      });
-
-      if (condition.workDays === '전체') {
-        next.delete('workDays');
+      if (condition.days.length === 0) {
+        next.set('days', '');
       } else {
-        next.set('workDays', condition.workDays);
+        condition.days.forEach((day) => {
+          next.append('days', day);
+        });
       }
+
+      next.set('workDays', condition.workDays === '전체' ? '' : condition.workDays);
 
       return next;
     });
+
     setIsOpen(false);
   }
 
@@ -71,11 +73,7 @@ function WorkConditionFilter() {
       icon={periodOffIcon}
       open={isOpen}
       appliedIcon={periodOnIcon}
-      isApplied={
-        appliedCondition.period !== '전체' ||
-        appliedCondition.days.length > 0 ||
-        appliedCondition.workDays !== '전체'
-      }
+      isApplied={hasAppliedCondition}
       onOpenChange={setIsOpen}
     >
       <DropdownPeriod
