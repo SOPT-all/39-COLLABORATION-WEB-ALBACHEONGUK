@@ -6,6 +6,7 @@ import regionOnIcon from '../../assets/icons/region-on.svg';
 import Dropdown from '../../components/Dropdown/Dropdown.tsx';
 import DropdownRegionJob from '../../components/Dropdown/DropdownRegionJob.tsx';
 import DropdownSelect from '../../components/Dropdown/DropdownSelect.tsx';
+import JobCategoryFilter from '../../components/JobCategoryFilter';
 import WorkConditionFilter from '../../components/WorkConditionFilter';
 import MoneyFilter from '../../components/Dropdown/MoneyFilter';
 
@@ -17,7 +18,7 @@ type FilterPreviewProps = {
   label: string;
   icon: string;
   appliedIcon: string;
-  children: ReactNode;
+  children: ReactNode | ((close: () => void) => ReactNode);
   width?: number;
 };
 
@@ -45,7 +46,7 @@ function FilterPreview({ title, label, icon, appliedIcon, children, width }: Fil
         onOpenChange={setIsOpen}
         width={width}
       >
-        {children}
+        {typeof children === 'function' ? children(() => setIsOpen(false)) : children}
       </Dropdown>
       <button
         type="button"
@@ -64,8 +65,7 @@ function DropdownPreviewPage() {
       <header className="flex flex-col gap-2">
         <h1 className="text-display-24sb">드롭다운 확인</h1>
         <p className="text-body-14r">
-          버튼 열기·닫기, 화살표, hover·적용 스타일, 내부 스크롤을 확인합니다. 필터 내부 항목은 임시
-          표시이며 선택·취소·적용은 아직 연결하지 않았습니다.
+          업직종은 선택·취소·적용과 URL 저장을 확인합니다. 다른 필터 패널은 레이아웃 확인용입니다.
         </p>
       </header>
 
@@ -76,13 +76,22 @@ function DropdownPreviewPage() {
           icon={regionOffIcon}
           appliedIcon={regionOnIcon}
         >
-          <DropdownRegionJob
-            leftTitle="시·도"
-            rightTitle="구·군"
-            leftContent={<div className="p-3">왼쪽 목록 자리</div>}
-            rightContent={<div className="p-3">오른쪽 목록 자리</div>}
-          />
+          {(close) => (
+            <DropdownRegionJob
+              onCancel={close}
+              onApply={close}
+              leftTitle="시·도"
+              rightTitle="구·군"
+              leftContent={<div className="p-3">왼쪽 목록 자리</div>}
+              rightContent={<div className="p-3">오른쪽 목록 자리</div>}
+            />
+          )}
         </FilterPreview>
+
+        <section className="flex flex-col items-start gap-4">
+          <h2 className="text-title-18sb">업직종 패널</h2>
+          <JobCategoryFilter />
+        </section>
 
         <section className="flex flex-col items-start gap-4">
           <h2 className="text-title-18sb">근무조건 패널</h2>
