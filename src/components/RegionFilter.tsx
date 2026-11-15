@@ -57,7 +57,7 @@ function RegionFilter() {
     setDraftGuguns([]);
   };
 
-   const handleAllChange = (checked: boolean) => {
+  const handleAllChange = (checked: boolean) => {
     setDraftGuguns(checked ? [ALL_GUGUN] : []);
   };
 
