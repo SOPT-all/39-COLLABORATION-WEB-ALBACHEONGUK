@@ -2,13 +2,11 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import periodOffIcon from '../../assets/icons/period-off.svg';
 import periodOnIcon from '../../assets/icons/period_on.svg';
-import moneyOffIcon from '../../assets/icons/money-off.svg';
-import moneyOnIcon from '../../assets/icons/money-on.svg';
 import Dropdown from '../../components/Dropdown/Dropdown.tsx';
 import DropdownPeriod from '../../components/Dropdown/DropdownPeriod.tsx';
-import DropdownMoney from '../../components/Dropdown/DropdownMoney.tsx';
 import DropdownSelect from '../../components/Dropdown/DropdownSelect.tsx';
 import RegionFilter from '../../components/RegionFilter.tsx';
+import MoneyFilter from '../../components/Dropdown/MoneyFilter';
 
 const SORT_OPTIONS = ['정확도순', '최신순'];
 const PAGE_SIZE_OPTIONS = ['20개씩 보기', '30개씩 보기', '50개씩 보기'];
@@ -87,14 +85,10 @@ function DropdownPreviewPage() {
           <DropdownPeriod />
         </FilterPreview>
 
-        <FilterPreview
-          title="급여 패널"
-          label="급여조건"
-          icon={moneyOffIcon}
-          appliedIcon={moneyOnIcon}
-        >
-          <DropdownMoney />
-        </FilterPreview>
+        <section className="flex flex-col items-start gap-4">
+          <h2 className="text-title-18sb">급여 패널</h2>
+          <MoneyFilter />
+        </section>
       </div>
 
       <section className="flex flex-col gap-4">
