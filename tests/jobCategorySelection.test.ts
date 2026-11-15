@@ -3,7 +3,7 @@ import test from 'node:test';
 import { applyJobSelections, getSelectedJobGroups } from '../src/utils/jobCategorySelection.ts';
 
 test('다른 업직종의 세부 선택이 모두 URL에 저장되고 복원된다', () => {
-  const params = applyJobSelections(new URLSearchParams('keyword=알바'), [
+  const params = applyJobSelections(new URLSearchParams('keyword=알바'), '외식·음료', [
     '일반음식점',
     '백화점·면세점',
   ]);
@@ -20,7 +20,7 @@ test('기존 전체 URL을 복원한 뒤 다른 업직종 항목을 더해도 �
   const groups = getSelectedJobGroups(original);
   assert.equal(groups[0].selected.length, groups[0].options.length);
   const selected = [...groups[0].selected, '백화점·면세점'];
-  const restored = getSelectedJobGroups(applyJobSelections(original, selected));
+  const restored = getSelectedJobGroups(applyJobSelections(original, '외식·음료', selected));
   assert.deepEqual(
     restored.flatMap((group) => group.selected),
     selected,
@@ -28,13 +28,15 @@ test('기존 전체 URL을 복원한 뒤 다른 업직종 항목을 더해도 �
   assert.equal(restored[1].selected.length, 1);
 });
 
-test('선택 해제 시 해당 업직종만 제거하며 빈 선택은 필터를 지운다', () => {
-  const original = applyJobSelections(new URLSearchParams('keyword=알바'), [
+test('선택 해제 시 해당 업직종만 제거하며 전체 선택은 빈 값으로 키를 유지한다', () => {
+  const original = applyJobSelections(new URLSearchParams('keyword=알바'), '외식·음료', [
     '일반음식점',
     '백화점·면세점',
   ]);
-  const remaining = applyJobSelections(original, ['백화점·면세점']);
+  const remaining = applyJobSelections(original, '유통·판매', ['백화점·면세점']);
   assert.deepEqual(remaining.getAll('jobCategory'), ['유통·판매']);
   assert.deepEqual(getSelectedJobGroups(remaining)[0].selected, ['백화점·면세점']);
-  assert.equal(applyJobSelections(original, []).toString(), 'keyword=%EC%95%8C%EB%B0%94');
+  const cleared = applyJobSelections(original, '전체', []);
+  assert.equal(cleared.toString(), 'keyword=%EC%95%8C%EB%B0%94&jobCategory=&jobSubcategory=');
+  assert.deepEqual(getSelectedJobGroups(cleared), []);
 });
