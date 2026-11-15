@@ -27,14 +27,11 @@ function WorkConditionFilter() {
     ...(appliedCondition.workDays !== '전체' ? [appliedCondition.workDays] : []),
   ];
 
-  const hasAppliedCondition =
-    searchParams.has('period') || searchParams.has('days') || searchParams.has('workDays');
+  const hasAppliedCondition = selectedLabels.length > 0;
 
   const buttonLabel =
     selectedLabels.length === 0
-      ? hasAppliedCondition
-        ? '전체'
-        : '근무시간'
+      ? '근무시간'
       : selectedLabels.length === 1
         ? selectedLabels[0]
         : `${selectedLabels[0]} 외 ${selectedLabels.length - 1}`;
