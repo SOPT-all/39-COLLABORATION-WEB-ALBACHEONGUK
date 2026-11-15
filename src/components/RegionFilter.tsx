@@ -32,7 +32,9 @@ function RegionFilter() {
 
   const getTriggerLabel = () => {
     if (!validSido || !isApplied) return '지역';
-    if (isAppliedAll) return `${validSido} ${ALL_GUGUN}`;
+    if (isAppliedAll) {
+      return REGIONS[validSido].length === 0 ? validSido : `${validSido} ${ALL_GUGUN}`;
+    }
 
     const [first, ...rest] = appliedGuguns;
     return rest.length > 0 ? `${first} 외 ${rest.length}` : first;
