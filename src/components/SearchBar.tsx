@@ -1,4 +1,4 @@
-import { useRef, type FormEvent, type KeyboardEvent } from 'react';
+import { useRef, type FormEvent, type KeyboardEvent, type Ref } from 'react';
 import searchIcon from '../assets/icons/search-bar/search.svg';
 
 type SearchBarProps = {
@@ -8,6 +8,7 @@ type SearchBarProps = {
   hasSelectedFilters?: boolean;
   disabled?: boolean;
   ariaLabel?: string;
+  inputRef?: Ref<HTMLInputElement>;
 };
 
 // 입력 중인 값과 실제 검색한 조건은 부모 화면에서 구분해 관리합니다.
@@ -18,6 +19,7 @@ function SearchBar({
   hasSelectedFilters = false,
   disabled = false,
   ariaLabel = '공고 검색',
+  inputRef,
 }: SearchBarProps) {
   const isComposing = useRef(false);
   const canSearch = !disabled && (value.trim().length > 0 || hasSelectedFilters);
@@ -49,6 +51,7 @@ function SearchBar({
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <img src={searchIcon} alt="" className="shrink-0" />
         <input
+          ref={inputRef}
           type="text"
           aria-label="검색어"
           value={value}
