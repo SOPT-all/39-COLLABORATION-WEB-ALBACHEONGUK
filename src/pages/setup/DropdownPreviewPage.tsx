@@ -3,21 +3,10 @@ import type { ReactNode } from 'react';
 
 import regionOffIcon from '../../assets/icons/region-off.svg';
 import regionOnIcon from '../../assets/icons/region-on.svg';
-
-import moneyOffIcon from '../../assets/icons/money-off.svg';
-import moneyOnIcon from '../../assets/icons/money-on.svg';
 import Dropdown from '../../components/Dropdown/Dropdown.tsx';
 import DropdownRegionJob from '../../components/Dropdown/DropdownRegionJob.tsx';
-
-import DropdownMoney from '../../components/Dropdown/DropdownMoney.tsx';
 import DropdownSelect from '../../components/Dropdown/DropdownSelect.tsx';
 import WorkConditionFilter from '../../components/WorkConditionFilter';
-import periodOffIcon from '../../assets/icons/period-off.svg';
-import periodOnIcon from '../../assets/icons/period_on.svg';
-import Dropdown from '../../components/Dropdown/Dropdown.tsx';
-import DropdownRegionJob from '../../components/Dropdown/DropdownRegionJob.tsx';
-import DropdownPeriod from '../../components/Dropdown/DropdownPeriod.tsx';
-import DropdownSelect from '../../components/Dropdown/DropdownSelect.tsx';
 import MoneyFilter from '../../components/Dropdown/MoneyFilter';
 
 const SORT_OPTIONS = ['정확도순', '최신순'];
