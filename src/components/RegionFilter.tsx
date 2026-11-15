@@ -75,10 +75,10 @@ function RegionFilter() {
       next.delete(REGION_PARAM.SIDO);
       next.delete(REGION_PARAM.GUGUN);
 
-      if (draftSido && (isAllChecked || draftGuguns.length > 0)) {
+      if (draftSido) {
         next.set(REGION_PARAM.SIDO, draftSido);
 
-        if (isAllChecked) {
+        if (isAllChecked || draftGuguns.length === 0) {
           next.append(REGION_PARAM.GUGUN, ALL_GUGUN);
         } else {
           guguns
