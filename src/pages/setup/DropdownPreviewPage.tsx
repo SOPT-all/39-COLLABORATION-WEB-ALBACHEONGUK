@@ -3,12 +3,10 @@ import type { ReactNode } from 'react';
 
 import regionOffIcon from '../../assets/icons/region-off.svg';
 import regionOnIcon from '../../assets/icons/region-on.svg';
-import periodOffIcon from '../../assets/icons/period-off.svg';
-import periodOnIcon from '../../assets/icons/period_on.svg';
 import Dropdown from '../../components/Dropdown/Dropdown.tsx';
 import DropdownRegionJob from '../../components/Dropdown/DropdownRegionJob.tsx';
-import DropdownPeriod from '../../components/Dropdown/DropdownPeriod.tsx';
 import DropdownSelect from '../../components/Dropdown/DropdownSelect.tsx';
+import WorkConditionFilter from '../../components/WorkConditionFilter';
 import MoneyFilter from '../../components/Dropdown/MoneyFilter';
 
 const SORT_OPTIONS = ['정확도순', '최신순'];
@@ -86,16 +84,10 @@ function DropdownPreviewPage() {
           />
         </FilterPreview>
 
-        <FilterPreview
-          title="근무조건 패널"
-          label="근무시간"
-          icon={periodOffIcon}
-          appliedIcon={periodOnIcon}
-          //실행 확인을 위한 조건
-          width={194}
-        >
-          <DropdownPeriod />
-        </FilterPreview>
+        <section className="flex flex-col items-start gap-4">
+          <h2 className="text-title-18sb">근무조건 패널</h2>
+          <WorkConditionFilter />
+        </section>
 
         <section className="flex flex-col items-start gap-4">
           <h2 className="text-title-18sb">급여 패널</h2>
