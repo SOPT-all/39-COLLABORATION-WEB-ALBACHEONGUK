@@ -5,6 +5,7 @@ import chevronIcon from '../assets/icons/job-row/chevron.svg';
 import chevronClosedIcon from '../assets/icons/job-row/chevron-closed.svg';
 import separatorIcon from '../assets/icons/job-row/separator.svg';
 import { useKstNow } from '../hooks/useKstNow.ts';
+import ClosedBadge from './ClosedBadge.tsx';
 import SalaryText from './SalaryText.tsx';
 import ScrapButton from './ScrapButton.tsx';
 import { getJobDeadlineText } from '../utils/jobDeadline.ts';
@@ -162,9 +163,7 @@ function JobRow({
               aria-label={isClosed ? '마감된 공고' : `등록일 ${postedAtText}`}
             >
               {isClosed ? (
-                <span className="text-body-14b text-alba-closed-badge bg-alba-white rounded px-2 py-1">
-                  마감
-                </span>
+                <ClosedBadge />
               ) : (
                 <>
                   <span className="text-caption-12b">등록일</span>
