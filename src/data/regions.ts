@@ -1,4 +1,5 @@
 export const REGIONS: Record<string, string[]> = {
+  전체: [],
   서울: [
     '강남구',
     '강동구',
@@ -262,7 +263,6 @@ export const REGIONS: Record<string, string[]> = {
     '진안군',
   ],
   제주: ['서귀포시', '제주시'],
-  전국: [],
 };
 
 export const SIDO_LIST = Object.keys(REGIONS);
