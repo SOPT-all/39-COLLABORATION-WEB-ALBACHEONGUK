@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 
 import defaultThumbnail from '../assets/images/job-row/thumbnail-default.png';
 import { useKstNow } from '../hooks/useKstNow.ts';
@@ -18,16 +19,21 @@ export type JobCardData = {
 type JobCardProps = {
   job: JobCardData;
   referenceNow?: Date;
+  variant?: 'standard' | 'match';
+  action?: ReactNode;
 };
 
-function JobCard({ job, referenceNow }: JobCardProps) {
+function JobCard({ job, referenceNow, variant = 'standard', action }: JobCardProps) {
+  const isMatch = variant === 'match';
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
   const now = useKstNow(referenceNow);
   const postedAtText = getJobPostedAt(job.postedAt, now);
   const canShowImage = job.imageUrl && failedImageUrl !== job.imageUrl;
 
   return (
-    <article className="border-alba-gray-300 bg-alba-white hover:bg-alba-yellow-500 flex h-[376px] w-full flex-col rounded-[15px] border px-[18px] pt-5 pb-5 transition-colors hover:border-transparent hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]">
+    <article
+      className={`border-alba-gray-300 bg-alba-white flex w-full flex-col rounded-[15px] border py-5 ${isMatch ? 'h-[354px] px-5' : 'hover:bg-alba-yellow-500 h-[376px] px-[18px] transition-colors hover:border-transparent hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'}`}
+    >
       <div className="bg-alba-gray-200 flex h-[200px] w-full shrink-0 items-center justify-center overflow-hidden rounded-xl">
         {canShowImage ? (
           <img
@@ -48,10 +54,13 @@ function JobCard({ job, referenceNow }: JobCardProps) {
         )}
       </div>
 
-      <div className="mt-[25px] flex min-w-0 flex-col gap-0.5">
-        <h3 className="text-display-20sb text-alba-gray-800 truncate" title={job.title}>
-          {job.title}
-        </h3>
+      <div className={`flex min-w-0 flex-col gap-0.5 ${isMatch ? 'mt-4' : 'mt-[25px]'}`}>
+        <div className="flex min-w-0 items-center justify-between gap-2">
+          <h3 className="text-display-20sb text-alba-gray-800 truncate" title={job.title}>
+            {job.title}
+          </h3>
+          {action}
+        </div>
         <p className="text-body-16r text-alba-gray-500 truncate" title={job.address}>
           {job.address}
         </p>
