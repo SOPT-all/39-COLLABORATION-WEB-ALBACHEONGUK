@@ -57,7 +57,10 @@ function RecommendSection({
 
       {chips}
 
-      <ul className="flex gap-[22px] pb-5">
+      {jobs.length === 0 && (
+        <p className="text-body-16r text-alba-gray-600 pb-5">이 지역에 표시할 공고가 없어요.</p>
+      )}
+      <ul className="flex gap-[22px] overflow-x-auto pb-5">
         {jobs.map((job) => (
           <li key={job.id} className="w-[297px] shrink-0">
             <JobCard job={job} />

@@ -136,3 +136,91 @@ export const TARGET_RECOMMEND_JOBS: JobCardData[] = [
     imageUrl: targetDaisoImage,
   },
 ];
+
+// 메인 시스템 QA에 사용하는 서울·경기 공고 샘플입니다.
+export const REGION_RECOMMEND_MOCKS: Partial<Record<string, JobCardData[]>> = {
+  서울: [
+    {
+      id: '18',
+      title: '분식점 평일 매장 운영',
+      address: '서울 마포구 서교동',
+      salaryType: '월급',
+      salaryText: '2,450,000',
+      postedAt: '2026-11-13',
+      imageUrl:
+        'https://images.pexels.com/photos/38668374/pexels-photo-38668374.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+    },
+    {
+      id: '25',
+      title: '생활잡화 판매 요일 협의',
+      address: '서울 강남구 역삼동',
+      salaryType: '시급',
+      salaryText: '11,500',
+      postedAt: '2026-11-13',
+      imageUrl:
+        'https://images.pexels.com/photos/18135184/pexels-photo-18135184.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+    },
+    {
+      id: '1',
+      title: '성수 카페 평일 바리스타 모집',
+      address: '서울 성동구 성수동1가',
+      salaryType: '시급',
+      salaryText: '10,500',
+      postedAt: '2026-11-12',
+      imageUrl:
+        'https://images.pexels.com/photos/5864216/pexels-photo-5864216.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    },
+    {
+      id: '37',
+      title: '편의점 야간 계산 스태프',
+      address: '서울 마포구 서교동',
+      salaryType: '시급',
+      salaryText: '12,500',
+      postedAt: '2026-11-12',
+      imageUrl:
+        'https://images.pexels.com/photos/40726672/pexels-photo-40726672.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+    },
+  ],
+  경기: [
+    {
+      id: '11',
+      title: '제과 매장 계산 담당',
+      address: '경기 안양시 동안구 범계동',
+      salaryType: '시급',
+      salaryText: '10,800',
+      postedAt: '2026-11-13',
+      imageUrl:
+        'https://images.pexels.com/photos/36445005/pexels-photo-36445005.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    },
+    {
+      id: '32',
+      title: '재고 조사 주간 근무',
+      address: '경기 수원시 팔달구 인계동',
+      salaryType: '주급',
+      salaryText: '500,000',
+      postedAt: '2026-11-13',
+      imageUrl:
+        'https://images.pexels.com/photos/10697106/pexels-photo-10697106.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+    },
+    {
+      id: '39',
+      title: '편의점 심야 상품 진열',
+      address: '경기 안양시 동안구 범계동',
+      salaryType: '시급',
+      salaryText: '12,500',
+      postedAt: '2026-11-13',
+      imageUrl:
+        'https://images.pexels.com/photos/31320528/pexels-photo-31320528.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+    },
+    {
+      id: '9',
+      title: '베이커리 주말 포장 직원',
+      address: '경기 성남시 분당구 정자동',
+      salaryType: '시급',
+      salaryText: '11,500',
+      postedAt: '2026-11-12',
+      imageUrl:
+        'https://images.pexels.com/photos/40842630/pexels-photo-40842630.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+    },
+  ],
+};

@@ -5,7 +5,7 @@ import logo from '../assets/header/logo.png';
 import menuDivider from '../assets/header/menu-divider.svg';
 import menuIcon from '../assets/header/menu.svg';
 import resumeRegister from '../assets/text/button/resume-register.svg';
-import { useMockSessionStore } from '../stores/useMockSessionStore.ts';
+import { useQaResumeScenario } from '../hooks/useQaResumeScenario.ts';
 
 const ALBA_SITE = 'https://www.alba.co.kr';
 
@@ -21,8 +21,7 @@ const FOCUS_STYLE =
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alba-blue-600';
 
 function Header() {
-  const isSignedIn = useMockSessionStore((state) => state.isSignedIn);
-  const setSignedIn = useMockSessionStore((state) => state.setSignedIn);
+  const { isSignedIn, toggleSignIn } = useQaResumeScenario();
   const [accountAction, accountDestination] = isSignedIn
     ? ['로그아웃', '내 정보']
     : ['로그인', '회원가입'];
@@ -32,7 +31,7 @@ function Header() {
       <div className="text-caption-12r text-alba-gray-600 mx-auto flex h-[34px] w-[calc(100%-2rem)] max-w-[1260px] items-center justify-end">
         <button
           type="button"
-          onClick={() => setSignedIn(!isSignedIn)}
+          onClick={toggleSignIn}
           className={`cursor-pointer rounded-sm px-3 py-2 hover:underline ${FOCUS_STYLE}`}
         >
           {accountAction}
