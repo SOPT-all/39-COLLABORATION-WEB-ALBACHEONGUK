@@ -3,39 +3,34 @@ import DropdownRegionJob from './Dropdown/DropdownRegionJob';
 import SelectListItem from './SelectListItem';
 import { JOB_CATEGORIES, jobCategories } from '../data/jobCategoryOptions';
 import Checkbox from './Checkbox';
-import { useSearchParams } from 'react-router';
+import { useFilterParams } from '../hooks/useFilterParams.ts';
+import type { FilterParams } from '../hooks/useFilterParams.ts';
 import Dropdown from './Dropdown/Dropdown';
 import jobOffIcon from '../assets/icons/job-off.svg';
 import jobOnIcon from '../assets/icons/job-on.svg';
 import {
   applyJobSelections,
   getSelectedJobGroups,
-  CATEGORY_PARAM,
-  SUBCATEGORY_PARAM,
+  getCategoryOnlySelection,
 } from '../utils/jobCategorySelection';
 
-function JobCategoryFilter() {
+function JobCategoryFilter({
+  width,
+  overlay,
+  filterParams,
+}: { width?: number; overlay?: boolean; filterParams?: FilterParams } = {}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useFilterParams(filterParams);
   const [draftCategory, setDraftCategory] = useState('전체');
   const [draftSubcategories, setDraftSubcategories] = useState<string[]>([]);
 
   const appliedGroups = getSelectedJobGroups(searchParams);
   const appliedSubcategories = appliedGroups.flatMap((group) => group.selected);
 
-  const categoryFromUrl = searchParams.get(CATEGORY_PARAM);
-  const validCategory = JOB_CATEGORIES.find((category) => category.name === categoryFromUrl);
-
-  const isCategoryAllApplied =
-    validCategory !== undefined &&
-    searchParams.get(SUBCATEGORY_PARAM) === '' &&
-    appliedSubcategories.length === 0;
-
+  const categoryOnly = getCategoryOnlySelection(searchParams);
+  const isCategoryAllApplied = categoryOnly !== null;
   const isApplied = isCategoryAllApplied || appliedSubcategories.length > 0;
-
-  const appliedCategory = isCategoryAllApplied
-    ? validCategory!.name
-    : (appliedGroups[0]?.name ?? '전체');
+  const appliedCategory = categoryOnly ?? appliedGroups[0]?.name ?? '전체';
 
   const label = !isApplied
     ? '업직종'
@@ -76,6 +71,8 @@ function JobCategoryFilter() {
 
   return (
     <Dropdown
+      width={width}
+      overlay={overlay}
       label={label}
       icon={jobOffIcon}
       appliedIcon={jobOnIcon}

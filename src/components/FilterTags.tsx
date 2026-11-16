@@ -10,6 +10,7 @@ const FILTER_KIND_LABELS = {
   occupation: '업직종',
   duration: '근무기간',
   days: '근무요일',
+  workDays: '근무일수',
   pay: '급여',
 };
 

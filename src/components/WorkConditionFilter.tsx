@@ -3,13 +3,18 @@ import Dropdown from './Dropdown/Dropdown';
 import DropdownPeriod from './Dropdown/DropdownPeriod';
 import periodOffIcon from '../assets/icons/period-off.svg';
 import periodOnIcon from '../assets/icons/period_on.svg';
-import { useSearchParams } from 'react-router';
+import { useFilterParams } from '../hooks/useFilterParams.ts';
+import type { FilterParams } from '../hooks/useFilterParams.ts';
 import { readWorkCondition, writeWorkCondition } from '../utils/workConditionSelection.ts';
 import type { WorkCondition } from '../utils/workConditionSelection.ts';
 
-function WorkConditionFilter() {
+function WorkConditionFilter({
+  width,
+  overlay,
+  filterParams,
+}: { width?: number; overlay?: boolean; filterParams?: FilterParams } = {}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useFilterParams(filterParams);
 
   const appliedCondition = readWorkCondition(searchParams);
 
@@ -39,6 +44,8 @@ function WorkConditionFilter() {
 
   return (
     <Dropdown
+      width={width}
+      overlay={overlay}
       label={buttonLabel}
       icon={periodOffIcon}
       open={isOpen}

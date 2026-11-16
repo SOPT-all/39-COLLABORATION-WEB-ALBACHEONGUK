@@ -5,6 +5,7 @@ import checkIcon from '../../assets/icons/check.svg';
 type DropdownSelectProps = {
   options: string[];
   initialValue?: string;
+  value?: string;
   onChange: (value: string) => void;
   variant?: 'sort' | 'pageSize';
 };
@@ -12,12 +13,14 @@ type DropdownSelectProps = {
 function DropdownSelect({
   options,
   initialValue,
+  value,
   onChange,
   variant = 'sort',
 }: DropdownSelectProps) {
   const defaultValue = variant === 'pageSize' ? '20개씩 보기' : '정확도순';
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(initialValue ?? defaultValue);
+  const [internalValue, setInternalValue] = useState(initialValue ?? defaultValue);
+  const selected = value ?? internalValue;
   const width = variant === 'pageSize' ? 136 : 128;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -41,13 +44,13 @@ function DropdownSelect({
   }, [isOpen]);
 
   return (
-    <div ref={dropdownRef} className="flex flex-col  gap-[4px]" style={{ width }}>
+    <div ref={dropdownRef} className="relative flex flex-col" style={{ width }}>
       <button
         ref={triggerRef}
         type="button"
         aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-between w-full h-[40px] pl-[12px] pr-[10px] rounded-[8px] overflow-hidden text-alba-gray-800 text-body-14r border border-alba-gray-300 `}
+        className={`flex items-center justify-between w-full h-[40px] bg-alba-white pl-[12px] pr-[10px] rounded-[8px] overflow-hidden text-alba-gray-800 text-body-14r border border-alba-gray-300 `}
       >
         {selected}
         <img
@@ -58,13 +61,13 @@ function DropdownSelect({
       </button>
 
       {isOpen && (
-        <div className="flex flex-col  w-full rounded-[8px] overflow-hidden border border-alba-gray-300">
+        <div className="absolute top-full z-20 mt-1 flex w-full flex-col overflow-hidden rounded-lg border border-alba-gray-300 bg-alba-white">
           {options.map((option) => (
             <button
               key={option}
               type="button"
               onClick={() => {
-                setSelected(option);
+                if (value === undefined) setInternalValue(option);
                 onChange(option);
                 setIsOpen(false);
                 triggerRef.current?.focus();

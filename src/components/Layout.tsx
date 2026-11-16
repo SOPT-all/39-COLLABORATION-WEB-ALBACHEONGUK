@@ -1,11 +1,12 @@
-import { Outlet } from 'react-router';
+import { Outlet, useMatch } from 'react-router';
 import Header from './Header.tsx';
 
 function Layout() {
+  const isSearch = useMatch('/search');
   return (
     <>
       <Header />
-      <main>
+      <main className={isSearch ? 'search-page-main' : undefined}>
         <Outlet />
       </main>
     </>

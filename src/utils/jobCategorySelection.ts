@@ -3,6 +3,13 @@ import { JOB_CATEGORIES } from '../data/jobCategoryOptions.ts';
 export const CATEGORY_PARAM = 'jobCategory';
 export const SUBCATEGORY_PARAM = 'jobSubcategory';
 
+export function getCategoryOnlySelection(params: URLSearchParams) {
+  const category = params.get(CATEGORY_PARAM);
+  if (params.getAll(CATEGORY_PARAM).length !== 1) return null;
+  if (params.getAll(SUBCATEGORY_PARAM).some(Boolean)) return null;
+  return JOB_CATEGORIES.find(({ name }) => name === category)?.name ?? null;
+}
+
 export function getSelectedJobGroups(params: URLSearchParams) {
   const categories = params.getAll(CATEGORY_PARAM);
   const values = params.getAll(SUBCATEGORY_PARAM);

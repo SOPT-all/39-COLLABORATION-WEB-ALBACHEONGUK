@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import Dropdown from './Dropdown';
 import DropdownMoney from './DropdownMoney';
-import { useSearchParams } from 'react-router';
+import { useFilterParams } from '../../hooks/useFilterParams.ts';
+import type { FilterParams } from '../../hooks/useFilterParams.ts';
 import moneyOffIcon from '../../assets/icons/money-off.svg';
 import moneyOnIcon from '../../assets/icons/money-on.svg';
 import { PAY_TYPES } from '../../data/payTypes';
 
-function MoneyFilter() {
+function MoneyFilter({
+  width,
+  overlay,
+  filterParams,
+}: { width?: number; overlay?: boolean; filterParams?: FilterParams } = {}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useFilterParams(filterParams);
   const pay = searchParams.get('pay');
   const appliedPay = pay && PAY_TYPES.includes(pay) ? pay : '전체';
 
@@ -33,6 +38,8 @@ function MoneyFilter() {
 
   return (
     <Dropdown
+      width={width}
+      overlay={overlay}
       label={appliedPay === '전체' ? '급여조건' : appliedPay}
       icon={moneyOffIcon}
       appliedIcon={moneyOnIcon}

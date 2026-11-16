@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useFilterParams } from '../hooks/useFilterParams.ts';
+import type { FilterParams } from '../hooks/useFilterParams.ts';
 
 import Dropdown from './Dropdown/Dropdown.tsx';
 import DropdownRegionJob from './Dropdown/DropdownRegionJob.tsx';
@@ -14,8 +15,12 @@ import {
 import regionOffIcon from '../assets/icons/region-off.svg';
 import regionOnIcon from '../assets/icons/region-on.svg';
 
-function RegionFilter() {
-  const [searchParams, setSearchParams] = useSearchParams();
+function RegionFilter({
+  width,
+  overlay,
+  filterParams,
+}: { width?: number; overlay?: boolean; filterParams?: FilterParams } = {}) {
+  const [searchParams, setSearchParams] = useFilterParams(filterParams);
   const [isOpen, setIsOpen] = useState(false);
   const [draftSido, setDraftSido] = useState<string | null>(null);
   const [draftGuguns, setDraftGuguns] = useState<string[]>([]);
@@ -57,6 +62,8 @@ function RegionFilter() {
 
   return (
     <Dropdown
+      width={width}
+      overlay={overlay}
       label={getRegionLabel(applied)}
       icon={regionOffIcon}
       appliedIcon={regionOnIcon}

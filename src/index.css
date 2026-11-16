@@ -11,3 +11,8 @@ main {
   margin: 0 auto;
   padding: 2rem;
 }
+
+main.search-page-main {
+  max-width: none;
+  padding: 0;
+}

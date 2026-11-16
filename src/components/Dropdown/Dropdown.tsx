@@ -10,6 +10,7 @@ type DropdownProps = {
   isApplied?: boolean;
   trigger?: ReactNode;
   width?: number;
+  overlay?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 };
@@ -22,6 +23,7 @@ function Dropdown({
   isApplied = false,
   trigger,
   width = 200,
+  overlay = false,
   open,
   onOpenChange,
 }: DropdownProps) {
@@ -61,7 +63,7 @@ function Dropdown({
   }, [isOpen, open, onOpenChange]);
 
   return (
-    <div ref={dropdownRef}>
+    <div ref={dropdownRef} className={overlay ? 'relative' : undefined}>
       <button
         type="button"
         onClick={() => changeOpen(!isOpen)}
@@ -97,7 +99,8 @@ function Dropdown({
           className={`size-[24px] shrink-0 ${isOpen ? 'rotate-180' : ''} `}
         />
       </button>
-      {isOpen && children}
+      {isOpen &&
+        (overlay ? <div className="absolute left-0 top-full z-30">{children}</div> : children)}
     </div>
   );
 }
