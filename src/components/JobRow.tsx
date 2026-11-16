@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 
 import chevronIcon from '../assets/icons/job-row/chevron.svg';
 import chevronClosedIcon from '../assets/icons/job-row/chevron-closed.svg';
-import separatorIcon from '../assets/icons/job-row/separator.svg';
 import { useKstNow } from '../hooks/useKstNow.ts';
 import ClosedBadge from './ClosedBadge.tsx';
 import SalaryText from './SalaryText.tsx';
@@ -11,7 +10,7 @@ import ScrapButton from './ScrapButton.tsx';
 import { getJobDeadlineText } from '../utils/jobDeadline.ts';
 import { getJobPostedAt } from '../utils/jobPostedAt.ts';
 
-import JobThumbnail from './JobThumbnail.tsx';
+import JobRowSummary from './JobRowSummary.tsx';
 
 // Figma의 Default/closed × Plus/Minus 원본 변환값입니다.
 const EXPAND_BUTTON_STATES = {
@@ -77,7 +76,6 @@ function JobRow({
   const contentId = useId();
   const titleId = useId();
   const now = useKstNow(referenceNow);
-  const deadlineText = getJobDeadlineText(job.deadlineDate);
   const isClosed = job.isClosed;
   const postedAtText = getJobPostedAt(job.postedAt, now);
   const hasThumbnail = showThumbnail || Boolean(job.thumbnailUrl) || variant === 'recommended';
@@ -92,7 +90,6 @@ function JobRow({
         ? 'bg-alba-yellow-100'
         : 'bg-alba-white';
   const columnSpacingClass = hasThumbnail ? 'ml-[18px]' : 'ml-2.5';
-  const primaryTextClass = isClosed ? 'text-alba-gray-600' : 'text-alba-black';
   const secondaryTextClass = isClosed ? 'text-alba-gray-600' : 'text-alba-gray-500';
 
   return (
@@ -104,47 +101,12 @@ function JobRow({
       <div
         className={`flex h-[82px] w-full items-center ${hasThumbnail ? 'max-w-[762px]' : 'max-w-[760px]'}`}
       >
-        <div className={`flex min-w-0 flex-1 items-center ${hasThumbnail ? 'gap-4' : ''}`}>
-          {hasThumbnail && <JobThumbnail src={job.thumbnailUrl} companyName={job.companyName} />}
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <div
-              className={`flex min-w-0 flex-col gap-1 ${hasThumbnail ? 'w-[calc(100%+33px)] max-w-[357px]' : ''}`}
-            >
-              <div className="flex min-w-0 items-center gap-1">
-                <p
-                  title={job.companyName}
-                  className={`text-body-16b max-w-full shrink-0 truncate ${primaryTextClass}`}
-                >
-                  {job.companyName}
-                </p>
-                <p className={`text-body-16r truncate ${secondaryTextClass}`} title={job.location}>
-                  {job.location}
-                </p>
-              </div>
-              <h3
-                id={titleId}
-                className={`text-title-18sb truncate ${primaryTextClass}`}
-                title={job.title}
-              >
-                {job.title}
-              </h3>
-            </div>
-
-            <div className={`text-body-14r flex min-w-0 items-center gap-2 ${secondaryTextClass}`}>
-              <span className="min-w-0 max-w-[120px] truncate" title={job.workDays}>
-                {job.workDays}
-              </span>
-              <img src={separatorIcon} alt="" width={2} height={2} className="shrink-0" />
-              <span className="min-w-0 max-w-[120px] truncate" title={job.workHours}>
-                {job.workHours}
-              </span>
-              <img src={separatorIcon} alt="" width={2} height={2} className="shrink-0" />
-              <span className="w-[95.45px] shrink-0 truncate" title={deadlineText}>
-                {deadlineText}
-              </span>
-            </div>
-          </div>
-        </div>
+        <JobRowSummary
+          job={job}
+          titleId={titleId}
+          hasThumbnail={hasThumbnail}
+          deadlineText={getJobDeadlineText(job.deadlineDate)}
+        />
 
         <div
           className={`flex w-[122px] shrink-0 flex-col items-center justify-center gap-0.5 text-center ${columnSpacingClass}`}
