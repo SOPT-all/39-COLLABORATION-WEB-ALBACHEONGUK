@@ -66,9 +66,6 @@ export function mapJobSearchParams(input: URLSearchParams, options: JobFilterOpt
     if (option) params.append('workdays', option.code);
     else unsupported.push(day + '요일');
   }
-  if (work.period !== '전체') unsupported.push('근무기간 ' + work.period);
-  if (work.workDays !== '전체') unsupported.push('근무일수 ' + work.workDays);
-
   const pay = input.get('pay');
   if (pay && pay !== '전체') {
     const option = options.payConditions.find(({ name }) => name === pay);

@@ -3,7 +3,7 @@ import SearchEmptyIllustration from './SearchEmptyIllustration.tsx';
 import SearchErrorIllustration from './SearchErrorIllustration.tsx';
 import ResumeSelector from '../../components/ResumeSelector.tsx';
 import type { Resume } from '../../components/ResumeSelector.tsx';
-import { useMockSessionStore } from '../../stores/useMockSessionStore.ts';
+import { useQaResumeScenario } from '../../hooks/useQaResumeScenario.ts';
 import SearchJobItem from './SearchJobItem.tsx';
 import SearchResumeGuest from './SearchResumeGuest.tsx';
 import type { SearchJob } from './searchJobs.ts';
@@ -48,7 +48,7 @@ function SignedInMatch({
   items: SearchJob[];
   hasSearchRegion: boolean;
 }) {
-  const status = useMockSessionStore((state) => state.resumeStatus);
+  const { resumeStatus: status, qa } = useQaResumeScenario();
   const [selectedId, setSelectedId] = useState(SAMPLE_RESUMES[0].id);
   const resume = SAMPLE_RESUMES.find(({ id }) => id === selectedId) ?? SAMPLE_RESUMES[0];
   const recommendations = items
@@ -62,7 +62,7 @@ function SignedInMatch({
     <ResumeSelector
       resumes={status === 'draft' ? SAMPLE_RESUMES.slice(0, 1) : SAMPLE_RESUMES}
       selectedResumeId={status === 'draft' ? SAMPLE_RESUMES[0].id : resume.id}
-      onSelectResume={setSelectedId}
+      onSelectResume={status === 'ready' ? setSelectedId : undefined}
       showRegion={status === 'ready'}
     />
   );
@@ -94,7 +94,7 @@ function SignedInMatch({
           <p className="text-caption-12r text-alba-gray-600 mt-1 text-right">
             최근 수정일 {resume.updatedAt}
           </p>
-          {recommendations.length === 0 ? (
+          {qa === 'no-match' || recommendations.length === 0 ? (
             <ResumeHint
               message="현재 이력서와 조건에 맞는 추천 공고가 없어요"
               action="이력서 수정하기"
@@ -122,7 +122,7 @@ function SearchResumeMatch({
   keyword: string;
   hasSearchRegion: boolean;
 }) {
-  const isSignedIn = useMockSessionStore((state) => state.isSignedIn);
+  const { isSignedIn } = useQaResumeScenario();
   return isSignedIn ? (
     <SignedInMatch items={items} hasSearchRegion={hasSearchRegion} />
   ) : (

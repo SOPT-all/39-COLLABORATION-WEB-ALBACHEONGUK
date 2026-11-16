@@ -161,11 +161,7 @@ function SearchPage() {
 
   function resetFilters() {
     updateDraftFilters(resetSearchFilters);
-    setParams((current) => {
-      const next = resetSearchFilters(current);
-      next.delete('activeOnly');
-      return next;
-    });
+    setParams(resetSearchFilters);
   }
 
   function browseAllJobs() {
@@ -249,7 +245,7 @@ function SearchPage() {
                 isPending={isPending || needsPageCorrection}
                 onRetry={isError ? () => void refetch() : undefined}
                 keyword={keyword}
-                hasFilters={getSearchFilterTags(params).length > 0 || activeOnly}
+                hasFilters={getSearchFilterTags(params).length > 0}
                 onReset={resetFilters}
                 onBrowseAll={browseAllJobs}
                 onSearch={handleSearch}

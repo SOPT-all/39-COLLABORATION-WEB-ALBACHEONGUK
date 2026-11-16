@@ -1,5 +1,6 @@
 const SALARY_TYPE_COLOR_CLASS: Record<string, string> = {
   일급: 'text-alba-green-200',
+  주급: 'text-alba-salary-weekly',
   월급: 'text-alba-red',
   시급: 'text-alba-teal',
   연봉: 'text-alba-purple-200',
