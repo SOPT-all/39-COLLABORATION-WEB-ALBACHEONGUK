@@ -1,25 +1,17 @@
 import { useState } from 'react';
-import type { WorkCondition } from './Dropdown/DropdownPeriod';
 import Dropdown from './Dropdown/Dropdown';
 import DropdownPeriod from './Dropdown/DropdownPeriod';
 import periodOffIcon from '../assets/icons/period-off.svg';
 import periodOnIcon from '../assets/icons/period_on.svg';
 import { useSearchParams } from 'react-router';
-import { periods, days, workDays } from '../data/workConditionOptions';
+import { readWorkCondition, writeWorkCondition } from '../utils/workConditionSelection.ts';
+import type { WorkCondition } from '../utils/workConditionSelection.ts';
 
 function WorkConditionFilter() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const periodFromUrl = searchParams.get('period') ?? '전체';
-  const workDaysFromUrl = searchParams.get('workDays') ?? '전체';
-  const daysFromUrl = searchParams.getAll('days');
-
-  const appliedCondition: WorkCondition = {
-    period: periods.includes(periodFromUrl) ? periodFromUrl : '전체',
-    days: days.filter((day) => day !== '전체' && daysFromUrl.includes(day)),
-    workDays: workDays.includes(workDaysFromUrl) ? workDaysFromUrl : '전체',
-  };
+  const appliedCondition = readWorkCondition(searchParams);
 
   const selectedLabels = [
     ...(appliedCondition.period !== '전체' ? [appliedCondition.period] : []),
@@ -41,26 +33,7 @@ function WorkConditionFilter() {
   }
 
   function handleApply(condition: WorkCondition) {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-
-      next.set('period', condition.period === '전체' ? '' : condition.period);
-
-      next.delete('days');
-
-      if (condition.days.length === 0) {
-        next.set('days', '');
-      } else {
-        condition.days.forEach((day) => {
-          next.append('days', day);
-        });
-      }
-
-      next.set('workDays', condition.workDays === '전체' ? '' : condition.workDays);
-
-      return next;
-    });
-
+    setSearchParams((params) => writeWorkCondition(params, condition));
     setIsOpen(false);
   }
 

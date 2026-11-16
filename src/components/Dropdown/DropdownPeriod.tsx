@@ -1,24 +1,16 @@
+import DropdownActions from './DropdownActions.tsx';
 import { useState } from 'react';
 import Radio from '../Radio';
 import DropdownPanel from './DropdownPanel';
 import type { ReactNode } from 'react';
 import Checkbox from '../Checkbox';
-import RectButton from '../RectButton';
-import TextImage from '../TextImage';
-import cancelText from '../../assets/text/button/cancel.svg';
-import applyText from '../../assets/text/button/apply.svg';
+import type { WorkCondition } from '../../utils/workConditionSelection.ts';
 import { periods, days, workDays } from '../../data/workConditionOptions';
 
 type FilterSectionProps = {
   title: string;
   children: ReactNode;
   isFirst?: boolean;
-};
-
-export type WorkCondition = {
-  period: string;
-  days: string[];
-  workDays: string;
 };
 
 type DropdownPeriodProps = {
@@ -107,29 +99,10 @@ function DropdownPeriod({ appliedCondition, onCancel, onApply }: DropdownPeriodP
         </FilterSection>
       </div>
 
-      <div className="flex items-center justify-center gap-[4px] h-[87px] shrink-0 py-[20px] border-t border-t-alba-gray-300">
-        <div className="w-[148px]">
-          <RectButton variant="secondary" isFullWidth onClick={onCancel}>
-            <TextImage src={cancelText} label="취소" width={29} height={24} />
-          </RectButton>
-        </div>
-
-        <div className="w-[148px]">
-          <RectButton
-            variant="primary"
-            isFullWidth
-            onClick={() =>
-              onApply({
-                period: draftPeriod,
-                days: draftDays,
-                workDays: draftWorkDays,
-              })
-            }
-          >
-            <TextImage src={applyText} label="적용" width={29} height={24} />
-          </RectButton>
-        </div>
-      </div>
+      <DropdownActions
+        onCancel={onCancel}
+        onApply={() => onApply({ period: draftPeriod, days: draftDays, workDays: draftWorkDays })}
+      />
     </DropdownPanel>
   );
 }

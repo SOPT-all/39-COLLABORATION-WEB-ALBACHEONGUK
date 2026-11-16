@@ -5,7 +5,12 @@ import Dropdown from './Dropdown/Dropdown.tsx';
 import DropdownRegionJob from './Dropdown/DropdownRegionJob.tsx';
 import SelectListItem from './SelectListItem.tsx';
 import Checkbox from './Checkbox.tsx';
-import { ALL_GUGUN, REGION_PARAM, REGIONS, SIDO_LIST } from '../data/regions.ts';
+import { ALL_GUGUN, REGIONS, SIDO_LIST } from '../data/regions.ts';
+import {
+  getRegionLabel,
+  readRegionSelection,
+  writeRegionSelection,
+} from '../utils/regionSelection.ts';
 import regionOffIcon from '../assets/icons/region-off.svg';
 import regionOnIcon from '../assets/icons/region-on.svg';
 
@@ -15,92 +20,47 @@ function RegionFilter() {
   const [draftSido, setDraftSido] = useState<string | null>(null);
   const [draftGuguns, setDraftGuguns] = useState<string[]>([]);
 
-  const appliedSido = searchParams.get(REGION_PARAM.SIDO);
-  const appliedGugunParams = searchParams.getAll(REGION_PARAM.GUGUN);
-  const validSido = appliedSido && REGIONS[appliedSido] ? appliedSido : null;
-  const isAppliedAll = appliedGugunParams.includes(ALL_GUGUN);
-  const appliedGuguns = validSido
-    ? isAppliedAll
-      ? [ALL_GUGUN]
-      : REGIONS[validSido].filter((gugun) => appliedGugunParams.includes(gugun))
-    : [];
-  const isApplied = validSido !== null && (isAppliedAll || appliedGuguns.length > 0);
-
+  const applied = readRegionSelection(searchParams);
   const guguns = draftSido ? REGIONS[draftSido] : [];
-  const hasGuguns = guguns.length > 0;
-  const isAllChecked = hasGuguns ? draftGuguns.includes(ALL_GUGUN) : draftSido !== null;
-
-  const getTriggerLabel = () => {
-    if (!validSido || !isApplied) return '지역';
-    if (isAppliedAll) {
-      return REGIONS[validSido].length === 0 ? validSido : `${validSido} ${ALL_GUGUN}`;
-    }
-
-    const [first, ...rest] = appliedGuguns;
-    return rest.length > 0 ? `${first} 외 ${rest.length}` : first;
-  };
-
-  const syncDraftFromUrl = () => {
-    setDraftSido(validSido);
-    setDraftGuguns(appliedGuguns);
-  };
+  const isAllChecked = draftSido !== null && guguns.every((name) => draftGuguns.includes(name));
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
-      syncDraftFromUrl();
+      setDraftSido(applied.sido);
+      setDraftGuguns(applied.guguns);
     }
     setIsOpen(nextOpen);
   };
 
   const handleSidoSelect = (sido: string) => {
+    if (sido === draftSido) return;
     setDraftSido(sido);
-    setDraftGuguns([]);
+    setDraftGuguns(REGIONS[sido]);
   };
 
   const handleAllChange = (checked: boolean) => {
-    setDraftGuguns(checked ? [ALL_GUGUN] : []);
+    setDraftGuguns(checked ? guguns : []);
   };
 
   const handleGugunChange = (gugun: string, checked: boolean) => {
-    setDraftGuguns((prev) => {
-      const rest = prev.filter((item) => item !== ALL_GUGUN);
-      return checked ? [...rest, gugun] : rest.filter((item) => item !== gugun);
-    });
-  };
-
-  const handleCancel = () => {
-    setIsOpen(false);
+    setDraftGuguns((previous) =>
+      checked ? [...new Set([...previous, gugun])] : previous.filter((name) => name !== gugun),
+    );
   };
 
   const handleApply = () => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.delete(REGION_PARAM.SIDO);
-      next.delete(REGION_PARAM.GUGUN);
-
-      if (draftSido) {
-        next.set(REGION_PARAM.SIDO, draftSido);
-
-        if (isAllChecked || draftGuguns.length === 0) {
-          next.append(REGION_PARAM.GUGUN, ALL_GUGUN);
-        } else {
-          guguns
-            .filter((gugun) => draftGuguns.includes(gugun))
-            .forEach((gugun) => next.append(REGION_PARAM.GUGUN, gugun));
-        }
-      }
-
-      return next;
-    });
+    setSearchParams((params) =>
+      writeRegionSelection(params, { sido: draftSido, guguns: draftGuguns }),
+    );
     setIsOpen(false);
   };
 
   return (
     <Dropdown
-      label={getTriggerLabel()}
+      label={getRegionLabel(applied)}
       icon={regionOffIcon}
       appliedIcon={regionOnIcon}
-      isApplied={isApplied}
+      isApplied={applied.sido !== null}
       open={isOpen}
       onOpenChange={handleOpenChange}
     >
@@ -121,31 +81,29 @@ function RegionFilter() {
           </ul>
         }
         rightContent={
-          <ul>
-            {draftSido && (
-              <ul>
-                <li className="px-[16px] py-[10px]">
+          draftSido && (
+            <ul>
+              <li className="px-[16px] py-[10px]">
+                <Checkbox
+                  label={ALL_GUGUN}
+                  checked={isAllChecked}
+                  onChange={handleAllChange}
+                  disabled={guguns.length === 0}
+                />
+              </li>
+              {guguns.map((gugun) => (
+                <li key={gugun} className="px-[16px] py-[10px]">
                   <Checkbox
-                    label={ALL_GUGUN}
-                    checked={isAllChecked}
-                    onChange={handleAllChange}
-                    disabled={!hasGuguns}
+                    label={gugun}
+                    checked={draftGuguns.includes(gugun)}
+                    onChange={(checked) => handleGugunChange(gugun, checked)}
                   />
                 </li>
-                {guguns.map((gugun) => (
-                  <li key={gugun} className="px-[16px] py-[10px]">
-                    <Checkbox
-                      label={gugun}
-                      checked={draftGuguns.includes(gugun)}
-                      onChange={(checked) => handleGugunChange(gugun, checked)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </ul>
+              ))}
+            </ul>
+          )
         }
-        onCancel={handleCancel}
+        onCancel={() => setIsOpen(false)}
         onApply={handleApply}
       />
     </Dropdown>

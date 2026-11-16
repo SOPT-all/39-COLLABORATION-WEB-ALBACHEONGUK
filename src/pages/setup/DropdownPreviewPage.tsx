@@ -13,7 +13,8 @@ function DropdownPreviewPage() {
       <header className="flex flex-col gap-2">
         <h1 className="text-display-24sb">드롭다운 확인</h1>
         <p className="text-body-14r">
-          업직종은 선택·취소·적용과 URL 저장을 확인합니다. 다른 필터 패널은 레이아웃 확인용입니다.
+          지역·업직종·근무조건·급여 필터를 선택하고 적용하거나 취소해 보세요. 새로고침하면 URL에
+          저장된 조건이 복원됩니다.
         </p>
       </header>
 
