@@ -22,7 +22,7 @@ export function writeRegionSelection(params: URLSearchParams, { sido, guguns }: 
   next.delete(REGION_PARAM.SIDO);
   next.delete(REGION_PARAM.GUGUN);
 
-  if (!sido || !Object.hasOwn(REGIONS, sido)) return next;
+  if (!sido || sido === ALL_GUGUN || !Object.hasOwn(REGIONS, sido)) return next;
 
   const options = REGIONS[sido];
   const selected = options.filter((name) => guguns.includes(name));
