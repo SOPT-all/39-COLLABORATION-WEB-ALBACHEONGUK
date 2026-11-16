@@ -83,6 +83,14 @@ export function removeSearchFilterTag(params: URLSearchParams, tag: FilterTag) {
   return next;
 }
 
+export function readSearchFilters(params: URLSearchParams) {
+  const filters = new URLSearchParams();
+  for (const key of Object.values(FILTER_KEYS).flat()) {
+    for (const value of params.getAll(key)) filters.append(key, value);
+  }
+  return filters;
+}
+
 export function resetSearchFilters(params: URLSearchParams) {
   const next = new URLSearchParams(params);
   next.delete('page');

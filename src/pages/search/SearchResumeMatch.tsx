@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import emptyResultsImage from '../../assets/images/search/empty-results.png';
-import noMatchImage from '../../assets/images/search/resume-no-match.png';
+import SearchEmptyIllustration from './SearchEmptyIllustration.tsx';
+import SearchErrorIllustration from './SearchErrorIllustration.tsx';
 import ResumeSelector from '../../components/ResumeSelector.tsx';
 import type { Resume } from '../../components/ResumeSelector.tsx';
 import { useMockSessionStore } from '../../stores/useMockSessionStore.ts';
@@ -22,33 +22,41 @@ type ResumeHintProps = {
 
 function ResumeHint({ message, action, noMatch = false, children }: ResumeHintProps) {
   return (
-    <div className="flex flex-col items-center gap-4 pt-6 text-center">
-      <img
-        src={noMatch ? noMatchImage : emptyResultsImage}
-        alt=""
-        className={
-          noMatch ? 'h-[188px] w-[132px] object-contain' : 'h-[194px] w-[187px] object-contain'
-        }
-      />
-      <p className="text-body-16r text-alba-gray-700">{message}</p>
-      {children}
-      <button
-        type="button"
-        disabled
-        className="text-body-16b bg-alba-yellow-400 text-alba-black rounded-full px-5 py-2"
-      >
-        {action}
-      </button>
+    <div className={`flex flex-col items-center gap-6 text-center ${noMatch ? 'pt-2' : 'pt-4'}`}>
+      <div className="flex w-full flex-col items-center gap-2">
+        {noMatch ? <SearchErrorIllustration /> : <SearchEmptyIllustration />}
+        <p className="text-body-16r text-alba-gray-700">{message}</p>
+      </div>
+      <div className="flex flex-col items-center gap-4">
+        {children}
+        <button
+          type="button"
+          disabled
+          className="text-body-16b bg-alba-yellow-400 text-alba-black rounded-full h-10 px-5 py-2"
+        >
+          {action}
+        </button>
+      </div>
     </div>
   );
 }
 
-function SignedInMatch({ items }: { items: SearchJob[] }) {
+function SignedInMatch({
+  items,
+  hasSearchRegion,
+}: {
+  items: SearchJob[];
+  hasSearchRegion: boolean;
+}) {
   const status = useMockSessionStore((state) => state.resumeStatus);
   const [selectedId, setSelectedId] = useState(SAMPLE_RESUMES[0].id);
   const resume = SAMPLE_RESUMES.find(({ id }) => id === selectedId) ?? SAMPLE_RESUMES[0];
   const recommendations = items
-    .filter(({ job, district }) => !job.isClosed && district === resume.desiredRegion)
+    .filter(
+      ({ job, district }) =>
+        !job.isClosed && (hasSearchRegion || district === resume.desiredRegion),
+    )
+    .toSorted((left, right) => right.job.postedAt.localeCompare(left.job.postedAt))
     .slice(0, 3);
   const selector = (
     <ResumeSelector
@@ -105,9 +113,21 @@ function SignedInMatch({ items }: { items: SearchJob[] }) {
   );
 }
 
-function SearchResumeMatch({ items, keyword }: { items: SearchJob[]; keyword: string }) {
+function SearchResumeMatch({
+  items,
+  keyword,
+  hasSearchRegion,
+}: {
+  items: SearchJob[];
+  keyword: string;
+  hasSearchRegion: boolean;
+}) {
   const isSignedIn = useMockSessionStore((state) => state.isSignedIn);
-  return isSignedIn ? <SignedInMatch items={items} /> : <SearchResumeGuest keyword={keyword} />;
+  return isSignedIn ? (
+    <SignedInMatch items={items} hasSearchRegion={hasSearchRegion} />
+  ) : (
+    <SearchResumeGuest keyword={keyword} />
+  );
 }
 
 export default SearchResumeMatch;

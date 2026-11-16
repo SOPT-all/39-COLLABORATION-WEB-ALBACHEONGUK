@@ -3,7 +3,8 @@ import DropdownRegionJob from './Dropdown/DropdownRegionJob';
 import SelectListItem from './SelectListItem';
 import { JOB_CATEGORIES, jobCategories } from '../data/jobCategoryOptions';
 import Checkbox from './Checkbox';
-import { useSearchParams } from 'react-router';
+import { useFilterParams } from '../hooks/useFilterParams.ts';
+import type { FilterParams } from '../hooks/useFilterParams.ts';
 import Dropdown from './Dropdown/Dropdown';
 import jobOffIcon from '../assets/icons/job-off.svg';
 import jobOnIcon from '../assets/icons/job-on.svg';
@@ -13,9 +14,13 @@ import {
   getCategoryOnlySelection,
 } from '../utils/jobCategorySelection';
 
-function JobCategoryFilter({ width, overlay }: { width?: number; overlay?: boolean } = {}) {
+function JobCategoryFilter({
+  width,
+  overlay,
+  filterParams,
+}: { width?: number; overlay?: boolean; filterParams?: FilterParams } = {}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useFilterParams(filterParams);
   const [draftCategory, setDraftCategory] = useState('전체');
   const [draftSubcategories, setDraftSubcategories] = useState<string[]>([]);
 

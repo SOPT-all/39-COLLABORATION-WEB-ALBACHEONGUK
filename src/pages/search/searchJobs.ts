@@ -90,8 +90,45 @@ export const SEARCH_JOBS: SearchJob[] = [
   },
 ];
 
+function normalizeSearchText(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function relevance(item: SearchJob, keyword: string) {
+  if (!keyword) return 0;
+  const fields = [item.job.title, item.job.companyName, item.subcategory];
+  return Math.max(
+    0,
+    ...fields.map((field, index) => {
+      const normalized = normalizeSearchText(field);
+      if (!normalized.includes(keyword)) return 0;
+      return (normalized === keyword ? fields.length : 0) + fields.length - index;
+    }),
+  );
+}
+
+export function sortSearchJobs(items: SearchJob[], keyword: string, sort: 'relevance' | 'latest') {
+  const query = normalizeSearchText(keyword);
+  const tierOrder = { premium: 0, light: 1 };
+  return items.toSorted((left, right) => {
+    const leftTier = left.tier ? tierOrder[left.tier] : 2;
+    const rightTier = right.tier ? tierOrder[right.tier] : 2;
+    const byRelevance = sort === 'relevance' ? relevance(right, query) - relevance(left, query) : 0;
+    return (
+      leftTier - rightTier ||
+      byRelevance ||
+      right.job.postedAt.localeCompare(left.job.postedAt) ||
+      String(left.job.id).localeCompare(String(right.job.id), 'ko', { numeric: true })
+    );
+  });
+}
+
 export function filterSearchJobs(items: SearchJob[], params: URLSearchParams) {
-  const keyword = (params.get('keyword') ?? '').trim().toLowerCase();
+  const keyword = normalizeSearchText(params.get('keyword') ?? '');
   const region = readRegionSelection(params);
   const category = getCategoryOnlySelection(params);
   const groups = getSelectedJobGroups(params);
@@ -101,16 +138,11 @@ export function filterSearchJobs(items: SearchJob[], params: URLSearchParams) {
 
   return items.filter((item) => {
     const { job } = item;
-    const searchableText = [
-      job.title,
-      job.companyName,
-      job.location,
-      item.subcategory,
-      job.workDays,
-      ...item.days,
-    ]
-      .join(' ')
-      .toLowerCase();
+    const searchableText = normalizeSearchText(
+      [job.title, job.companyName, job.location, item.subcategory, job.workDays, ...item.days].join(
+        ' ',
+      ),
+    );
     if (keyword && !searchableText.includes(keyword)) return false;
     if (isActiveOnly && job.isClosed) return false;
     if (region.sido && region.sido !== '전체' && region.sido !== item.sido) return false;
