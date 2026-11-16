@@ -30,7 +30,7 @@ function SearchResultToolbar({
       >
         <span
           aria-hidden="true"
-          className={`flex h-6 w-[42px] shrink-0 items-center justify-end rounded-full px-1 ${activeOnly ? 'bg-alba-yellow-500' : 'bg-alba-gray-400'}`}
+          className={`flex h-6 w-[42px] shrink-0 items-center justify-end rounded-full px-1 ${activeOnly ? 'bg-alba-yellow-600' : 'bg-alba-gray-300'}`}
         >
           <span className="bg-alba-white size-[18px] rounded-full" />
         </span>
