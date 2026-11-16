@@ -1,5 +1,15 @@
 import { useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
+import FilterTags from '../../components/FilterTags.tsx';
+import JobCategoryFilter from '../../components/JobCategoryFilter.tsx';
+import MoneyFilter from '../../components/Dropdown/MoneyFilter.tsx';
+import RegionFilter from '../../components/RegionFilter.tsx';
+import WorkConditionFilter from '../../components/WorkConditionFilter.tsx';
+import {
+  getSearchFilterTags,
+  removeSearchFilterTag,
+  resetSearchFilters,
+} from './searchFilterTags.ts';
 import RecentSearches from '../../components/RecentSearches.tsx';
 import SearchBar from '../../components/SearchBar.tsx';
 import { useRecentSearchStore } from '../../stores/useRecentSearchStore.ts';
@@ -71,6 +81,19 @@ function SearchPage() {
     <div className="space-y-4">
       <h1 className="text-display-24sb">검색 화면</h1>
       <SearchKeywordInput keyword={keyword} onSearch={handleSearch} />
+      <section aria-label="검색 필터" className="space-y-4">
+        <div className="flex flex-wrap items-start gap-2">
+          <RegionFilter />
+          <JobCategoryFilter />
+          <WorkConditionFilter />
+          <MoneyFilter />
+        </div>
+        <FilterTags
+          tags={getSearchFilterTags(params)}
+          onRemove={(tag) => setParams((current) => removeSearchFilterTag(current, tag))}
+          onReset={() => setParams(resetSearchFilters)}
+        />
+      </section>
     </div>
   );
 }
