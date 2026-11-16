@@ -1,3 +1,10 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/api/v1/jobs", "destination": "https://13.209.88.193/api/v1/jobs" },
+    {
+      "source": "/api/v1/jobs/filters",
+      "destination": "https://13.209.88.193/api/v1/jobs/filters"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

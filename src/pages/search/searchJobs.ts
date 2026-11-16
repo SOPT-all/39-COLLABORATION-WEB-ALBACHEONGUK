@@ -16,6 +16,8 @@ type SearchJob = {
   period: string;
   days: string[];
   address: string;
+  nearbySubway?: string;
+  applyMethod?: string;
   tier?: 'premium' | 'light';
 };
 

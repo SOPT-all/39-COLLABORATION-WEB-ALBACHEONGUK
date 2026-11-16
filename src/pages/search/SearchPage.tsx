@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Ref } from 'react';
 import { useSearchParams } from 'react-router';
 import FilterTags from '../../components/FilterTags.tsx';
@@ -16,10 +16,10 @@ import PopularSearches from '../../components/PopularSearches.tsx';
 import { POPULAR_SEARCHES, POPULAR_SEARCH_UPDATE_DATE } from '../../data/popularSearches.ts';
 import SearchResumeMatch from './SearchResumeMatch.tsx';
 import SearchResultToolbar from './SearchResultToolbar.tsx';
-import { readResultToolbar, readSearchPage } from './searchResultOptions.ts';
+import { readResultToolbar } from './searchResultOptions.ts';
 import SearchJobResults from './SearchJobResults.tsx';
 import SearchPagination from './SearchPagination.tsx';
-import { sortSearchJobs } from './searchJobs.ts';
+import { filterSearchJobs, SEARCH_JOBS } from './searchJobs.ts';
 import { useSearchJobs } from './useSearchJobs.ts';
 import RecentSearches from '../../components/RecentSearches.tsx';
 import SearchBar from '../../components/SearchBar.tsx';
@@ -77,11 +77,27 @@ function SearchPage() {
   const lookup = readSearchFilters(params);
   if (keyword) lookup.set('keyword', keyword);
   if (params.get('activeOnly') === 'true') lookup.set('activeOnly', 'true');
-  const { data: matchedJobs = [], isPending, isError, refetch } = useSearchJobs(lookup.toString());
-  const sortedJobs = sortSearchJobs(matchedJobs, keyword, sort);
-  const { page, pageCount, items } = readSearchPage(sortedJobs, pageSize, params.get('page'));
+  for (const key of ['sort', 'size', 'page', 'qa']) {
+    const value = params.get(key);
+    if (value) lookup.set(key, value);
+  }
+  const { data, isPending, isError, unsupported, refetch } = useSearchJobs(lookup.toString());
+  const { page = 1, pageCount = 0, items = [], total = 0 } = data ?? {};
+  const needsPageCorrection = !isError && pageCount > 0 && page > pageCount;
+  useEffect(() => {
+    if (!needsPageCorrection) return;
+    setParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        next.set('page', String(pageCount));
+        return next;
+      },
+      { replace: true },
+    );
+  }, [needsPageCorrection, pageCount, setParams]);
+  const matchingJobs = filterSearchJobs(SEARCH_JOBS, lookup);
   const activeOnly = params.get('activeOnly') === 'true';
-  const showToolbar = isPending || (!isError && matchedJobs.length > 0);
+  const showToolbar = isPending || (!isError && total > 0);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const [searchRevision, setSearchRevision] = useState(0);
@@ -110,8 +126,8 @@ function SearchPage() {
     } else {
       nextParams.delete('keyword');
     }
-    if (nextParams.toString() === params.toString()) void refetch();
-    else setParams(nextParams);
+    if (nextParams.toString() !== params.toString()) setParams(nextParams);
+    else if (unsupported.length === 0) refetch();
   }
 
   function goToPage(nextPage: number) {
@@ -203,28 +219,45 @@ function SearchPage() {
           )}
         </section>
         <div className="pt-8">
-          {!isError && matchedJobs.length > 0 && (
+          {!isPending && !isError && total > 0 && (
             <SearchResumeMatch
               key={String(searchRevision) + ':' + keyword + ':' + appliedFilters}
               keyword={keyword}
-              items={matchedJobs}
+              items={matchingJobs}
               hasSearchRegion={lookup.has('sido')}
             />
           )}
           <div ref={resultsRef} className="scroll-mt-8 pt-8">
-            <SearchJobResults
-              key={params.toString() + ':' + searchRevision}
-              items={items}
-              total={matchedJobs.length}
-              isPending={isPending}
-              onRetry={isError ? () => void refetch() : undefined}
-              keyword={keyword}
-              hasFilters={getSearchFilterTags(params).length > 0 || activeOnly}
-              onReset={resetFilters}
-              onBrowseAll={browseAllJobs}
-              onSearch={handleSearch}
-            />
-            <SearchPagination page={page} pageCount={pageCount} onPageChange={goToPage} />
+            {unsupported.length > 0 ? (
+              <div className="flex flex-col items-start gap-4 py-8">
+                <p role="alert" className="text-body-16r text-alba-gray-700">
+                  {'검색에서 지원하지 않는 조건이 포함되어 있어요. ' + unsupported.join(', ')}
+                </p>
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="text-body-16b text-alba-gray-500 border-alba-gray-300 h-[46px] w-40 cursor-pointer rounded-lg border"
+                >
+                  조건 초기화
+                </button>
+              </div>
+            ) : (
+              <SearchJobResults
+                key={params.toString() + ':' + searchRevision}
+                items={items}
+                total={total}
+                isPending={isPending || needsPageCorrection}
+                onRetry={isError ? () => void refetch() : undefined}
+                keyword={keyword}
+                hasFilters={getSearchFilterTags(params).length > 0 || activeOnly}
+                onReset={resetFilters}
+                onBrowseAll={browseAllJobs}
+                onSearch={handleSearch}
+              />
+            )}
+            {!needsPageCorrection && (
+              <SearchPagination page={page} pageCount={pageCount} onPageChange={goToPage} />
+            )}
           </div>
         </div>
       </div>

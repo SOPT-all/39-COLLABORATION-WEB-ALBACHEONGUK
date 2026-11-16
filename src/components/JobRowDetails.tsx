@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 export type JobRowDetailsData = {
   category: string;
   address: string;
+  nearbySubway?: string;
   stations: {
     id: string;
     line: string;
@@ -33,7 +34,7 @@ function JobRowDetails({ details }: JobRowDetailsProps) {
       label: '인근지하철',
       value:
         details.stations.length === 0 ? (
-          '정보 없음'
+          details.nearbySubway || '정보 없음'
         ) : (
           <ul className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {details.stations.map((station) => (
@@ -60,7 +61,10 @@ function JobRowDetails({ details }: JobRowDetailsProps) {
   return (
     <dl className="border-alba-detail-border bg-alba-white space-y-3.5 rounded-xl border px-[60px] py-6">
       {rows
-        .filter(({ label }) => label !== '인근지하철' || details.stations.length > 0)
+        .filter(
+          ({ label }) =>
+            label !== '인근지하철' || details.stations.length > 0 || details.nearbySubway,
+        )
         .map(({ label, value }) => (
           <div
             key={label}

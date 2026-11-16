@@ -1,18 +1,63 @@
 import { useQuery } from '@tanstack/react-query';
-import { filterSearchJobs, SEARCH_JOBS } from './searchJobs.ts';
+import { useState } from 'react';
+import { getJobFilterOptions, getJobSearchResults } from '../../apis/searchJobs.ts';
+import { mapSearchResults } from './mapApiSearchJobs.ts';
+import { mapJobSearchParams } from './searchJobApiParams.ts';
+import { readSearchFilters } from './searchFilterTags.ts';
+
+const QA_ENABLED = import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
+const EMPTY_OPTIONS = { regions: [], categories: [], payConditions: [], workdays: [] };
 
 export function useSearchJobs(query: string) {
-  return useQuery({
-    queryKey: ['search-results', 'mock', query],
-    queryFn: async () => {
-      const params = new URLSearchParams(query);
-      // 기존 초기 세팅용 오류 입력과 동일하되 개발 서버에서만 재현합니다.
-      if (import.meta.env.DEV && params.get('keyword') === '오류테스트') {
-        throw new Error('목업 공고 조회 실패');
-      }
-      return filterSearchJobs(SEARCH_JOBS, params);
-    },
-    staleTime: 30_000,
+  const input = new URLSearchParams(query);
+  const hasFilters = [...readSearchFilters(input).values()].some(Boolean);
+  const filterOptions = useQuery({
+    queryKey: ['job-search', 'filter-options'],
+    queryFn: ({ signal }) => getJobFilterOptions(signal),
+    enabled: hasFilters,
+    staleTime: 5 * 60_000,
     retry: false,
   });
+  const prepared =
+    !hasFilters || filterOptions.data
+      ? mapJobSearchParams(input, filterOptions.data ?? EMPTY_OPTIONS)
+      : undefined;
+  const scenario = input.get('qa');
+  const qa =
+    QA_ENABLED && (scenario === 'search-loading' || scenario === 'search-error') ? scenario : null;
+  const request = prepared?.params.toString();
+  const [retriedRequest, setRetriedRequest] = useState<string>();
+  const shouldShowQaError = qa === 'search-error' && request !== retriedRequest;
+
+  const results = useQuery({
+    queryKey: ['job-search', 'list', request, qa, shouldShowQaError],
+    enabled: request !== undefined && prepared?.unsupported.length === 0,
+    queryFn: async ({ signal }) => {
+      if (qa === 'search-loading') {
+        await new Promise<void>((resolve) => window.setTimeout(resolve, 3000));
+        signal.throwIfAborted();
+      }
+      if (shouldShowQaError) throw new Error('QA 공고 목록 조회 오류');
+      const data = await getJobSearchResults(new URLSearchParams(request), signal);
+      return mapSearchResults(data);
+    },
+    staleTime: qa ? 0 : 30_000,
+    gcTime: qa ? 0 : undefined,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+
+  const unsupported = prepared?.unsupported ?? [];
+  return {
+    data: results.data,
+    isPending:
+      unsupported.length === 0 && (!hasFilters || !filterOptions.isError) && results.isPending,
+    isError: (hasFilters && filterOptions.isError) || results.isError,
+    unsupported,
+    refetch: () => {
+      if (hasFilters && filterOptions.isError) return void filterOptions.refetch();
+      if (shouldShowQaError) return setRetriedRequest(request);
+      return void results.refetch();
+    },
+  };
 }
