@@ -28,7 +28,7 @@ function HomeSearch({ isSignedIn, onSearch }: HomeSearchProps) {
   const tags = getSearchFilterTags(params);
 
   return (
-    <section aria-labelledby="home-search-title" className="relative pb-6">
+    <section aria-labelledby="home-search-title" className="relative pb-6 lg:pt-6 lg:pb-0">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-[3px] inset-x-0 h-[396px] bg-top bg-no-repeat"

@@ -62,7 +62,7 @@ function SignedInMatch({
     <ResumeSelector
       resumes={status === 'draft' ? SAMPLE_RESUMES.slice(0, 1) : SAMPLE_RESUMES}
       selectedResumeId={status === 'draft' ? SAMPLE_RESUMES[0].id : resume.id}
-      onSelectResume={setSelectedId}
+      onSelectResume={status === 'ready' ? setSelectedId : undefined}
       showRegion={status === 'ready'}
     />
   );
