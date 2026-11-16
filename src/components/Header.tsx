@@ -22,6 +22,7 @@ const FOCUS_STYLE =
 
 function Header() {
   const isSignedIn = useMockSessionStore((state) => state.isSignedIn);
+  const setSignedIn = useMockSessionStore((state) => state.setSignedIn);
   const [accountAction, accountDestination] = isSignedIn
     ? ['로그아웃', '내 정보']
     : ['로그인', '회원가입'];
@@ -29,7 +30,13 @@ function Header() {
   return (
     <header className="bg-alba-white text-alba-black">
       <div className="text-caption-12r text-alba-gray-600 mx-auto flex h-[34px] w-[calc(100%-2rem)] max-w-[1260px] items-center justify-end">
-        <span className="px-3 py-2">{accountAction}</span>
+        <button
+          type="button"
+          onClick={() => setSignedIn(!isSignedIn)}
+          className={`cursor-pointer rounded-sm px-3 py-2 hover:underline ${FOCUS_STYLE}`}
+        >
+          {accountAction}
+        </button>
         <img src={accountDivider} alt="" width={1} height={12} />
         <span className="px-3 py-2">{accountDestination}</span>
       </div>
