@@ -13,6 +13,9 @@ import {
 } from './searchFilterTags.ts';
 import PopularSearches from '../../components/PopularSearches.tsx';
 import { POPULAR_SEARCHES, POPULAR_SEARCH_UPDATE_DATE } from '../../data/popularSearches.ts';
+import SearchResumeGuest from './SearchResumeGuest.tsx';
+import SearchResultToolbar from './SearchResultToolbar.tsx';
+import { readResultToolbar } from './searchResultOptions.ts';
 import SearchJobResults from './SearchJobResults.tsx';
 import { filterSearchJobs, SEARCH_JOBS } from './searchJobs.ts';
 import RecentSearches from '../../components/RecentSearches.tsx';
@@ -59,7 +62,13 @@ function SearchPage() {
   const [params, setParams] = useSearchParams();
   const keyword = params.get('keyword') ?? '';
   const tags = getSearchFilterTags(params);
-  const items = filterSearchJobs(SEARCH_JOBS, params);
+  const { sort, pageSize } = readResultToolbar(params);
+  const matchedJobs = filterSearchJobs(SEARCH_JOBS, params);
+  const sortedJobs =
+    sort === 'latest'
+      ? matchedJobs.toSorted((left, right) => right.job.postedAt.localeCompare(left.job.postedAt))
+      : matchedJobs;
+  const items = sortedJobs.slice(0, pageSize);
   const activeOnly = params.get('activeOnly') === 'true';
   const inputRef = useRef<HTMLInputElement>(null);
   const recentKeywords = useRecentSearchStore((state) => state.keywords);
@@ -86,6 +95,15 @@ function SearchPage() {
       const next = new URLSearchParams(current);
       if (activeOnly) next.delete('activeOnly');
       else next.set('activeOnly', 'true');
+      next.delete('page');
+      return next;
+    });
+  }
+
+  function updateResultOption(key: 'sort' | 'size', value: string) {
+    setParams((current) => {
+      const next = new URLSearchParams(current);
+      next.set(key, value);
       next.delete('page');
       return next;
     });
@@ -119,45 +137,39 @@ function SearchPage() {
         />
         <section aria-label="검색 필터" className="mt-[11px] space-y-[11px]">
           <div className="flex flex-wrap items-start gap-2">
-            <RegionFilter width={194} />
-            <JobCategoryFilter width={194} />
-            <WorkConditionFilter width={194} />
-            <MoneyFilter width={194} />
+            <RegionFilter width={194} overlay />
+            <JobCategoryFilter width={194} overlay />
+            <WorkConditionFilter width={194} overlay />
+            <MoneyFilter width={194} overlay />
           </div>
           <FilterTags
             tags={tags}
             onRemove={(tag) => setParams((current) => removeSearchFilterTag(current, tag))}
             onReset={resetFilters}
           />
-          <div className="flex min-h-[52px] items-center rounded-xl bg-alba-gray-200 px-4">
-            <button
-              type="button"
-              role="switch"
-              aria-checked={activeOnly}
-              onClick={toggleActiveOnly}
-              className="text-body-14r text-alba-gray-800 flex cursor-pointer items-center gap-2"
-            >
-              <span
-                aria-hidden="true"
-                className={`flex h-6 w-[42px] items-center rounded-full px-1 ${activeOnly ? 'justify-end bg-alba-yellow-500' : 'bg-alba-gray-400'}`}
-              >
-                <span className="size-[18px] rounded-full bg-alba-white" />
-              </span>
-              진행중 공고만 보기
-            </button>
-          </div>
-        </section>
-        <div className="mt-12">
-          <SearchJobResults
-            items={items}
-            keyword={keyword}
-            hasFilters={tags.length > 0 || activeOnly}
-            onReset={resetFilters}
-            onBrowseAll={browseAllJobs}
+          <SearchResultToolbar
+            activeOnly={activeOnly}
+            sort={sort}
+            pageSize={pageSize}
+            onToggleActive={toggleActiveOnly}
+            onSort={(value) => updateResultOption('sort', value)}
+            onPageSize={(size) => updateResultOption('size', String(size))}
           />
+        </section>
+        <div className="pt-8">
+          {items.length > 0 && <SearchResumeGuest keyword={keyword} />}
+          <div className={items.length > 0 ? 'pt-8' : ''}>
+            <SearchJobResults
+              items={items}
+              keyword={keyword}
+              hasFilters={tags.length > 0 || activeOnly}
+              onReset={resetFilters}
+              onBrowseAll={browseAllJobs}
+            />
+          </div>
         </div>
       </div>
-      <aside aria-label="검색 기록과 인기 검색어" className="flex flex-col gap-8 xl:pt-[230px]">
+      <aside aria-label="검색 기록과 인기 검색어" className="flex flex-col gap-8 xl:pt-[262px]">
         <PopularSearches
           items={POPULAR_SEARCHES}
           updatedOn={POPULAR_SEARCH_UPDATE_DATE}

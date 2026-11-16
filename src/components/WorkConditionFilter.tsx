@@ -7,7 +7,7 @@ import { useSearchParams } from 'react-router';
 import { readWorkCondition, writeWorkCondition } from '../utils/workConditionSelection.ts';
 import type { WorkCondition } from '../utils/workConditionSelection.ts';
 
-function WorkConditionFilter({ width }: { width?: number } = {}) {
+function WorkConditionFilter({ width, overlay }: { width?: number; overlay?: boolean } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -40,6 +40,7 @@ function WorkConditionFilter({ width }: { width?: number } = {}) {
   return (
     <Dropdown
       width={width}
+      overlay={overlay}
       label={buttonLabel}
       icon={periodOffIcon}
       open={isOpen}

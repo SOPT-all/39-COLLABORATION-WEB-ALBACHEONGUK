@@ -14,7 +14,7 @@ import {
 import regionOffIcon from '../assets/icons/region-off.svg';
 import regionOnIcon from '../assets/icons/region-on.svg';
 
-function RegionFilter({ width }: { width?: number } = {}) {
+function RegionFilter({ width, overlay }: { width?: number; overlay?: boolean } = {}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [draftSido, setDraftSido] = useState<string | null>(null);
@@ -58,6 +58,7 @@ function RegionFilter({ width }: { width?: number } = {}) {
   return (
     <Dropdown
       width={width}
+      overlay={overlay}
       label={getRegionLabel(applied)}
       icon={regionOffIcon}
       appliedIcon={regionOnIcon}

@@ -13,7 +13,7 @@ import {
   getCategoryOnlySelection,
 } from '../utils/jobCategorySelection';
 
-function JobCategoryFilter({ width }: { width?: number } = {}) {
+function JobCategoryFilter({ width, overlay }: { width?: number; overlay?: boolean } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [draftCategory, setDraftCategory] = useState('전체');
@@ -67,6 +67,7 @@ function JobCategoryFilter({ width }: { width?: number } = {}) {
   return (
     <Dropdown
       width={width}
+      overlay={overlay}
       label={label}
       icon={jobOffIcon}
       appliedIcon={jobOnIcon}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import emptyResultsImage from '../../assets/images/search/empty-results.png';
 import JobRow from '../../components/JobRow.tsx';
 import JobRowDetails from '../../components/JobRowDetails.tsx';
 import { useJobScrap } from '../../hooks/useJobScrap.ts';
@@ -58,15 +59,22 @@ function SearchJobResults({
 }: SearchJobResultsProps) {
   return (
     <section aria-labelledby="search-result-title" className="min-w-0">
-      <h1 id="search-result-title" className="text-display-20sb mb-3 flex items-baseline gap-2">
+      <h1 id="search-result-title" className="text-display-20sb flex min-h-11 items-start gap-2">
         전체 채용정보
-        <span className="text-body-16b text-alba-blue-600" aria-live="polite">
+        <span className="text-body-16b text-alba-blue-600 self-start pt-0.5" aria-live="polite">
           {items.length.toLocaleString('ko-KR')}
         </span>
       </h1>
       {items.length === 0 ? (
-        <div className="flex min-h-64 flex-col items-center justify-center gap-4 px-4 text-center">
-          <p className="text-body-16r text-alba-gray-600">
+        <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 px-4 text-center">
+          <img
+            src={emptyResultsImage}
+            alt=""
+            width={140}
+            height={168}
+            className="h-[168px] w-[140px] object-contain"
+          />
+          <p className="text-body-16r text-alba-gray-700">
             {keyword ? '‘' + keyword + '’에 대한 공고가 없어요.' : '조건에 맞는 공고가 없어요.'}
           </p>
           <div className="flex flex-wrap justify-center gap-2">
@@ -74,7 +82,7 @@ function SearchJobResults({
               <button
                 type="button"
                 onClick={onReset}
-                className="text-body-14b cursor-pointer rounded-lg border border-alba-gray-300 px-5 py-2.5"
+                className="text-body-14b cursor-pointer w-40 rounded-lg border border-alba-gray-300 px-5 py-2.5"
               >
                 조건 초기화
               </button>
@@ -82,7 +90,7 @@ function SearchJobResults({
             <button
               type="button"
               onClick={onBrowseAll}
-              className="text-body-14b cursor-pointer rounded-lg border border-alba-yellow-500 bg-alba-yellow-400 px-5 py-2.5"
+              className="text-body-14b cursor-pointer w-40 rounded-lg border border-alba-yellow-500 bg-alba-yellow-400 px-5 py-2.5"
             >
               전체 공고 둘러보기
             </button>
