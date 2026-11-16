@@ -1,9 +1,5 @@
-import { useState } from 'react';
+import SearchJobItem from './SearchJobItem.tsx';
 import emptyResultsImage from '../../assets/images/search/empty-results.png';
-import JobRow from '../../components/JobRow.tsx';
-import JobRowDetails from '../../components/JobRowDetails.tsx';
-import { useJobScrap } from '../../hooks/useJobScrap.ts';
-import { getJobDeadlineText } from '../../utils/jobDeadline.ts';
 import type { SearchJob } from './searchJobs.ts';
 
 const GROUPS = [
@@ -11,36 +7,6 @@ const GROUPS = [
   { tier: 'light', label: '키워드 라이트' },
   { tier: undefined, label: '일반 채용정보' },
 ] as const;
-
-function SearchJobItem({ item }: { item: SearchJob }) {
-  const [expanded, setExpanded] = useState(false);
-  const { isScrapped, toggleScrap } = useJobScrap(item.job.id);
-  const { job } = item;
-
-  return (
-    <JobRow
-      job={job}
-      variant={item.tier ? 'highlighted' : 'default'}
-      showThumbnail={item.tier === 'premium'}
-      isExpanded={expanded}
-      isScrapped={isScrapped}
-      onToggleExpand={() => setExpanded((value) => !value)}
-      onToggleScrap={toggleScrap}
-    >
-      <JobRowDetails
-        details={{
-          category: item.subcategory,
-          address: item.address,
-          stations: [],
-          workHours: job.workHours,
-          periodAndDays: [item.period, job.workDays].join(', '),
-          applicationMethod: '',
-          deadline: getJobDeadlineText(job.deadlineDate),
-        }}
-      />
-    </JobRow>
-  );
-}
 
 type SearchJobResultsProps = {
   items: SearchJob[];

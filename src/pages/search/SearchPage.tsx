@@ -13,7 +13,7 @@ import {
 } from './searchFilterTags.ts';
 import PopularSearches from '../../components/PopularSearches.tsx';
 import { POPULAR_SEARCHES, POPULAR_SEARCH_UPDATE_DATE } from '../../data/popularSearches.ts';
-import SearchResumeGuest from './SearchResumeGuest.tsx';
+import SearchResumeMatch from './SearchResumeMatch.tsx';
 import SearchResultToolbar from './SearchResultToolbar.tsx';
 import { readResultToolbar } from './searchResultOptions.ts';
 import SearchJobResults from './SearchJobResults.tsx';
@@ -157,7 +157,7 @@ function SearchPage() {
           />
         </section>
         <div className="pt-8">
-          {items.length > 0 && <SearchResumeGuest keyword={keyword} />}
+          {items.length > 0 && <SearchResumeMatch keyword={keyword} items={matchedJobs} />}
           <div className={items.length > 0 ? 'pt-8' : ''}>
             <SearchJobResults
               items={items}
