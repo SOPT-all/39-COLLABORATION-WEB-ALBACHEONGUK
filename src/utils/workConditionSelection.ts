@@ -35,3 +35,24 @@ export function writeWorkCondition(params: URLSearchParams, condition: WorkCondi
 
   return next;
 }
+
+export function matchesWorkCondition(
+  condition: WorkCondition,
+  job: { period: string; days: string[] },
+) {
+  if (condition.period !== '전체' && job.period.replaceAll(' ', '') !== condition.period) {
+    return false;
+  }
+
+  if (condition.workDays === '전체') {
+    return condition.days.length === 0 || condition.days.some((day) => job.days.includes(day));
+  }
+
+  if (condition.workDays !== '주' + job.days.length + '일') return false;
+  if (condition.days.length === 0) return true;
+  const [shorter, longer] =
+    condition.days.length <= job.days.length
+      ? [condition.days, job.days]
+      : [job.days, condition.days];
+  return shorter.every((day) => longer.includes(day));
+}

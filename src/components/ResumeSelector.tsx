@@ -29,20 +29,28 @@ function ResumeSelector({
   return (
     <section
       aria-label="내 이력서 선택"
-      className="inline-flex w-fit max-w-full flex-wrap items-center gap-x-12 gap-y-2 rounded-lg bg-alba-gray-200 px-4 py-3"
+      className={`bg-alba-gray-200 flex max-w-full flex-wrap items-center justify-between gap-x-2 gap-y-2 rounded-lg px-4 py-3 ${showRegion ? 'w-[466px]' : 'w-[301px]'}`}
     >
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2 text-alba-gray-600">
-          <img src={folderIcon} alt="" className="size-7" />
+      <div className="flex min-w-0 items-center gap-6">
+        <div className="text-alba-gray-600 flex shrink-0 items-center gap-2">
+          <img src={folderIcon} alt="" width={28} height={28} />
           <TextImage src={myResumeText} label="내 이력서" width={62} height={24} />
         </div>
-        {onSelectResume ? (
-          <div className="relative flex items-center">
+        <div className="relative flex h-7 w-[147px] min-w-0 items-center rounded-sm focus-within:outline-alba-blue-600 focus-within:outline-2">
+          <span
+            aria-hidden={onSelectResume ? true : undefined}
+            title={selectedResume?.title}
+            className="text-body-14r text-alba-gray-600 min-w-0 flex-1 truncate"
+          >
+            {selectedResume?.title}
+          </span>
+          <img src={triangleDownIcon} alt="" width={24} height={24} className="shrink-0" />
+          {onSelectResume && (
             <select
               aria-label="기준 이력서"
               value={selectedResumeId}
               onChange={(event) => onSelectResume(event.target.value)}
-              className="font-pretendard text-body-14r text-alba-gray-600 max-w-[230px] min-w-0 cursor-pointer appearance-none truncate bg-transparent pr-6"
+              className="absolute inset-0 size-full cursor-pointer opacity-0"
             >
               {resumes.map((resume) => (
                 <option key={resume.id} value={resume.id}>
@@ -50,25 +58,15 @@ function ResumeSelector({
                 </option>
               ))}
             </select>
-            <img
-              src={triangleDownIcon}
-              alt=""
-              className="pointer-events-none absolute right-0 size-6"
-            />
-          </div>
-        ) : (
-          <div className="flex items-center">
-            <p className="font-pretendard text-body-14r text-alba-gray-600">
-              {selectedResume?.title}
-            </p>
-            <span aria-hidden="true" className="size-6" />
-          </div>
-        )}
+          )}
+        </div>
       </div>
       {showRegion && (
-        <p className="flex items-center gap-1 font-pretendard text-body-14r">
-          <span className="text-alba-gray-600">희망 근무지역</span>
-          <span className="text-alba-black">{selectedResume?.desiredRegion}</span>
+        <p className="text-body-14r flex min-w-0 items-center gap-1">
+          <span className="text-alba-gray-600 shrink-0">희망 근무지역</span>
+          <span className="text-alba-black truncate" title={selectedResume?.desiredRegion}>
+            {selectedResume?.desiredRegion}
+          </span>
         </p>
       )}
     </section>

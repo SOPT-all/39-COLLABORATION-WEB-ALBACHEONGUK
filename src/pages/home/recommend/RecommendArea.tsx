@@ -11,6 +11,7 @@ import { REGION_OPTIONS, TARGET_OPTIONS, THEME_OPTIONS } from './recommendChips.
 import type { ChipOption } from './recommendChips.ts';
 import {
   REGION_RECOMMEND_JOBS,
+  REGION_RECOMMEND_MOCKS,
   TARGET_RECOMMEND_JOBS,
   THEME_RECOMMEND_JOBS,
 } from './recommendJobs.ts';
@@ -37,7 +38,7 @@ function IconChipGroup({ options, selectedLabel, onSelect }: IconChipGroupProps)
   );
 }
 
-function RecommendArea() {
+function RecommendArea({ onViewRegion }: { onViewRegion?: (sido: string) => void } = {}) {
   const [selectedRegion, setSelectedRegion] = useState(REGION_OPTIONS[0].label);
   const [selectedTheme, setSelectedTheme] = useState(THEME_OPTIONS[0].label);
   const [selectedTarget, setSelectedTarget] = useState(TARGET_OPTIONS[0].label);
@@ -56,7 +57,8 @@ function RecommendArea() {
             onSelect={setSelectedRegion}
           />
         }
-        jobs={REGION_RECOMMEND_JOBS}
+        jobs={onViewRegion ? (REGION_RECOMMEND_MOCKS[selectedRegion] ?? []) : REGION_RECOMMEND_JOBS}
+        onViewAll={onViewRegion ? () => onViewRegion(selectedRegion) : undefined}
       />
       <RecommendSection
         title="테마별 추천 알바"

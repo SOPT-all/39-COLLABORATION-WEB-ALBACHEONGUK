@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { filterSearchJobs, SEARCH_JOBS, sortSearchJobs } from '../src/pages/search/searchJobs.ts';
 import { readSearchPage } from '../src/pages/search/searchResultOptions.ts';
+import { matchesWorkCondition } from '../src/utils/workConditionSelection.ts';
 
 test('검색어 특수문자를 무시하고 진행 중 여부를 함께 적용한다', () => {
   const params = new URLSearchParams({ keyword: ' 카페! ', activeOnly: 'true' });
@@ -47,4 +48,34 @@ test('페이지를 복원하고 범위를 벗어나면 마지막 페이지로 �
   assert.deepEqual([second.items[0], second.items.at(-1)], [21, 40]);
   assert.deepEqual(readSearchPage(jobs, 20, '99').items, [41, 42, 43, 44, 45]);
   assert.deepEqual(readSearchPage([], 20, '2'), { page: 1, pageCount: 0, items: [] });
+});
+
+test('근무일수와 요일을 함께 고르면 더 짧은 요일 목록이 긴 목록에 모두 포함되어야 한다', () => {
+  assert.equal(
+    matchesWorkCondition(
+      { period: '전체', days: ['월', '수'], workDays: '주3일' },
+      { period: '1일', days: ['월', '수', '금'] },
+    ),
+    true,
+  );
+  assert.equal(
+    matchesWorkCondition(
+      { period: '전체', days: ['월', '수'], workDays: '주3일' },
+      { period: '1일', days: ['월', '금', '토'] },
+    ),
+    false,
+  );
+  assert.equal(
+    matchesWorkCondition(
+      { period: '전체', days: ['화', '수', '목', '금', '토'], workDays: '주1일' },
+      { period: '1일', days: ['토'] },
+    ),
+    true,
+  );
+});
+
+test('서버 근무기간의 공백을 정리하고 선택한 기간과 비교한다', () => {
+  const condition = { period: '1년이상', days: [], workDays: '전체' };
+  assert.equal(matchesWorkCondition(condition, { period: '1년 이상', days: [] }), true);
+  assert.equal(matchesWorkCondition(condition, { period: '1일', days: [] }), false);
 });

@@ -4,7 +4,7 @@ import {
   getSelectedJobGroups,
 } from '../../utils/jobCategorySelection.ts';
 import { readRegionSelection } from '../../utils/regionSelection.ts';
-import { readWorkCondition } from '../../utils/workConditionSelection.ts';
+import { matchesWorkCondition, readWorkCondition } from '../../utils/workConditionSelection.ts';
 import { PAY_TYPES } from '../../data/payTypes.ts';
 
 type SearchJob = {
@@ -16,6 +16,8 @@ type SearchJob = {
   period: string;
   days: string[];
   address: string;
+  nearbySubway?: string;
+  applyMethod?: string;
   tier?: 'premium' | 'light';
 };
 
@@ -156,9 +158,7 @@ export function filterSearchJobs(items: SearchJob[], params: URLSearchParams) {
       )
     )
       return false;
-    if (work.period !== '전체' && item.period !== work.period) return false;
-    if (work.days.length && !work.days.some((day) => item.days.includes(day))) return false;
-    if (work.workDays !== '전체' && work.workDays !== '주' + item.days.length + '일') return false;
+    if (!matchesWorkCondition(work, item)) return false;
     return !pay || pay === '전체' || !PAY_TYPES.includes(pay) || pay === job.salaryType;
   });
 }

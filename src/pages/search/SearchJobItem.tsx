@@ -25,9 +25,10 @@ function SearchJobItem({ item, recommended = false }: { item: SearchJob; recomme
           category: item.subcategory,
           address: item.address,
           stations: [],
+          nearbySubway: item.nearbySubway,
           workHours: job.workHours,
           periodAndDays: [item.period, job.workDays].join(', '),
-          applicationMethod: '',
+          applicationMethod: item.applyMethod ?? '',
           deadline: getJobDeadlineText(job.deadlineDate),
         }}
       />
