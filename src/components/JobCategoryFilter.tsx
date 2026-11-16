@@ -10,11 +10,10 @@ import jobOnIcon from '../assets/icons/job-on.svg';
 import {
   applyJobSelections,
   getSelectedJobGroups,
-  CATEGORY_PARAM,
-  SUBCATEGORY_PARAM,
+  getCategoryOnlySelection,
 } from '../utils/jobCategorySelection';
 
-function JobCategoryFilter() {
+function JobCategoryFilter({ width }: { width?: number } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [draftCategory, setDraftCategory] = useState('전체');
@@ -23,19 +22,10 @@ function JobCategoryFilter() {
   const appliedGroups = getSelectedJobGroups(searchParams);
   const appliedSubcategories = appliedGroups.flatMap((group) => group.selected);
 
-  const categoryFromUrl = searchParams.get(CATEGORY_PARAM);
-  const validCategory = JOB_CATEGORIES.find((category) => category.name === categoryFromUrl);
-
-  const isCategoryAllApplied =
-    validCategory !== undefined &&
-    searchParams.get(SUBCATEGORY_PARAM) === '' &&
-    appliedSubcategories.length === 0;
-
+  const categoryOnly = getCategoryOnlySelection(searchParams);
+  const isCategoryAllApplied = categoryOnly !== null;
   const isApplied = isCategoryAllApplied || appliedSubcategories.length > 0;
-
-  const appliedCategory = isCategoryAllApplied
-    ? validCategory!.name
-    : (appliedGroups[0]?.name ?? '전체');
+  const appliedCategory = categoryOnly ?? appliedGroups[0]?.name ?? '전체';
 
   const label = !isApplied
     ? '업직종'
@@ -76,6 +66,7 @@ function JobCategoryFilter() {
 
   return (
     <Dropdown
+      width={width}
       label={label}
       icon={jobOffIcon}
       appliedIcon={jobOnIcon}

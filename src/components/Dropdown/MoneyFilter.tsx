@@ -6,7 +6,7 @@ import moneyOffIcon from '../../assets/icons/money-off.svg';
 import moneyOnIcon from '../../assets/icons/money-on.svg';
 import { PAY_TYPES } from '../../data/payTypes';
 
-function MoneyFilter() {
+function MoneyFilter({ width }: { width?: number } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const pay = searchParams.get('pay');
@@ -33,6 +33,7 @@ function MoneyFilter() {
 
   return (
     <Dropdown
+      width={width}
       label={appliedPay === '전체' ? '급여조건' : appliedPay}
       icon={moneyOffIcon}
       appliedIcon={moneyOnIcon}

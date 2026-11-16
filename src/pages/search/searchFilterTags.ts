@@ -1,10 +1,10 @@
 import type { FilterTag } from '../../components/FilterTags.tsx';
-import { JOB_CATEGORIES } from '../../data/jobCategoryOptions.ts';
 import { PAY_TYPES } from '../../data/payTypes.ts';
 import { ALL_GUGUN, REGION_PARAM, REGIONS } from '../../data/regions.ts';
 import {
   applyJobSelections,
   CATEGORY_PARAM,
+  getCategoryOnlySelection,
   getSelectedJobGroups,
   SUBCATEGORY_PARAM,
 } from '../../utils/jobCategorySelection.ts';
@@ -43,13 +43,8 @@ export function getSearchFilterTags(params: URLSearchParams): FilterTag[] {
       tags.push({ kind: 'occupation', id: name, label: name });
     }
   }
-  const category = params.get(CATEGORY_PARAM);
-  if (
-    groups.length === 0 &&
-    params.get(SUBCATEGORY_PARAM) === '' &&
-    category &&
-    JOB_CATEGORIES.some(({ name }) => name === category)
-  ) {
+  const category = getCategoryOnlySelection(params);
+  if (category) {
     tags.push({ kind: 'occupation', id: category, label: category + ' 전체' });
   }
 
