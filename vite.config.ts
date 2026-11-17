@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => {
   const target = VITE_API_BASE_URL || 'https://13.209.88.193';
   const proxy = {
     '^/api/v1/jobs(?:/filters)?(?:\\?|$)': { target, changeOrigin: true },
+    '/api/v1/recommendations/resume': {
+      target,
+      changeOrigin: true,
+    },
   };
   return {
     plugins: [react(), tailwindcss()],
