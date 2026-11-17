@@ -12,7 +12,11 @@ function ResumeSelectorPreviewPage() {
   return (
     <main className="flex flex-col gap-4 p-10">
       <h2 className="text-title-18sb">ResumeSelector</h2>
-      <ResumeSelector resumes={MOCK_RESUMES} selectedResumeId={selectedResumeId} />
+      <ResumeSelector
+        resumes={MOCK_RESUMES}
+        selectedResumeId={selectedResumeId}
+        onSelectResume={setSelectedResumeId}
+      />
       <div className="flex gap-2">
         {MOCK_RESUMES.map((resume) => (
           <button
