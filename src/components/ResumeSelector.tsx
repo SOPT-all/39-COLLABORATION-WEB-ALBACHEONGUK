@@ -51,7 +51,7 @@ function ResumeSelector({
   return (
     <section
       aria-label="내 이력서 선택"
-      className={`bg-alba-gray-200 flex max-w-full flex-wrap items-center justify-between gap-x-2 gap-y-2 rounded-lg px-4 py-3 ${showRegion ? 'w-[466px]' : 'w-[301px]'}`}
+      className={`bg-alba-gray-100 flex max-w-full flex-wrap items-center justify-between gap-x-2 gap-y-2 rounded-lg px-4 py-3 ${showRegion ? 'w-[466px]' : 'w-[301px]'}`}
     >
       <div className="flex min-w-0 items-center gap-6">
         <div className="text-alba-gray-600 flex shrink-0 items-center gap-2">
