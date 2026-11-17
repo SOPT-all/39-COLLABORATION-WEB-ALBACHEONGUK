@@ -12,6 +12,8 @@ import scrapIcon from '../assets/profile-card/scrap.svg';
 
 type MainProfileCardProps = {
   user: { name: string; availableJobCount: number } | null;
+  status?: 'loading' | 'error';
+  onRetry?: () => void;
 };
 
 const ALBA_SITE = 'https://www.alba.co.kr';
@@ -49,11 +51,11 @@ function ProfileCardFooter({ items }: { items: readonly [string, string, string]
   );
 }
 
-function MainProfileCard({ user }: MainProfileCardProps) {
+function MainProfileCard({ user, status, onRetry }: MainProfileCardProps) {
   const cardClassName =
     'border-alba-gray-300 bg-alba-white text-alba-black w-[302px] max-w-full overflow-hidden border drop-shadow-[0_-2px_10px_rgba(73,38,17,0.05)]';
 
-  if (!user) {
+  if (!user && !status) {
     return (
       <section aria-label="비회원 로그인 안내" className={`${cardClassName} rounded-[20px] pt-5`}>
         <h2 className="text-body-16b px-5">로그인</h2>
@@ -79,29 +81,60 @@ function MainProfileCard({ user }: MainProfileCardProps) {
   }
 
   return (
-    <section aria-label="회원 프로필" className={`${cardClassName} rounded-2xl`}>
+    <section
+      aria-label="회원 프로필"
+      aria-busy={status === 'loading'}
+      className={`${cardClassName} rounded-2xl`}
+    >
       <div className="flex flex-col gap-4 px-5 pt-4">
         <div className="flex items-center gap-3">
           <div className="flex size-16 shrink-0 items-center justify-center">
             <img src={avatarIcon} alt="" />
           </div>
           <div className="flex min-w-0 flex-col gap-0.5">
-            <p className="text-body-16b truncate">{user.name}</p>
+            {user ? (
+              <p className="text-body-16b truncate">{user.name}</p>
+            ) : (
+              <span className="bg-alba-gray-100 block h-6 w-20 rounded" />
+            )}
             <p className="text-caption-12r text-alba-gray-500">정보 수정</p>
           </div>
         </div>
         <div className="text-caption-12r bg-alba-gray-100 text-alba-gray-500 flex items-center justify-between gap-[18px] rounded-xl py-2 pr-3 pl-4">
-          <div>
-            <p>이력서를 등록해보세요.</p>
-            <p>
-              지금{' '}
-              <strong className="text-alba-blue-700">
-                {user.availableJobCount.toLocaleString('ko-KR')}
-              </strong>
-              개의 공고에 지원이 가능해요!
-            </p>
-          </div>
-          <img src={chevronIcon} alt="" className="shrink-0" />
+          {user ? (
+            <>
+              <div>
+                <p>이력서를 등록해보세요.</p>
+                <p>
+                  지금{' '}
+                  <strong className="text-alba-blue-700">
+                    {user.availableJobCount.toLocaleString('ko-KR')}
+                  </strong>
+                  개의 공고에 지원이 가능해요!
+                </p>
+              </div>
+              <img src={chevronIcon} alt="" className="shrink-0" />
+            </>
+          ) : status === 'error' ? (
+            <>
+              <div role="alert">
+                <p>프로필을 불러오지 못했어요.</p>
+                <p>잠시 후 다시 시도해 주세요.</p>
+              </div>
+              <button
+                type="button"
+                onClick={onRetry}
+                className="text-alba-gray-700 border-alba-gray-300 bg-alba-white shrink-0 rounded-md border px-2 py-1"
+              >
+                다시 시도
+              </button>
+            </>
+          ) : (
+            <div role="status">
+              <p>이력서를 등록해보세요.</p>
+              <p>공고 수를 불러오는 중이에요.</p>
+            </div>
+          )}
         </div>
       </div>
       <ul className="text-body-14r text-alba-gray-700 mx-auto grid w-fit grid-cols-3 gap-x-6 gap-y-[21px] py-4">

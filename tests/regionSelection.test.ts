@@ -21,12 +21,16 @@ test('전체 구·군을 복원한 뒤 하나만 해제하면 나머지 선택�
   assert.equal(params.get('gugun'), '전체');
 });
 
-test('구·군이 없는 전국 선택과 압축된 전체 값을 다시 열 수 있다', () => {
-  const params = new URLSearchParams();
+test('구·군 전체는 압축해 저장하고 시·도 전체는 지역 조건을 지운다', () => {
+  const params = new URLSearchParams('sido=서울&gugun=강남구&keyword=편의점');
   const all = writeRegionSelection(params, { sido: '서울', guguns: REGIONS.서울 });
   assert.deepEqual(all.getAll('gugun'), ['전체']);
+
   const nationwide = writeRegionSelection(params, { sido: '전체', guguns: [] });
-  assert.deepEqual(readRegionSelection(nationwide), { sido: '전체', guguns: [] });
+  assert.equal(nationwide.has('sido'), false);
+  assert.equal(nationwide.has('gugun'), false);
+  assert.equal(nationwide.get('keyword'), '편의점');
+  assert.equal(getRegionLabel(readRegionSelection(nationwide)), '지역');
 });
 
 test('알 수 없는 지역이나 해당 지역에 없는 구·군은 적용 상태로 표시하지 않는다', () => {
@@ -44,4 +48,12 @@ test('구·군 전체를 직접 해제하고 적용하면 지역 조건만 URL�
   assert.equal(updated.has('gugun'), false);
   assert.equal(updated.get('keyword'), '편의점');
   assert.equal(updated.get('pay'), '시급');
+});
+
+test('기존에 공유된 시·도 전체 URL은 지역 조건 없음으로 읽는다', () => {
+  const params = new URLSearchParams('keyword=카페&sido=전체&gugun=전체');
+
+  assert.deepEqual(readRegionSelection(params), { sido: null, guguns: [] });
+  assert.equal(getRegionLabel(readRegionSelection(params)), '지역');
+  assert.equal(params.get('keyword'), '카페');
 });

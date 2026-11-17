@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
       target,
       changeOrigin: true,
     },
+    '/api/v1/members/me': { target, changeOrigin: true },
   };
   return {
     plugins: [react(), tailwindcss()],

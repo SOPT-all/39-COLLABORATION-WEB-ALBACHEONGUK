@@ -7,7 +7,8 @@ type RegionSelection = {
 
 export function readRegionSelection(params: URLSearchParams): RegionSelection {
   const sido = params.get(REGION_PARAM.SIDO);
-  if (!sido || !Object.hasOwn(REGIONS, sido)) return { sido: null, guguns: [] };
+  if (!sido || sido === ALL_GUGUN || !Object.hasOwn(REGIONS, sido))
+    return { sido: null, guguns: [] };
 
   const values = params.getAll(REGION_PARAM.GUGUN);
   const options = REGIONS[sido];
@@ -22,7 +23,7 @@ export function writeRegionSelection(params: URLSearchParams, { sido, guguns }: 
   next.delete(REGION_PARAM.SIDO);
   next.delete(REGION_PARAM.GUGUN);
 
-  if (!sido || !Object.hasOwn(REGIONS, sido)) return next;
+  if (!sido || sido === ALL_GUGUN || !Object.hasOwn(REGIONS, sido)) return next;
 
   const options = REGIONS[sido];
   const selected = options.filter((name) => guguns.includes(name));
