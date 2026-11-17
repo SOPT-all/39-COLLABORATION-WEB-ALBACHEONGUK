@@ -1,17 +1,18 @@
-import { useState } from 'react';
-import SearchEmptyIllustration from './SearchEmptyIllustration.tsx';
+import type { ResumeRecommendationData } from '../../types/resumeRecommendation.ts';
 import SearchErrorIllustration from './SearchErrorIllustration.tsx';
 import ResumeSelector from '../../components/ResumeSelector.tsx';
-import type { Resume } from '../../components/ResumeSelector.tsx';
 import { useQaResumeScenario } from '../../hooks/useQaResumeScenario.ts';
 import SearchJobItem from './SearchJobItem.tsx';
 import SearchResumeGuest from './SearchResumeGuest.tsx';
 import type { SearchJob } from './searchJobs.ts';
+import SearchEmptyIllustration from './SearchEmptyIllustration.tsx';
 
-const SAMPLE_RESUMES: Resume[] = [
-  { id: 'winter', title: '26년 겨울 알바 이력서', desiredRegion: '성동구', updatedAt: '26.11.15' },
-  { id: 'weekend', title: '주말 알바 이력서', desiredRegion: '강남구', updatedAt: '26.11.10' },
-];
+type SearchResumeMatchProps = {
+  items: SearchJob[];
+  keyword: string;
+  recommendation: ResumeRecommendationData;
+  onSelectResume: (id: string) => void;
+};
 
 type ResumeHintProps = {
   message: string;
@@ -22,7 +23,7 @@ type ResumeHintProps = {
 
 function ResumeHint({ message, action, noMatch = false, children }: ResumeHintProps) {
   return (
-    <div className={`flex flex-col items-center gap-6 text-center ${noMatch ? 'pt-2' : 'pt-4'}`}>
+    <div className="flex flex-col items-center gap-6 pt-4 text-center">
       <div className="flex w-full flex-col items-center gap-2">
         {noMatch ? <SearchErrorIllustration /> : <SearchEmptyIllustration />}
         <p className="text-body-16r text-alba-gray-700">{message}</p>
@@ -32,7 +33,9 @@ function ResumeHint({ message, action, noMatch = false, children }: ResumeHintPr
         <button
           type="button"
           disabled
-          className="text-body-16b bg-alba-yellow-400 text-alba-black rounded-full h-10 px-5 py-2"
+          className={`text-body-16b bg-alba-yellow-400 text-alba-black h-10 rounded-full px-5 py-2 ${
+            action === '이력서 이어서 작성하기' ? 'w-[192px]' : 'w-[145px]'
+          }`}
         >
           {action}
         </button>
@@ -41,28 +44,34 @@ function ResumeHint({ message, action, noMatch = false, children }: ResumeHintPr
   );
 }
 
-function SignedInMatch({
-  items,
-  hasSearchRegion,
-}: {
-  items: SearchJob[];
-  hasSearchRegion: boolean;
-}) {
-  const { resumeStatus: status, qa } = useQaResumeScenario();
-  const [selectedId, setSelectedId] = useState(SAMPLE_RESUMES[0].id);
-  const resume = SAMPLE_RESUMES.find(({ id }) => id === selectedId) ?? SAMPLE_RESUMES[0];
-  const recommendations = items
-    .filter(
-      ({ job, district }) =>
-        !job.isClosed && (hasSearchRegion || district === resume.desiredRegion),
+function SignedInMatch({ items, recommendation, onSelectResume }: SearchResumeMatchProps) {
+  const status =
+    recommendation.status === 'NO_RESUME'
+      ? 'none'
+      : recommendation.status === 'DRAFT_ONLY'
+        ? 'draft'
+        : 'ready';
+
+  const resumes = recommendation.resumes
+    .filter((resume) =>
+      status === 'draft' ? resume.status === 'DRAFT' : resume.status === 'COMPLETED',
     )
-    .toSorted((left, right) => right.job.postedAt.localeCompare(left.job.postedAt))
-    .slice(0, 3);
+    .map((resume) => ({
+      id: String(resume.resumeId),
+      title: resume.title,
+      desiredRegion: resume.desiredRegionNames.join(', '),
+      updatedAt: resume.modifiedAt.slice(2, 10).replaceAll('-', '.'),
+    }));
+
+  const selectedId = String(recommendation.selectedResume?.resumeId ?? '');
+
+  const recommendations = items;
+
   const selector = (
     <ResumeSelector
-      resumes={status === 'draft' ? SAMPLE_RESUMES.slice(0, 1) : SAMPLE_RESUMES}
-      selectedResumeId={status === 'draft' ? SAMPLE_RESUMES[0].id : resume.id}
-      onSelectResume={status === 'ready' ? setSelectedId : undefined}
+      resumes={resumes}
+      selectedResumeId={selectedId}
+      onSelectResume={status === 'ready' ? onSelectResume : undefined}
       showRegion={status === 'ready'}
     />
   );
@@ -91,10 +100,7 @@ function SignedInMatch({
       )}
       {status === 'ready' && (
         <>
-          <p className="text-caption-12r text-alba-gray-600 mt-1 text-right">
-            최근 수정일 {resume.updatedAt}
-          </p>
-          {qa === 'no-match' || recommendations.length === 0 ? (
+          {recommendation.status === 'NO_RECOMMENDATION' || recommendations.length === 0 ? (
             <ResumeHint
               message="현재 이력서와 조건에 맞는 추천 공고가 없어요"
               action="이력서 수정하기"
@@ -116,15 +122,18 @@ function SignedInMatch({
 function SearchResumeMatch({
   items,
   keyword,
-  hasSearchRegion,
-}: {
-  items: SearchJob[];
-  keyword: string;
-  hasSearchRegion: boolean;
-}) {
+  recommendation,
+  onSelectResume,
+}: SearchResumeMatchProps) {
   const { isSignedIn } = useQaResumeScenario();
-  return isSignedIn ? (
-    <SignedInMatch items={items} hasSearchRegion={hasSearchRegion} />
+
+  return isSignedIn && recommendation.status !== 'GUEST' ? (
+    <SignedInMatch
+      items={items}
+      keyword={keyword}
+      recommendation={recommendation}
+      onSelectResume={onSelectResume}
+    />
   ) : (
     <SearchResumeGuest keyword={keyword} />
   );

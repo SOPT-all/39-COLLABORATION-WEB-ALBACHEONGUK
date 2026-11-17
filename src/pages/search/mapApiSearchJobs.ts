@@ -21,7 +21,7 @@ const WEEKDAY_LABELS: Partial<Record<string, string>> = {
   SUN: '일',
 };
 
-function mapJob(
+export function mapJob(
   item: ApiJob,
   exposure: JobSearchResponse['groups'][number]['exposureType'],
 ): SearchJob {

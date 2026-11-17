@@ -1,6 +1,12 @@
 import SearchErrorIllustration from './SearchErrorIllustration.tsx';
 
-function SearchResultsPending({ onRetry }: { onRetry?: () => void }) {
+function SearchResultsPending({
+  onRetry,
+  rowCount = 5,
+}: {
+  onRetry?: () => void;
+  rowCount?: number;
+}) {
   if (onRetry) {
     return (
       <div className="flex flex-col items-center gap-6 px-4 pt-40 pb-40 text-center">
@@ -25,7 +31,7 @@ function SearchResultsPending({ onRetry }: { onRetry?: () => void }) {
     <div role="status">
       <span className="sr-only">공고를 불러오는 중입니다</span>
       <div aria-hidden="true">
-        {Array.from({ length: 5 }, (_, row) => (
+        {Array.from({ length: rowCount }, (_, row) => (
           <div
             key={row}
             className="border-alba-gray-300 flex h-[131px] items-center justify-between gap-4 border-b px-5"
