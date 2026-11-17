@@ -7,7 +7,8 @@ type RegionSelection = {
 
 export function readRegionSelection(params: URLSearchParams): RegionSelection {
   const sido = params.get(REGION_PARAM.SIDO);
-  if (!sido || !Object.hasOwn(REGIONS, sido)) return { sido: null, guguns: [] };
+  if (!sido || sido === ALL_GUGUN || !Object.hasOwn(REGIONS, sido))
+    return { sido: null, guguns: [] };
 
   const values = params.getAll(REGION_PARAM.GUGUN);
   const options = REGIONS[sido];

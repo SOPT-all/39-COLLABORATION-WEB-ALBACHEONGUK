@@ -49,3 +49,11 @@ test('구·군 전체를 직접 해제하고 적용하면 지역 조건만 URL�
   assert.equal(updated.get('keyword'), '편의점');
   assert.equal(updated.get('pay'), '시급');
 });
+
+test('기존에 공유된 시·도 전체 URL은 지역 조건 없음으로 읽는다', () => {
+  const params = new URLSearchParams('keyword=카페&sido=전체&gugun=전체');
+
+  assert.deepEqual(readRegionSelection(params), { sido: null, guguns: [] });
+  assert.equal(getRegionLabel(readRegionSelection(params)), '지역');
+  assert.equal(params.get('keyword'), '카페');
+});
