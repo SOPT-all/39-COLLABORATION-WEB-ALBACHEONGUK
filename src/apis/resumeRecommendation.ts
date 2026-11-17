@@ -11,6 +11,7 @@ export async function getResumeRecommendations(
   const response = await client.get<ResumeRecommendationResponse>(
     '/api/v1/recommendations/resume',
     {
+      baseURL: '/',
       params,
       headers: memberId ? { 'X-Member-Id': memberId } : {},
       paramsSerializer: {
