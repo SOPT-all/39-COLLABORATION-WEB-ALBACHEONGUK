@@ -9,6 +9,10 @@
       "source": "/api/v1/recommendations/resume",
       "destination": "https://13.209.88.193/api/v1/recommendations/resume"
     },
+    {
+      "source": "/api/v1/members/me",
+      "destination": "https://13.209.88.193/api/v1/members/me"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
