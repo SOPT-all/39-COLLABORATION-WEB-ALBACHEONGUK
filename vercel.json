@@ -5,6 +5,10 @@
       "source": "/api/v1/jobs/filters",
       "destination": "https://13.209.88.193/api/v1/jobs/filters"
     },
+    {
+      "source": "/api/v1/recommendations/resume",
+      "destination": "https://13.209.88.193/api/v1/recommendations/resume"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
