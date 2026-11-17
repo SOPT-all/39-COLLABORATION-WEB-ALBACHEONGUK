@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import type { KeyboardEvent } from 'react';
 import folderIcon from '../assets/icons/resume-selector/ic_document.svg';
 import triangleDownIcon from '../assets/icons/triangle.svg';
 import checkIcon from '../assets/icons/check.svg';
@@ -29,6 +30,47 @@ function ResumeSelector({
   const selectedResume = resumes.find((resume) => resume.id === selectedResumeId);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const listboxId = useId();
+  const selectedIndex = resumes.findIndex((resume) => resume.id === selectedResumeId);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    optionRefs.current[Math.max(selectedIndex, 0)]?.focus();
+  }, [isOpen, selectedIndex]);
+
+  function closeDropdown() {
+    setIsOpen(false);
+    triggerRef.current?.focus();
+  }
+
+  function handleTriggerKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      setIsOpen(true);
+    }
+  }
+
+  function handleListKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    const currentIndex = optionRefs.current.findIndex(
+      (option) => option === document.activeElement,
+    );
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      optionRefs.current[(currentIndex + 1) % resumes.length]?.focus();
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      optionRefs.current[(currentIndex - 1 + resumes.length) % resumes.length]?.focus();
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      closeDropdown();
+    } else if (event.key === 'Tab') {
+      setIsOpen(false);
+    }
+  }
 
   useEffect(() => {
     if (!isOpen) return;
@@ -61,9 +103,13 @@ function ResumeSelector({
         <div ref={dropdownRef} className="relative flex min-w-0 items-center">
           {onSelectResume ? (
             <button
+              ref={triggerRef}
               type="button"
+              aria-haspopup="listbox"
               aria-expanded={isOpen}
+              aria-controls={listboxId}
               onClick={() => setIsOpen(!isOpen)}
+              onKeyDown={handleTriggerKeyDown}
               className="flex h-7 w-[147px] min-w-0 items-center rounded-sm focus-visible:outline-alba-blue-600 focus-visible:outline-2"
             >
               <span
@@ -92,17 +138,29 @@ function ResumeSelector({
             </div>
           )}
           {onSelectResume && isOpen && (
-            <div className="absolute top-full left-[-58px] z-20 mt-1 flex w-[240px] flex-col overflow-hidden rounded-lg border border-alba-gray-300 bg-alba-white">
-              {resumes.map((resume) => {
+            <div
+              id={listboxId}
+              role="listbox"
+              aria-label="기준 이력서"
+              onKeyDown={handleListKeyDown}
+              className="absolute top-full left-[-58px] z-20 mt-1 flex w-[240px] flex-col overflow-hidden rounded-lg border border-alba-gray-300 bg-alba-white"
+            >
+              {resumes.map((resume, index) => {
                 const isSelected = resume.id === selectedResumeId;
 
                 return (
                   <button
                     key={resume.id}
+                    ref={(element) => {
+                      optionRefs.current[index] = element;
+                    }}
                     type="button"
+                    role="option"
+                    aria-selected={isSelected}
+                    tabIndex={-1}
                     onClick={() => {
                       onSelectResume(resume.id);
-                      setIsOpen(false);
+                      closeDropdown();
                     }}
                     className={`flex w-full items-center justify-between gap-[10px] py-3 pl-4 ${
                       isSelected
