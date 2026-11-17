@@ -15,6 +15,7 @@ import {
   removeSearchFilterTag,
   resetSearchFilters,
 } from '../search/searchFilterTags.ts';
+import { useMyProfile } from './useMyProfile.ts';
 
 type HomeSearchProps = {
   isSignedIn: boolean;
@@ -26,6 +27,11 @@ function HomeSearch({ isSignedIn, onSearch }: HomeSearchProps) {
   const [params, setParams] = useState(() => new URLSearchParams());
   const filterParams: FilterParams = [params, setParams];
   const tags = getSearchFilterTags(params);
+  const { data: profile } = useMyProfile(isSignedIn);
+  const profileUser =
+    isSignedIn && profile
+      ? { name: profile.name, availableJobCount: profile.ongoingJobCount }
+      : null;
 
   return (
     <section aria-labelledby="home-search-title" className="relative pb-6 lg:pt-6 lg:pb-0">
@@ -71,7 +77,7 @@ function HomeSearch({ isSignedIn, onSearch }: HomeSearchProps) {
             />
           </div>
         </div>
-        <MainProfileCard user={isSignedIn ? { name: '심민식', availableJobCount: 50 } : null} />
+        <MainProfileCard user={profileUser} />
       </div>
     </section>
   );
