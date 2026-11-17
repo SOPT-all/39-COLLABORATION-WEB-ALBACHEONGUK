@@ -27,11 +27,18 @@ function HomeSearch({ isSignedIn, onSearch }: HomeSearchProps) {
   const [params, setParams] = useState(() => new URLSearchParams());
   const filterParams: FilterParams = [params, setParams];
   const tags = getSearchFilterTags(params);
-  const { data: profile } = useMyProfile(isSignedIn);
+  const profileQuery = useMyProfile(isSignedIn);
+  const profile = profileQuery.data;
   const profileUser =
     isSignedIn && profile
       ? { name: profile.name, availableJobCount: profile.ongoingJobCount }
       : null;
+  const profileStatus =
+    !isSignedIn || profile
+      ? undefined
+      : profileQuery.isError && !profileQuery.isFetching
+        ? 'error'
+        : 'loading';
 
   return (
     <section aria-labelledby="home-search-title" className="relative pb-6 lg:pt-6 lg:pb-0">
@@ -77,7 +84,11 @@ function HomeSearch({ isSignedIn, onSearch }: HomeSearchProps) {
             />
           </div>
         </div>
-        <MainProfileCard user={profileUser} />
+        <MainProfileCard
+          user={profileUser}
+          status={profileStatus}
+          onRetry={() => void profileQuery.refetch()}
+        />
       </div>
     </section>
   );
