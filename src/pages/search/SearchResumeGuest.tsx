@@ -27,7 +27,7 @@ function SearchResumeGuest({ keyword }: { keyword: string }) {
         <button
           type="button"
           disabled
-          className="text-body-16b bg-alba-yellow-400 text-alba-black rounded-full px-5 py-2"
+          className="text-body-16b bg-alba-yellow-400 text-alba-black h-10 w-[178px] rounded-full px-5 py-2"
         >
           로그인하고 추천 받기
         </button>

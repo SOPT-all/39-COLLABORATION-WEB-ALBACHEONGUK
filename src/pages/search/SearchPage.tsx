@@ -15,6 +15,7 @@ import {
 import PopularSearches from '../../components/PopularSearches.tsx';
 import { POPULAR_SEARCHES, POPULAR_SEARCH_UPDATE_DATE } from '../../data/popularSearches.ts';
 import SearchResumeMatch from './SearchResumeMatch.tsx';
+import SearchResumeGuest from './SearchResumeGuest.tsx';
 import SearchResultToolbar from './SearchResultToolbar.tsx';
 import { readResultToolbar } from './searchResultOptions.ts';
 import SearchJobResults from './SearchJobResults.tsx';
@@ -31,6 +32,7 @@ import { getJobFilterOptions } from '../../apis/searchJobs.ts';
 import { mapJobSearchParams } from './searchJobApiParams.ts';
 import type { WorkPeriod } from '../../types/resumeRecommendation.ts';
 import SearchResultsPending from './SearchResultsPending.tsx';
+import { getQaResumeRecommendation } from './qaResumeRecommendation.ts';
 
 type SearchKeywordInputProps = {
   keyword: string;
@@ -71,16 +73,18 @@ function SearchKeywordInput({
 function SearchPage() {
   const [params, setParams] = useSearchParams();
   const keyword = params.get('keyword') ?? '';
+  const recommendationKeyword = keyword.trim().slice(0, 30);
 
-  const { isSignedIn } = useQaResumeScenario();
+  const { isSignedIn, qa } = useQaResumeScenario();
   const memberId = isSignedIn ? '1' : undefined;
+  const qaRecommendation = getQaResumeRecommendation(qa);
 
   const [selectedResumeId, setSelectedResumeId] = useState<number | undefined>(undefined);
 
   const filterOptionsQuery = useQuery({
     queryKey: ['job-search', 'filter-options'],
     queryFn: ({ signal }) => getJobFilterOptions(signal),
-    enabled: isSignedIn,
+    enabled: isSignedIn && !qaRecommendation,
     staleTime: 5 * 60_000,
   });
 
@@ -130,7 +134,7 @@ function SearchPage() {
 
   const recommendationQuery = useResumeRecommendations(
     {
-      keyword,
+      keyword: recommendationKeyword,
       resumeId: selectedResumeId,
       regionIds,
       categoryCodes,
@@ -139,12 +143,15 @@ function SearchPage() {
       payType,
     },
     memberId,
-    !isSignedIn || filterOptionsQuery.isSuccess,
+    isSignedIn && !qaRecommendation && filterOptionsQuery.isSuccess,
   );
 
-  const recommendedJobs = mapRecommendedJobs(recommendationQuery.data?.jobs ?? []);
+  const recommendationData = qaRecommendation ?? recommendationQuery.data;
+  const recommendedJobs = mapRecommendedJobs(recommendationData?.jobs ?? []);
+  const isRecommendationPending = !qaRecommendation && recommendationQuery.isPending;
   const hasRecommendationError =
-    recommendationQuery.isError || (isSignedIn && filterOptionsQuery.isError);
+    !qaRecommendation &&
+    (recommendationQuery.isError || (isSignedIn && filterOptionsQuery.isError));
   const appliedFilters = readSearchFilters(params).toString();
   const [draft, setDraft] = useState({ source: appliedFilters, filters: appliedFilters });
   if (draft.source !== appliedFilters) {
@@ -297,7 +304,9 @@ function SearchPage() {
         <div className="pt-8">
           {!isError && (isPending || total > 0) && (
             <>
-              {isSignedIn && !filterOptionsQuery.isError && recommendationQuery.isPending && (
+              {!isSignedIn && <SearchResumeGuest keyword={keyword} />}
+
+              {isSignedIn && !hasRecommendationError && isRecommendationPending && (
                 <section className="py-8">
                   <h2 className="text-display-20sb mb-4">이력서 매칭</h2>
                   <SearchResultsPending rowCount={3} />
@@ -320,14 +329,15 @@ function SearchPage() {
                 </section>
               )}
 
-              {!recommendationQuery.isPending &&
+              {isSignedIn &&
+                !isRecommendationPending &&
                 !hasRecommendationError &&
-                recommendationQuery.data && (
+                recommendationData && (
                   <SearchResumeMatch
                     key={String(searchRevision) + ':' + keyword + ':' + appliedFilters}
                     keyword={keyword}
                     items={recommendedJobs}
-                    recommendation={recommendationQuery.data}
+                    recommendation={recommendationData}
                     onSelectResume={(id) => setSelectedResumeId(Number(id))}
                   />
                 )}

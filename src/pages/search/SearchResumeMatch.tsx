@@ -23,7 +23,7 @@ type ResumeHintProps = {
 
 function ResumeHint({ message, action, noMatch = false, children }: ResumeHintProps) {
   return (
-    <div className={`flex flex-col items-center gap-6 text-center ${noMatch ? 'pt-2' : 'pt-4'}`}>
+    <div className="flex flex-col items-center gap-6 pt-4 text-center">
       <div className="flex w-full flex-col items-center gap-2">
         {noMatch ? <SearchErrorIllustration /> : <SearchEmptyIllustration />}
         <p className="text-body-16r text-alba-gray-700">{message}</p>
@@ -33,7 +33,9 @@ function ResumeHint({ message, action, noMatch = false, children }: ResumeHintPr
         <button
           type="button"
           disabled
-          className="text-body-16b bg-alba-yellow-400 text-alba-black rounded-full h-10 px-5 py-2"
+          className={`text-body-16b bg-alba-yellow-400 text-alba-black h-10 rounded-full px-5 py-2 ${
+            action === '이력서 이어서 작성하기' ? 'w-[192px]' : 'w-[145px]'
+          }`}
         >
           {action}
         </button>
@@ -63,8 +65,9 @@ function SignedInMatch({ items, recommendation, onSelectResume }: SearchResumeMa
 
   const selectedId = String(recommendation.selectedResume?.resumeId ?? '');
 
-  const resume = resumes.find(({ id }) => id === selectedId);
   const recommendations = items;
+
+  const hasNoMatch = recommendation.status === 'NO_RECOMMENDATION' || recommendations.length === 0;
 
   const selector = (
     <ResumeSelector
@@ -81,7 +84,7 @@ function SignedInMatch({ items, recommendation, onSelectResume }: SearchResumeMa
         <h2 id="signed-in-match-title" className="text-display-20sb text-alba-gray-800">
           이력서 매칭
         </h2>
-        {status === 'ready' && selector}
+        {status === 'ready' && !hasNoMatch && selector}
       </div>
       {status === 'none' && (
         <ResumeHint
@@ -99,9 +102,6 @@ function SignedInMatch({ items, recommendation, onSelectResume }: SearchResumeMa
       )}
       {status === 'ready' && (
         <>
-          <p className="text-caption-12r text-alba-gray-600 mt-1 text-right">
-            최근 수정일 {resume?.updatedAt}
-          </p>
           {recommendation.status === 'NO_RECOMMENDATION' || recommendations.length === 0 ? (
             <ResumeHint
               message="현재 이력서와 조건에 맞는 추천 공고가 없어요"
