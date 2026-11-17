@@ -67,8 +67,6 @@ function SignedInMatch({ items, recommendation, onSelectResume }: SearchResumeMa
 
   const recommendations = items;
 
-  const hasNoMatch = recommendation.status === 'NO_RECOMMENDATION' || recommendations.length === 0;
-
   const selector = (
     <ResumeSelector
       resumes={resumes}
@@ -84,7 +82,7 @@ function SignedInMatch({ items, recommendation, onSelectResume }: SearchResumeMa
         <h2 id="signed-in-match-title" className="text-display-20sb text-alba-gray-800">
           이력서 매칭
         </h2>
-        {status === 'ready' && !hasNoMatch && selector}
+        {status === 'ready' && selector}
       </div>
       {status === 'none' && (
         <ResumeHint
