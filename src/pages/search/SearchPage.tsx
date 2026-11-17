@@ -19,11 +19,18 @@ import SearchResultToolbar from './SearchResultToolbar.tsx';
 import { readResultToolbar } from './searchResultOptions.ts';
 import SearchJobResults from './SearchJobResults.tsx';
 import SearchPagination from './SearchPagination.tsx';
-import { filterSearchJobs, SEARCH_JOBS } from './searchJobs.ts';
 import { useSearchJobs } from './useSearchJobs.ts';
 import RecentSearches from '../../components/RecentSearches.tsx';
 import SearchBar from '../../components/SearchBar.tsx';
 import { useRecentSearchStore } from '../../stores/useRecentSearchStore.ts';
+import { useResumeRecommendations } from './useResumeRecommendation.ts';
+import { mapRecommendedJobs } from './mapRecommendedJob.ts';
+import { useQaResumeScenario } from '../../hooks/useQaResumeScenario.ts';
+import { useQuery } from '@tanstack/react-query';
+import { getJobFilterOptions } from '../../apis/searchJobs.ts';
+import { mapJobSearchParams } from './searchJobApiParams.ts';
+import type { WorkPeriod } from '../../types/resumeRecommendation.ts';
+import SearchResultsPending from './SearchResultsPending.tsx';
 
 type SearchKeywordInputProps = {
   keyword: string;
@@ -64,6 +71,80 @@ function SearchKeywordInput({
 function SearchPage() {
   const [params, setParams] = useSearchParams();
   const keyword = params.get('keyword') ?? '';
+
+  const { isSignedIn } = useQaResumeScenario();
+  const memberId = isSignedIn ? '1' : undefined;
+
+  const [selectedResumeId, setSelectedResumeId] = useState<number | undefined>(undefined);
+
+  const filterOptionsQuery = useQuery({
+    queryKey: ['job-search', 'filter-options'],
+    queryFn: ({ signal }) => getJobFilterOptions(signal),
+    enabled: isSignedIn,
+    staleTime: 5 * 60_000,
+  });
+
+  const preparedFilters = filterOptionsQuery.data
+    ? mapJobSearchParams(params, filterOptionsQuery.data)
+    : undefined;
+
+  const regionIds = preparedFilters?.params.getAll('regionIds').map(Number);
+  const categoryCodes = preparedFilters?.params.getAll('categoryCodes');
+  const workdays = preparedFilters?.params
+    .getAll('workdays')
+    .filter(
+      (day) =>
+        day === 'MON' ||
+        day === 'TUE' ||
+        day === 'WED' ||
+        day === 'THU' ||
+        day === 'FRI' ||
+        day === 'SAT' ||
+        day === 'SUN',
+    );
+
+  const WORK_PERIOD_CODES: Record<string, WorkPeriod | undefined> = {
+    '1일': 'ONE_DAY',
+    '1주일이하': 'UNDER_ONE_WEEK',
+    '1주일~1개월': 'ONE_WEEK_TO_ONE_MONTH',
+    '1개월~3개월': 'ONE_TO_THREE_MONTHS',
+    '3개월~6개월': 'THREE_TO_SIX_MONTHS',
+    '6개월~1년': 'SIX_MONTHS_TO_ONE_YEAR',
+    '1년이상': 'OVER_ONE_YEAR',
+  };
+
+  const workPeriod = WORK_PERIOD_CODES[params.get('period') ?? ''];
+  const selectedPayType = preparedFilters?.params.get('payType');
+
+  const payType =
+    selectedPayType === 'PER_TASK'
+      ? 'PER_CASE'
+      : selectedPayType === 'HOURLY' ||
+          selectedPayType === 'DAILY' ||
+          selectedPayType === 'WEEKLY' ||
+          selectedPayType === 'MONTHLY' ||
+          selectedPayType === 'YEARLY' ||
+          selectedPayType === 'PER_CASE'
+        ? selectedPayType
+        : undefined;
+
+  const recommendationQuery = useResumeRecommendations(
+    {
+      keyword,
+      resumeId: selectedResumeId,
+      regionIds,
+      categoryCodes,
+      workdays,
+      workPeriod,
+      payType,
+    },
+    memberId,
+    !isSignedIn || filterOptionsQuery.isSuccess,
+  );
+
+  const recommendedJobs = mapRecommendedJobs(recommendationQuery.data?.jobs ?? []);
+  const hasRecommendationError =
+    recommendationQuery.isError || (isSignedIn && filterOptionsQuery.isError);
   const appliedFilters = readSearchFilters(params).toString();
   const [draft, setDraft] = useState({ source: appliedFilters, filters: appliedFilters });
   if (draft.source !== appliedFilters) {
@@ -95,7 +176,6 @@ function SearchPage() {
       { replace: true },
     );
   }, [needsPageCorrection, pageCount, setParams]);
-  const matchingJobs = filterSearchJobs(SEARCH_JOBS, lookup);
   const activeOnly = params.get('activeOnly') === 'true';
   const showToolbar = isPending || (!isError && total > 0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -215,13 +295,43 @@ function SearchPage() {
           )}
         </section>
         <div className="pt-8">
-          {!isPending && !isError && total > 0 && (
-            <SearchResumeMatch
-              key={String(searchRevision) + ':' + keyword + ':' + appliedFilters}
-              keyword={keyword}
-              items={matchingJobs}
-              hasSearchRegion={lookup.has('sido')}
-            />
+          {!isError && (isPending || total > 0) && (
+            <>
+              {isSignedIn && !filterOptionsQuery.isError && recommendationQuery.isPending && (
+                <section className="py-8">
+                  <h2 className="text-display-20sb mb-4">이력서 매칭</h2>
+                  <SearchResultsPending rowCount={3} />
+                </section>
+              )}
+
+              {/* 추천 조회에 실패한 상태 */}
+              {isSignedIn && hasRecommendationError && (
+                <section className="py-8">
+                  <h2 className="text-display-20sb mb-4">이력서 매칭</h2>
+                  <SearchResultsPending
+                    onRetry={() => {
+                      if (filterOptionsQuery.isError) {
+                        void filterOptionsQuery.refetch();
+                      } else {
+                        void recommendationQuery.refetch();
+                      }
+                    }}
+                  />
+                </section>
+              )}
+
+              {!recommendationQuery.isPending &&
+                !hasRecommendationError &&
+                recommendationQuery.data && (
+                  <SearchResumeMatch
+                    key={String(searchRevision) + ':' + keyword + ':' + appliedFilters}
+                    keyword={keyword}
+                    items={recommendedJobs}
+                    recommendation={recommendationQuery.data}
+                    onSelectResume={(id) => setSelectedResumeId(Number(id))}
+                  />
+                )}
+            </>
           )}
           <div ref={resultsRef} className="scroll-mt-8 pt-8">
             {unsupported.length > 0 ? (
