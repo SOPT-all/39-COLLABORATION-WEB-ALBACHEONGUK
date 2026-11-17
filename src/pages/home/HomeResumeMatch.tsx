@@ -45,7 +45,7 @@ function MatchSkeleton() {
       <span className="sr-only">추천 공고를 불러오는 중입니다</span>
       <div aria-hidden="true" className="grid gap-6 md:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
-          <div key={index} className="border-alba-gray-300 rounded-[15px] border p-5">
+          <div key={index} className="border-alba-gray-300 h-[350px] rounded-[15px] border p-5">
             <div className="bg-alba-gray-200 h-[200px] rounded-xl" />
             <div className="bg-alba-gray-200 mt-5 h-5 w-3/4 rounded" />
             <div className="bg-alba-gray-200 mt-3 h-4 w-1/2 rounded" />
@@ -138,28 +138,49 @@ function HomeResumeMatch() {
   // 목업 로그인 상태면 회원 번호 '1'을 보내고, 비로그인이면 보내지 않습니다. (#80 공용 함수 기준)
   const memberId = isSignedIn ? '1' : undefined;
 
-  const query = useQuery({
-    queryKey: ['resume-recommendation', 'home', memberId, selectedResumeId, qa, shouldFailQa],
+  function getRecommendation(resumeId: number | undefined, signal: AbortSignal) {
+    return isQaSimulation
+      ? getQaRecommendation(qa, resumeId, shouldFailQa, signal)
+      : getResumeRecommendations({ resumeId }, memberId);
+  }
+
+  const queryOptions = {
     // 비로그인은 서버를 부르지 않고 바로 로그인 안내를 보여줍니다.
     enabled: isSignedIn,
     retry: false,
     refetchOnWindowFocus: false,
+  } as const;
+
+  const baseQuery = useQuery({
+    ...queryOptions,
+    queryKey: ['resume-recommendation', 'home', memberId, undefined, qa, shouldFailQa],
+    queryFn: ({ signal }) => getRecommendation(undefined, signal),
+  });
+
+  const query = useQuery({
+    ...queryOptions,
+    queryKey: ['resume-recommendation', 'home', memberId, selectedResumeId, qa, shouldFailQa],
     // 이력서를 바꿔 다시 불러오는 동안 이전 추천을 유지해 화면이 깜빡이지 않게 합니다.
     placeholderData: keepPreviousData,
-    queryFn: ({ signal }) =>
-      isQaSimulation
-        ? getQaRecommendation(qa, selectedResumeId, shouldFailQa, signal)
-        : getResumeRecommendations({ resumeId: selectedResumeId }, memberId),
+    queryFn: ({ signal }) => getRecommendation(selectedResumeId, signal),
   });
 
   const data = query.data;
-  const resumes = (data?.resumes ?? []).map(toResume);
+  const resumes = (baseQuery.data?.resumes ?? [])
+    .filter((resume) => resume.status === 'COMPLETED')
+    .map(toResume);
+  const selectedResumeKey = String(
+    selectedResumeId ?? data?.selectedResume?.resumeId ?? baseQuery.data?.selectedResume?.resumeId,
+  );
   const selectedResume = data?.selectedResume ? toResume(data.selectedResume) : undefined;
   const jobs = (data?.jobs ?? []).map(toMatchJobCard);
   const isMatched = isSignedIn && data?.status === 'OK' && jobs.length > 0;
+  const showResumeRow = isSignedIn && (query.isPending || query.isError || isMatched);
+  const canSelectResume = showResumeRow && resumes.some(({ id }) => id === selectedResumeKey);
 
   function handleRetry() {
     setHasRetried(true);
+    void baseQuery.refetch();
     void query.refetch();
   }
 
@@ -259,21 +280,23 @@ function HomeResumeMatch() {
       aria-labelledby="home-match-title"
       className="mx-auto flex w-[calc(100%-2rem)] max-w-[1260px] flex-col gap-6 pt-12 pb-[60px]"
     >
-      <div className="flex min-h-7 flex-wrap items-center justify-between gap-4">
+      <div
+        className={`flex flex-wrap items-center justify-between gap-4 ${showResumeRow ? 'min-h-[52px]' : 'min-h-7'}`}
+      >
         <div className="flex flex-wrap items-center gap-4">
           <h2 id="home-match-title" className="text-display-20sb">
             이력서 매칭
           </h2>
-          {isMatched && (
+          {showResumeRow && (
             <p className="text-body-14r text-alba-gray-700">
               내 이력서로 바로 지원할 수 있는 공고를 추천해 드려요!
             </p>
           )}
         </div>
-        {isMatched && selectedResume && (
+        {canSelectResume && (
           <ResumeSelector
             resumes={resumes}
-            selectedResumeId={selectedResume.id}
+            selectedResumeId={selectedResumeKey}
             onSelectResume={handleSelectResume}
           />
         )}
