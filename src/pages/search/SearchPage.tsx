@@ -33,6 +33,7 @@ import { mapJobSearchParams } from './searchJobApiParams.ts';
 import type { WorkPeriod } from '../../types/resumeRecommendation.ts';
 import SearchResultsPending from './SearchResultsPending.tsx';
 import { getQaResumeRecommendation } from './qaResumeRecommendation.ts';
+import { readWorkCondition } from '../../utils/workConditionSelection.ts';
 
 type SearchKeywordInputProps = {
   keyword: string;
@@ -118,6 +119,8 @@ function SearchPage() {
   };
 
   const workPeriod = WORK_PERIOD_CODES[params.get('period') ?? ''];
+  const { workDays } = readWorkCondition(params);
+  const daysPerWeek = workDays === '전체' ? undefined : Number(workDays.slice(1, -1));
   const selectedPayType = preparedFilters?.params.get('payType');
 
   const payType =
@@ -139,6 +142,7 @@ function SearchPage() {
       regionIds,
       categoryCodes,
       workdays,
+      daysPerWeek,
       workPeriod,
       payType,
     },
