@@ -16,6 +16,7 @@ export type ResumeRecommendationRequest = {
   regionIds?: number[];
   categoryCodes?: string[];
   workdays?: Workday[];
+  daysPerWeek?: number;
   workPeriod?: WorkPeriod;
   payType?: PayType;
 };

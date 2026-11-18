@@ -33,6 +33,7 @@ import { mapJobSearchParams } from './searchJobApiParams.ts';
 import type { WorkPeriod } from '../../types/resumeRecommendation.ts';
 import SearchResultsPending from './SearchResultsPending.tsx';
 import { getQaResumeRecommendation } from './qaResumeRecommendation.ts';
+import { readWorkCondition } from '../../utils/workConditionSelection.ts';
 
 type SearchKeywordInputProps = {
   keyword: string;
@@ -117,7 +118,18 @@ function SearchPage() {
     '1년이상': 'OVER_ONE_YEAR',
   };
 
+  const DAYS_PER_WEEK: Partial<Record<string, number>> = {
+    주1일: 1,
+    주2일: 2,
+    주3일: 3,
+    주4일: 4,
+    주5일: 5,
+    주6일: 6,
+  };
+
   const workPeriod = WORK_PERIOD_CODES[params.get('period') ?? ''];
+  const { workDays } = readWorkCondition(params);
+  const daysPerWeek = DAYS_PER_WEEK[workDays];
   const selectedPayType = preparedFilters?.params.get('payType');
 
   const payType =
@@ -139,6 +151,7 @@ function SearchPage() {
       regionIds,
       categoryCodes,
       workdays,
+      daysPerWeek,
       workPeriod,
       payType,
     },
