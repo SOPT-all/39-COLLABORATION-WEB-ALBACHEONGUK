@@ -1,14 +1,18 @@
-* {
-  box-sizing: border-box;
-}
+@import 'tailwindcss';
+@import './styles/font.css';
+@import './styles/theme.css';
 
 body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: var(--font-pretendard);
 }
 
 main {
   max-width: 72rem;
   margin: 0 auto;
   padding: 2rem;
+}
+
+main.full-width-page {
+  max-width: none;
+  padding: 0;
 }
