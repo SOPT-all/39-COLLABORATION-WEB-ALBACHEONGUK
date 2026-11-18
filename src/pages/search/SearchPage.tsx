@@ -118,9 +118,18 @@ function SearchPage() {
     '1년이상': 'OVER_ONE_YEAR',
   };
 
+  const DAYS_PER_WEEK: Partial<Record<string, number>> = {
+    주1일: 1,
+    주2일: 2,
+    주3일: 3,
+    주4일: 4,
+    주5일: 5,
+    주6일: 6,
+  };
+
   const workPeriod = WORK_PERIOD_CODES[params.get('period') ?? ''];
   const { workDays } = readWorkCondition(params);
-  const daysPerWeek = workDays === '전체' ? undefined : Number(workDays.slice(1, -1));
+  const daysPerWeek = DAYS_PER_WEEK[workDays];
   const selectedPayType = preparedFilters?.params.get('payType');
 
   const payType =
