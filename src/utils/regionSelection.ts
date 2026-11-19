@@ -14,7 +14,7 @@ export function readRegionSelection(params: URLSearchParams): RegionSelection {
   const options = REGIONS[sido];
   if (values.includes(ALL_GUGUN)) return { sido, guguns: [...options] };
 
-  const guguns = options.filter((name) => values.includes(name));
+  const guguns = [...new Set(values)].filter((name) => options.includes(name));
   return guguns.length > 0 ? { sido, guguns } : { sido: null, guguns: [] };
 }
 
@@ -26,7 +26,7 @@ export function writeRegionSelection(params: URLSearchParams, { sido, guguns }: 
   if (!sido || sido === ALL_GUGUN || !Object.hasOwn(REGIONS, sido)) return next;
 
   const options = REGIONS[sido];
-  const selected = options.filter((name) => guguns.includes(name));
+  const selected = [...new Set(guguns)].filter((name) => options.includes(name));
   if (options.length > 0 && selected.length === 0) return next;
 
   next.set(REGION_PARAM.SIDO, sido);
