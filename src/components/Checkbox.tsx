@@ -10,7 +10,7 @@ type CheckboxProps = {
 
 function Checkbox({ checked, onChange, label, disabled = false }: CheckboxProps) {
   return (
-    <label className="inline-flex cursor-pointer items-center gap-2 has-[:disabled]:cursor-not-allowed">
+    <label className="relative inline-flex cursor-pointer items-center gap-2 has-[:disabled]:cursor-not-allowed">
       <input
         type="checkbox"
         checked={checked}
