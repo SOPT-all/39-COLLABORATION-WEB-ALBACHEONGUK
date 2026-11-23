@@ -45,7 +45,9 @@ function HomeSearch({ isSignedIn, onSearch }: HomeSearchProps) {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-[3px] inset-x-0 h-[396px] bg-top bg-no-repeat"
-        style={{ backgroundImage: 'url(' + heroBackground + ')' }}
+        style={{
+          backgroundImage: `url(${heroBackground}), linear-gradient(#ffffff, #fff6dd)`,
+        }}
       />
       <div className="relative mx-auto grid w-[calc(100%-2rem)] max-w-[1260px] items-end gap-5 pt-12 lg:min-h-[412px] lg:grid-cols-[minmax(0,1fr)_302px] lg:pt-0">
         <div className="min-w-0 space-y-6">
