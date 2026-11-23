@@ -358,7 +358,7 @@ function SearchPage() {
           )}
           <div ref={resultsRef} className="scroll-mt-8 pt-8">
             {unsupported.length > 0 ? (
-              <div className="flex flex-col items-start gap-4 py-8">
+              <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 py-8">
                 <p role="alert" className="text-body-16r text-alba-gray-700">
                   {'검색에서 지원하지 않는 조건이 포함되어 있어요. ' + unsupported.join(', ')}
                 </p>
