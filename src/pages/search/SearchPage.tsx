@@ -405,7 +405,7 @@ function SearchPage() {
           onSearch={(value) => handleSearch(value)}
           onRemove={removeKeyword}
           onClear={clearKeywords}
-          onEmptyAfterDelete={() => inputRef.current?.focus()}
+          onEmptyAfterDelete={() => inputRef.current?.focus({ preventScroll: true })}
         />
       </aside>
     </div>

@@ -33,7 +33,7 @@ function RecentSearches({
     const adjacentKeyword = keywords[index + 1] ?? keywords[index - 1];
     const adjacentButton = searchButtons.current.get(adjacentKeyword);
     if (adjacentButton) {
-      adjacentButton.focus();
+      adjacentButton.focus({ preventScroll: true });
     } else {
       onEmptyAfterDelete();
     }
