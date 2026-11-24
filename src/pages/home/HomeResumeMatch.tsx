@@ -273,7 +273,9 @@ function HomeResumeMatch() {
           <button
             type="button"
             disabled
-            className="text-body-16b bg-alba-yellow-400 text-alba-black inline-flex h-10 items-center justify-center rounded-full px-5"
+            className={`text-body-16b bg-alba-yellow-400 text-alba-black inline-flex h-10 items-center justify-center rounded-full px-5 ${
+              variant === 'guest' ? '' : variant === 'draft' ? 'w-[192px]' : 'w-[145px]'
+            }`}
           >
             {variant === 'guest' ? (
               <TextImage src={loginRecommendText} label={action} width={136} height={15} />
