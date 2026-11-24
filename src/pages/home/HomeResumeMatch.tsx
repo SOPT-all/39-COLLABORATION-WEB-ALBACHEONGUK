@@ -15,6 +15,7 @@ import SearchErrorIllustration from '../search/SearchErrorIllustration.tsx';
 import { getResumeRecommendations } from '../../apis/resumeRecommendation.ts';
 import type { ResumeRecommendationData } from '../../types/resumeRecommendation.ts';
 import { HOME_MATCH_JOBS, HOME_RESUMES } from './homeResumeFixtures.ts';
+import { RESUME_ACTION_TEXT } from '../search/resumeActionText.ts';
 import { toMatchJobCard, toResume } from './mapResumeRecommendation.ts';
 
 const OUTLINE_BUTTON =
@@ -272,12 +273,19 @@ function HomeResumeMatch() {
           <button
             type="button"
             disabled
-            className="text-body-16b bg-alba-yellow-400 text-alba-black inline-flex h-10 items-center justify-center rounded-full px-5"
+            className={`text-body-16b bg-alba-yellow-400 text-alba-black inline-flex h-10 items-center justify-center rounded-full px-5 ${
+              variant === 'guest' ? '' : variant === 'draft' ? 'w-[192px]' : 'w-[145px]'
+            }`}
           >
             {variant === 'guest' ? (
               <TextImage src={loginRecommendText} label={action} width={136} height={15} />
             ) : (
-              action
+              <TextImage
+                src={RESUME_ACTION_TEXT[action].src}
+                label={action}
+                width={RESUME_ACTION_TEXT[action].width}
+                height={15}
+              />
             )}
           </button>
         </div>

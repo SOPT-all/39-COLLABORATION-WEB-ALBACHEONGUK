@@ -6,6 +6,8 @@ import SearchJobItem from './SearchJobItem.tsx';
 import SearchResumeGuest from './SearchResumeGuest.tsx';
 import type { SearchJob } from './searchJobs.ts';
 import resumeMatchText from '../../assets/text/home/resume-match.svg';
+import { RESUME_ACTION_TEXT } from './resumeActionText.ts';
+import TextImage from '../../components/TextImage.tsx';
 import SearchEmptyIllustration from './SearchEmptyIllustration.tsx';
 
 type SearchResumeMatchProps = {
@@ -34,11 +36,20 @@ function ResumeHint({ message, action, noMatch = false, children }: ResumeHintPr
         <button
           type="button"
           disabled
-          className={`text-body-16b bg-alba-yellow-400 text-alba-black h-10 rounded-full px-5 py-2 ${
+          className={`text-body-16b bg-alba-yellow-400 text-alba-black inline-flex h-10 items-center justify-center rounded-full px-5 py-2 ${
             action === '이력서 이어서 작성하기' ? 'w-[192px]' : 'w-[145px]'
           }`}
         >
-          {action}
+          {RESUME_ACTION_TEXT[action] ? (
+            <TextImage
+              src={RESUME_ACTION_TEXT[action].src}
+              label={action}
+              width={RESUME_ACTION_TEXT[action].width}
+              height={15}
+            />
+          ) : (
+            action
+          )}
         </button>
       </div>
     </div>

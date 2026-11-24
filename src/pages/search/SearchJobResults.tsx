@@ -4,6 +4,9 @@ import SearchResultsPending from './SearchResultsPending.tsx';
 import SearchEmptyIllustration from './SearchEmptyIllustration.tsx';
 import { POPULAR_SEARCHES } from '../../data/popularSearches.ts';
 import { SEARCH_JOBS } from './searchJobs.ts';
+import browseAllText from '../../assets/text/button/browse-all.svg';
+import filterResetText from '../../assets/text/button/filter-reset.svg';
+import TextImage from '../../components/TextImage.tsx';
 import type { SearchJob } from './searchJobs.ts';
 
 const GROUPS = [
@@ -61,17 +64,17 @@ function SearchJobResults({
                 <button
                   type="button"
                   onClick={onReset}
-                  className="text-body-16b text-alba-gray-500 cursor-pointer h-[46px] w-40 rounded-lg border border-alba-gray-300"
+                  className="text-body-16b text-alba-gray-500 inline-flex h-[46px] w-40 cursor-pointer items-center justify-center rounded-lg border border-alba-gray-300"
                 >
-                  조건 초기화
+                  <TextImage src={filterResetText} label="조건 초기화" width={76} height={15} />
                 </button>
               )}
               <button
                 type="button"
                 onClick={onBrowseAll}
-                className="text-body-16b cursor-pointer h-[46px] w-40 rounded-lg border border-alba-yellow-500 bg-alba-yellow-400"
+                className="text-body-16b text-alba-black inline-flex h-[46px] w-40 cursor-pointer items-center justify-center rounded-lg border border-alba-yellow-500 bg-alba-yellow-400"
               >
-                전체 공고 둘러보기
+                <TextImage src={browseAllText} label="전체 공고 둘러보기" width={121} height={15} />
               </button>
             </div>
             <div className="bg-alba-gray-200 mt-10 flex max-w-full flex-col items-center gap-4 rounded-xl px-8 py-4">

@@ -1,3 +1,5 @@
+import retrySearchText from '../../assets/text/button/retry-search.svg';
+import TextImage from '../../components/TextImage.tsx';
 import SearchErrorIllustration from './SearchErrorIllustration.tsx';
 
 function SearchResultsPending({
@@ -19,9 +21,9 @@ function SearchResultsPending({
         <button
           type="button"
           onClick={onRetry}
-          className="text-body-16b text-alba-gray-500 border-alba-gray-300 bg-alba-white h-[46px] w-40 cursor-pointer rounded-lg border"
+          className="text-body-16b text-alba-gray-500 border-alba-gray-300 bg-alba-white inline-flex h-[46px] w-40 cursor-pointer items-center justify-center rounded-lg border"
         >
-          다시 시도하기
+          <TextImage src={retrySearchText} label="다시 시도하기" width={88} height={15} />
         </button>
       </div>
     );
