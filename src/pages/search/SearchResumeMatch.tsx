@@ -5,6 +5,7 @@ import { useQaResumeScenario } from '../../hooks/useQaResumeScenario.ts';
 import SearchJobItem from './SearchJobItem.tsx';
 import SearchResumeGuest from './SearchResumeGuest.tsx';
 import type { SearchJob } from './searchJobs.ts';
+import resumeMatchText from '../../assets/text/home/resume-match.svg';
 import SearchEmptyIllustration from './SearchEmptyIllustration.tsx';
 
 type SearchResumeMatchProps = {
@@ -79,8 +80,8 @@ function SignedInMatch({ items, recommendation, onSelectResume }: SearchResumeMa
   return (
     <section aria-labelledby="signed-in-match-title" className="py-8">
       <div className="flex min-h-10 flex-wrap items-center justify-between gap-2">
-        <h2 id="signed-in-match-title" className="text-display-20sb text-alba-gray-800">
-          이력서 매칭
+        <h2 id="signed-in-match-title" className="flex h-7 items-center">
+          <img src={resumeMatchText} alt="이력서 매칭" width={93} height={19} />
         </h2>
         {status === 'ready' && selector}
       </div>
