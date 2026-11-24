@@ -1,3 +1,4 @@
+import allJobsText from '../../assets/text/search/all-jobs.svg';
 import SearchJobItem from './SearchJobItem.tsx';
 import SearchResultsPending from './SearchResultsPending.tsx';
 import SearchEmptyIllustration from './SearchEmptyIllustration.tsx';
@@ -37,7 +38,9 @@ function SearchJobResults({
   return (
     <section aria-labelledby="search-result-title" className="min-w-0">
       <h1 id="search-result-title" className="text-display-20sb flex min-h-11 items-start gap-2">
-        전체 채용정보
+        <span className="flex h-7 items-center">
+          <img src={allJobsText} alt="전체 채용정보" width={112} height={19} />
+        </span>
         <span className="text-body-16b text-alba-blue-600 self-start pt-0.5" aria-live="polite">
           {total.toLocaleString('ko-KR')}
         </span>

@@ -33,6 +33,7 @@ import { mapJobSearchParams } from './searchJobApiParams.ts';
 import type { WorkPeriod } from '../../types/resumeRecommendation.ts';
 import SearchResultsPending from './SearchResultsPending.tsx';
 import { getQaResumeRecommendation } from './qaResumeRecommendation.ts';
+import resumeMatchText from '../../assets/text/home/resume-match.svg';
 import { readWorkCondition } from '../../utils/workConditionSelection.ts';
 
 type SearchKeywordInputProps = {
@@ -321,7 +322,9 @@ function SearchPage() {
 
               {isSignedIn && !hasRecommendationError && isRecommendationPending && (
                 <section className="py-8">
-                  <h2 className="text-display-20sb mb-4">이력서 매칭</h2>
+                  <h2 className="mb-4 flex h-7 items-center">
+                    <img src={resumeMatchText} alt="이력서 매칭" width={93} height={19} />
+                  </h2>
                   <SearchResultsPending rowCount={3} />
                 </section>
               )}
@@ -329,7 +332,9 @@ function SearchPage() {
               {/* 추천 조회에 실패한 상태 */}
               {isSignedIn && hasRecommendationError && (
                 <section className="py-8">
-                  <h2 className="text-display-20sb mb-4">이력서 매칭</h2>
+                  <h2 className="mb-4 flex h-7 items-center">
+                    <img src={resumeMatchText} alt="이력서 매칭" width={93} height={19} />
+                  </h2>
                   <SearchResultsPending
                     onRetry={() => {
                       if (filterOptionsQuery.isError) {
