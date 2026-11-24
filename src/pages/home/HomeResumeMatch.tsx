@@ -297,7 +297,7 @@ function HomeResumeMatch() {
           <h2 id="home-match-title" className="flex h-7 shrink-0 items-center">
             <img src={resumeMatchText} alt="이력서 매칭" width={93} height={19} />
           </h2>
-          {showResumeRow && (
+          {showResumeRow && !isNoMatch && (
             <p className="text-body-14r text-alba-gray-700">
               내 이력서로 바로 지원할 수 있는 공고를 추천해 드려요!
             </p>
