@@ -1,5 +1,7 @@
 import { useRef, type FormEvent, type KeyboardEvent, type Ref } from 'react';
 import searchIcon from '../assets/icons/search-bar/search.svg';
+import searchText from '../assets/text/button/search.svg';
+import TextImage from './TextImage.tsx';
 
 type SearchBarProps = {
   value: string;
@@ -72,9 +74,9 @@ function SearchBar({
       <button
         type="submit"
         disabled={!canSearch}
-        className="bg-alba-yellow-400 text-alba-black text-body-16b focus-visible:outline-alba-blue-600 disabled:bg-alba-gray-200 disabled:text-alba-gray-400 h-10 w-28 shrink-0 cursor-pointer tracking-normal rounded-[100px] px-5 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
+        className="bg-alba-yellow-400 text-alba-black text-body-16b inline-flex items-center justify-center focus-visible:outline-alba-blue-600 disabled:bg-alba-gray-200 disabled:text-alba-gray-400 h-10 w-28 shrink-0 cursor-pointer tracking-normal rounded-[100px] px-5 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
       >
-        검색하기
+        <TextImage src={searchText} label="검색하기" width={56} height={15} />
       </button>
     </form>
   );

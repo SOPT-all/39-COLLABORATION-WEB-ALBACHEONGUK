@@ -1,12 +1,15 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import resumeMatchImage from '../../assets/images/search/resume-match.png';
+import loginRecommendText from '../../assets/text/button/login-recommend.svg';
+import resumeMatchText from '../../assets/text/home/resume-match.svg';
 import JobCard from '../../components/JobCard.tsx';
 import type { JobCardData } from '../../components/JobCard.tsx';
 import ResumeSelector from '../../components/ResumeSelector.tsx';
 import ScrapButton from '../../components/ScrapButton.tsx';
 import { useJobScrap } from '../../hooks/useJobScrap.ts';
 import { useQaResumeScenario } from '../../hooks/useQaResumeScenario.ts';
+import TextImage from '../../components/TextImage.tsx';
 import SearchEmptyIllustration from '../search/SearchEmptyIllustration.tsx';
 import SearchErrorIllustration from '../search/SearchErrorIllustration.tsx';
 import { getResumeRecommendations } from '../../apis/resumeRecommendation.ts';
@@ -266,9 +269,13 @@ function HomeResumeMatch() {
           <button
             type="button"
             disabled
-            className="text-body-16b bg-alba-yellow-400 text-alba-black h-10 rounded-full px-5"
+            className="text-body-16b bg-alba-yellow-400 text-alba-black inline-flex h-10 items-center justify-center rounded-full px-5"
           >
-            {action}
+            {variant === 'guest' ? (
+              <TextImage src={loginRecommendText} label={action} width={136} height={15} />
+            ) : (
+              action
+            )}
           </button>
         </div>
       </div>
@@ -284,8 +291,8 @@ function HomeResumeMatch() {
         className={`flex flex-wrap items-center justify-between gap-4 ${showResumeRow ? 'min-h-[52px]' : 'min-h-7'}`}
       >
         <div className="flex flex-wrap items-center gap-4">
-          <h2 id="home-match-title" className="text-display-20sb">
-            이력서 매칭
+          <h2 id="home-match-title" className="flex h-7 shrink-0 items-center">
+            <img src={resumeMatchText} alt="이력서 매칭" width={93} height={19} />
           </h2>
           {showResumeRow && (
             <p className="text-body-14r text-alba-gray-700">

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import heroBackground from '../../assets/images/home/hero-background.png';
+import heroTitleBottom from '../../assets/text/home/hero-title-bottom.svg';
+import heroTitleTop from '../../assets/text/home/hero-title-top.svg';
 import MoneyFilter from '../../components/Dropdown/MoneyFilter.tsx';
 import FilterTags from '../../components/FilterTags.tsx';
 import JobCategoryFilter from '../../components/JobCategoryFilter.tsx';
@@ -49,12 +51,19 @@ function HomeSearch({ isSignedIn, onSearch }: HomeSearchProps) {
       />
       <div className="relative mx-auto grid w-[calc(100%-2rem)] max-w-[1260px] items-end gap-5 pt-12 lg:min-h-[412px] lg:grid-cols-[minmax(0,1fr)_302px] lg:pt-0">
         <div className="min-w-0 space-y-6">
-          <h1
-            id="home-search-title"
-            className="text-alba-gray-800 px-3 text-[32px] leading-[1.4] font-bold lg:text-[40px]"
-          >
-            <span className="mb-1 block text-xl">여기는 돈 버는 천국,</span>
-            <span className="text-alba-yellow-700">딱 맞는 알바</span>를 찾아보세요
+          <h1 id="home-search-title" className="px-3">
+            <span className="mb-1 flex h-7 items-center">
+              <img src={heroTitleTop} alt="여기는 돈 버는 천국," width={162} height={20} />
+            </span>
+            <span className="flex h-[45px] items-center lg:h-14">
+              <img
+                src={heroTitleBottom}
+                alt="딱 맞는 알바를 찾아보세요"
+                width={421}
+                height={38}
+                className="h-auto max-w-full"
+              />
+            </span>
           </h1>
           <div className="bg-alba-white border-alba-gray-300 rounded-[20px] border shadow-[0_-2px_10px_rgba(73,38,17,0.05)]">
             <div className="space-y-3 px-5 pt-4 pb-3">
