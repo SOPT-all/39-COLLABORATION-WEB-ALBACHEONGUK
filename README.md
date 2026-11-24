@@ -63,7 +63,7 @@
   Git · GitHub Actions · Vercel · Node.js · pnpm · ESLint · Prettier
 </p>
 
-- React·TypeScript로 화면을 구성하고, Tailwind CSS의 공통 토큰으로 색상·서체를 맞춥니다.
+- React·TypeScript로 화면을 구성하고, Tailwind CSS의 공통 토큰으로 색상·서체를 맞춥니다. 기본 서체는 Pretendard이며 HG굴린꼬딕씨 문구는 Figma에서 내보낸 SVG로 표시합니다.
 - 검색 조건은 URL, 서버 데이터는 TanStack Query, 공유하는 클라이언트 상태는 Zustand로 관리합니다.
 - GitHub Actions로 코드를 검사하고, Vercel에 배포합니다.
 
@@ -105,11 +105,11 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 
 ## 자동 검사·배포
 
-| 구분       | 기준                                                     |
-| ---------- | -------------------------------------------------------- |
-| 코드 검사  | PR과 `main`·`develop` push에서 린트·타입·빌드·포맷 검사  |
-| Preview    | 같은 저장소의 Draft가 아닌 PR에서 검사 후 변경 화면 배포 |
-| Production | `main`에 반영된 코드를 검사 후 운영 환경에 배포          |
+| 구분       | 기준                                                           |
+| ---------- | -------------------------------------------------------------- |
+| 코드 검사  | PR과 `main`·`develop` push에서 린트·타입·테스트·빌드·포맷 검사 |
+| Preview    | 같은 저장소의 Draft가 아닌 PR에서 검사 후 변경 화면 배포       |
+| Production | `main`에 반영된 코드를 검사 후 운영 환경에 배포                |
 
 ```text
 개발: 작업 브랜치 → PR → 자동 검사·Preview → 리뷰·승인 → develop
@@ -118,6 +118,13 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 
 배포는 GitHub Actions에서 Vercel CLI로 진행합니다. Preview 주소는 해당 Actions 실행의 Summary에서 확인합니다.
 API 환경변수는 Preview·Production 환경에 각각 등록하며, 라우팅 경로로 직접 접근하거나 새로고침해도 앱을 표시하도록 SPA rewrite를 적용합니다.
+
+## 서비스·QA 확인
+
+- [운영 서비스](https://39-collaboration-web-albacheonguk.vercel.app/)에서 검색·필터·정렬·페이지 이동·스크랩·이력서 변경 등 주요 흐름을 확인합니다.
+- 이력서 없음·작성 중·추천 없음·로딩·오류는 [상태별 QA 링크](https://app.notion.com/p/99a828481af882d892fe01d1fb7840ce)에서 확인합니다. 최신 운영 코드와 동일한 소스의 통합 프리뷰를 사용하며, 일부 상태는 재현용 데이터로 표시합니다.
+- `?qa=...`와 `/setup` 확인 화면은 로컬 개발·Vercel Preview 전용이며 운영 빌드에서는 비활성화합니다.
+- 프리뷰 주소는 특정 배포 버전에 고정됩니다. 이후 수정이 자동 반영되지 않으므로 최종 QA 때는 운영과 프리뷰의 기준 커밋을 대조하고 링크를 갱신합니다.
 
 ## 협업 컨벤션
 
@@ -203,7 +210,7 @@ docs: 팀 소개와 개발 범위를 README에 반영
 ```text
 src/
 ├── apis/                 # Axios 클라이언트·요청 함수·QueryClient
-├── assets/               # 이미지·아이콘·폰트
+├── assets/               # 이미지·아이콘·폰트·SVG 문구
 │   └── fonts/
 ├── components/           # 여러 화면에서 재사용하는 컴포넌트
 │   ├── Header.tsx
@@ -219,6 +226,7 @@ src/
 │   ├── font.css
 │   └── theme.css
 ├── types/                # 공통 타입·API 응답 타입
+├── utils/                # 검색 조건·날짜 등 공통 로직
 ├── App.tsx               # 라우팅 구성
 ├── index.css             # 전역 스타일
 └── main.tsx              # 앱 진입점·Provider 연결
@@ -256,13 +264,13 @@ export default JobCard;
 <details>
 <summary>URL·Query·Zustand·내부 상태를 나누는 기준</summary>
 
-| 상태                                           | 관리 위치                                                 |
-| ---------------------------------------------- | --------------------------------------------------------- |
-| 실행한 검색어·필터·정렬·토글·페이지·표시 개수  | URL                                                       |
-| 공고·이력서·추천 API 응답                      | TanStack Query                                            |
-| 여러 영역에서 함께 쓰는 선택 이력서 ID 등      | Zustand                                                   |
-| 드롭다운·팝업 열림, 적용 전 임시 선택, 행 펼침 | 우선 해당 컴포넌트의 `useState`                           |
-| 스크랩·최근 검색                               | 브라우저 저장, 여러 화면의 동기화가 필요하면 store와 연결 |
+| 상태                                                      | 관리 위치                               |
+| --------------------------------------------------------- | --------------------------------------- |
+| 실행한 검색어·필터·정렬·토글·페이지·표시 개수             | URL                                     |
+| 공고·이력서·추천 API 응답                                 | TanStack Query                          |
+| 데모 로그인·이력서 작성 상태, 로그인 안내 표시            | Zustand                                 |
+| 선택 이력서 ID, 드롭다운 열림, 적용 전 임시 선택, 행 펼침 | 우선 해당 컴포넌트의 `useState`         |
+| 스크랩·최근 검색                                          | Zustand로 공유하고 브라우저에 저장·복원 |
 
 - URL 조건과 Query 응답을 Zustand에 중복 저장하지 않습니다.
 - 필터의 `[적용]`은 선택값만 저장하고 `[검색하기]`에서 결과를 갱신합니다.
@@ -277,5 +285,5 @@ export default JobCard;
 - [노션 · 일정·업무 분담·과제](https://app.notion.com/p/40b828481af880c6b072e73b768e4128)
 - [코딩 컨벤션](https://app.notion.com/p/8eb828481af883d79323013b119a0fe2) · [Git · Issue · PR 가이드](https://app.notion.com/p/d35828481af883ffab9101cb84f217d5)
 - [킥오프 FigJam](https://www.figma.com/board/URXA8pMmgp5wz2A5WvLS0x?node-id=0-1)
-- [리디자인](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5) · [디자인 시스템](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-3)
+- [리디자인](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5) · [디자인 시스템](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-4)
 - [화면설계서·기능명세서](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=6-11) · [PRD](https://app.notion.com/p/sopt-official/40d1e48dd96080d39db1d023ebbdaf5e)
