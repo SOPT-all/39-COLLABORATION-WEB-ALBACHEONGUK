@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../assets/fonts/PretendardVariable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 지하철 노선 배지의 숫자·중 글리프용 Google Fonts 공식 subset입니다. */
+@font-face {
+  font-family: 'Noto Sans KR Station';
+  src: url('../assets/fonts/NotoSansKR-StationBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

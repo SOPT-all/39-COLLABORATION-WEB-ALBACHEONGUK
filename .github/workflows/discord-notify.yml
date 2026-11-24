@@ -1,0 +1,38 @@
+name: Discord PR notification
+
+on:
+  pull_request_target:
+    branches: [main, develop]
+    types: [opened, closed]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (github.event.action == 'opened' || github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v9
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        with:
+          script: |
+            const url = process.env.DISCORD_WEBHOOK_URL;
+            if (!url) {
+              core.setFailed('DISCORD_WEBHOOK_URL secret을 등록하세요.');
+              return;
+            }
+            const pr = context.payload.pull_request;
+            const action = context.payload.action === 'opened' ? 'PR 생성' : 'PR 머지';
+            const content = `[${action}] #${pr.number} ${pr.title}\n작성자: ${pr.user.login}\n${pr.html_url}`;
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ content, allowed_mentions: { parse: [] } }),
+            });
+            if (!response.ok) {
+              core.setFailed(`Discord 알림 실패: HTTP ${response.status}`);
+            }
