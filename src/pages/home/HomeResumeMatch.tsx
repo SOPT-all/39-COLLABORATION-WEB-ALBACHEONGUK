@@ -178,7 +178,10 @@ function HomeResumeMatch() {
   const selectedResume = data?.selectedResume ? toResume(data.selectedResume) : undefined;
   const jobs = (data?.jobs ?? []).map(toMatchJobCard);
   const isMatched = isSignedIn && data?.status === 'OK' && jobs.length > 0;
-  const showResumeRow = isSignedIn && (query.isPending || query.isError || isMatched);
+  const isNoMatch =
+    isSignedIn &&
+    (data?.status === 'NO_RECOMMENDATION' || (data?.status === 'OK' && jobs.length === 0));
+  const showResumeRow = isSignedIn && (query.isPending || query.isError || isMatched || isNoMatch);
   const canSelectResume = showResumeRow && resumes.some(({ id }) => id === selectedResumeKey);
 
   function handleRetry() {
