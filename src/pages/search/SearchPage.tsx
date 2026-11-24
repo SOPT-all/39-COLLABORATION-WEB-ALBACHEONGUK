@@ -34,6 +34,8 @@ import type { WorkPeriod } from '../../types/resumeRecommendation.ts';
 import SearchResultsPending from './SearchResultsPending.tsx';
 import { getQaResumeRecommendation } from './qaResumeRecommendation.ts';
 import resumeMatchText from '../../assets/text/home/resume-match.svg';
+import filterResetText from '../../assets/text/button/filter-reset.svg';
+import TextImage from '../../components/TextImage.tsx';
 import { readWorkCondition } from '../../utils/workConditionSelection.ts';
 
 type SearchKeywordInputProps = {
@@ -370,9 +372,9 @@ function SearchPage() {
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="text-body-16b text-alba-gray-500 border-alba-gray-300 h-[46px] w-40 cursor-pointer rounded-lg border"
+                  className="text-body-16b text-alba-gray-500 border-alba-gray-300 inline-flex h-[46px] w-40 cursor-pointer items-center justify-center rounded-lg border"
                 >
-                  조건 초기화
+                  <TextImage src={filterResetText} label="조건 초기화" width={76} height={15} />
                 </button>
               </div>
             ) : (
