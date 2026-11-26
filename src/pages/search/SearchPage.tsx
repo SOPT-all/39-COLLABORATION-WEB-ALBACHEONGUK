@@ -81,9 +81,8 @@ function SearchPage() {
 
   const { isSignedIn, qa } = useQaResumeScenario();
   const memberId = isSignedIn ? '1' : undefined;
-  const qaRecommendation = getQaResumeRecommendation(qa);
-
   const [selectedResumeId, setSelectedResumeId] = useState<number | undefined>(undefined);
+  const qaRecommendation = getQaResumeRecommendation(qa, selectedResumeId);
 
   const filterOptionsQuery = useQuery({
     queryKey: ['job-search', 'filter-options'],
