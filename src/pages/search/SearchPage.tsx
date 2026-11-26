@@ -284,7 +284,7 @@ function SearchPage() {
           keyword={keyword}
           onSearch={(value) => handleSearch(value, draftFilters)}
           inputRef={inputRef}
-          hasSelectedFilters={tags.length > 0 || activeOnly}
+          hasSelectedFilters={tags.length > 0}
         />
         <section aria-label="검색 필터" className="mt-[11px] space-y-[11px]">
           <div className="flex flex-wrap items-start gap-2">
