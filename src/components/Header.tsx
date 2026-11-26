@@ -21,7 +21,7 @@ const FOCUS_STYLE =
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alba-blue-600';
 
 function Header() {
-  const { isSignedIn, toggleSignIn } = useQaResumeScenario();
+  const { isSignedIn, toggleSignIn, qa } = useQaResumeScenario();
   const [accountAction, accountDestination] = isSignedIn
     ? ['로그아웃', '내 정보']
     : ['로그인', '회원가입'];
@@ -43,7 +43,7 @@ function Header() {
       <div className="overflow-x-auto px-4">
         <div className="mx-auto flex w-full min-w-max max-w-[1244px] items-end gap-[clamp(16px,calc((100vw_-_1280px)/2),116px)] pb-6">
           <Link
-            to="/"
+            to={qa ? { pathname: '/', search: new URLSearchParams({ qa }).toString() } : '/'}
             className="focus-visible:outline-alba-blue-600 shrink-0 rounded-sm focus-visible:outline-2 focus-visible:-outline-offset-2"
           >
             <img src={logo} alt="알바천국 홈" width={154} height={61} />
