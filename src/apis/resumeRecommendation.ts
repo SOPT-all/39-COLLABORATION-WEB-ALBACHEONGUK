@@ -22,3 +22,13 @@ export async function getResumeRecommendations(
 
   return response.data.data;
 }
+
+export function resumeRecommendationOptions(
+  params: ResumeRecommendationRequest,
+  memberId?: string,
+) {
+  return {
+    queryKey: ['resume-recommendations', params, memberId],
+    queryFn: () => getResumeRecommendations(params, memberId),
+  };
+}

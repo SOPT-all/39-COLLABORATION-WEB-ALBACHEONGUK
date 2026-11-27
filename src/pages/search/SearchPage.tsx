@@ -1,3 +1,4 @@
+import { MOCK_MEMBER_ID } from '../../apis/client.ts';
 import { useEffect, useRef, useState } from 'react';
 import type { Ref } from 'react';
 import { useSearchParams } from 'react-router';
@@ -24,7 +25,7 @@ import { useSearchJobs } from './useSearchJobs.ts';
 import RecentSearches from '../../components/RecentSearches.tsx';
 import SearchBar from '../../components/SearchBar.tsx';
 import { useRecentSearchStore } from '../../stores/useRecentSearchStore.ts';
-import { useResumeRecommendations } from './useResumeRecommendation.ts';
+import { useResumeRecommendations } from '../../hooks/useResumeRecommendations.ts';
 import { mapRecommendedJobs } from './mapRecommendedJob.ts';
 import { useQaResumeScenario } from '../../hooks/useQaResumeScenario.ts';
 import { useQuery } from '@tanstack/react-query';
@@ -32,7 +33,7 @@ import { getJobFilterOptions } from '../../apis/searchJobs.ts';
 import { mapJobSearchParams } from './searchJobApiParams.ts';
 import type { WorkPeriod } from '../../types/resumeRecommendation.ts';
 import SearchResultsPending from './SearchResultsPending.tsx';
-import { getQaResumeRecommendation } from './qaResumeRecommendation.ts';
+import { getQaResumeRecommendation } from '../../utils/qaResumeRecommendation.ts';
 import resumeMatchText from '../../assets/text/home/resume-match.svg';
 import filterResetText from '../../assets/text/button/filter-reset.svg';
 import TextImage from '../../components/TextImage.tsx';
@@ -80,7 +81,7 @@ function SearchPage() {
   const recommendationKeyword = keyword.trim().slice(0, 30);
 
   const { isSignedIn, qa } = useQaResumeScenario();
-  const memberId = isSignedIn ? '1' : undefined;
+  const memberId = isSignedIn ? MOCK_MEMBER_ID : undefined;
   const [selectedResumeId, setSelectedResumeId] = useState<number | undefined>(undefined);
   const qaRecommendation = getQaResumeRecommendation(qa, selectedResumeId);
 

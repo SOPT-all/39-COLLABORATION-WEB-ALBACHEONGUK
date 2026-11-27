@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { getQaResumeRecommendation } from '../src/pages/search/qaResumeRecommendation.ts';
+import { getQaResumeRecommendation } from '../src/utils/qaResumeRecommendation.ts';
 
 test('이력서 없음 QA는 선택값과 이력서 목록을 비운다', () => {
   assert.deepEqual(getQaResumeRecommendation('no-resume'), {

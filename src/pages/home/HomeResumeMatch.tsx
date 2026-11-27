@@ -12,13 +12,15 @@ import { useQaResumeScenario } from '../../hooks/useQaResumeScenario.ts';
 import TextImage from '../../components/TextImage.tsx';
 import SearchEmptyIllustration from '../search/SearchEmptyIllustration.tsx';
 import SearchErrorIllustration from '../search/SearchErrorIllustration.tsx';
-import { getResumeRecommendations } from '../../apis/resumeRecommendation.ts';
-import type { ResumeRecommendationData } from '../../types/resumeRecommendation.ts';
-import { HOME_MATCH_JOBS } from './homeResumeFixtures.ts';
-import { QA_RESUMES } from '../../data/qaResumes.ts';
-import { getQaResumeRecommendation } from '../search/qaResumeRecommendation.ts';
+import {
+  getResumeRecommendations,
+  resumeRecommendationOptions,
+} from '../../apis/resumeRecommendation.ts';
 import { RESUME_ACTION_TEXT } from '../search/resumeActionText.ts';
-import { toMatchJobCard, toResume } from './mapResumeRecommendation.ts';
+import { toMatchJobCard } from './mapResumeRecommendation.ts';
+import { toResume } from '../../utils/resume.ts';
+import { getQaHomeRecommendation } from './qaHomeResumeRecommendation.ts';
+import { MOCK_MEMBER_ID } from '../../apis/client.ts';
 
 const OUTLINE_BUTTON =
   'border-alba-gray-300 text-alba-gray-500 text-body-16b h-[46px] rounded-lg border bg-alba-white';
@@ -66,59 +68,6 @@ function MatchSkeleton() {
   );
 }
 
-type QaScenario = ReturnType<typeof useQaResumeScenario>['qa'];
-
-async function getQaRecommendation(
-  qa: Exclude<QaScenario, null | 'guest'>,
-  resumeId: number | undefined,
-  shouldFail: boolean,
-  signal: AbortSignal,
-): Promise<ResumeRecommendationData> {
-  if (qa === 'match-loading') {
-    await new Promise<void>((resolve) => window.setTimeout(resolve, 3500));
-    signal.throwIfAborted();
-  }
-  if (shouldFail) throw new Error('QA 추천 조회 오류');
-
-  const scenario = getQaResumeRecommendation(qa, resumeId);
-  if (scenario) return scenario;
-
-  const resumes = QA_RESUMES.filter((resume) => resume.status === 'COMPLETED');
-  const selectedResume = resumes.find((resume) => resume.resumeId === resumeId) ?? resumes[0];
-  const jobs = selectedResume.resumeId === 2 ? HOME_MATCH_JOBS.slice(1) : HOME_MATCH_JOBS;
-
-  return {
-    status: 'OK',
-    selectedResume,
-    resumes,
-    jobs: jobs.map((job, index) => ({
-      jobId: index + 1,
-      exposureType: 'NORMAL',
-      title: job.title,
-      companyName: '',
-      imageUrl: job.imageUrl ?? '',
-      regionName: job.address,
-      dong: null,
-      nearbySubway: null,
-      categoryName: '',
-      payType: job.salaryType === '월급' ? 'MONTHLY' : 'HOURLY',
-      payAmount: Number(job.salaryText.replaceAll(',', '')),
-      workPeriod: null,
-      workdays: [],
-      daysNegotiable: false,
-      startTime: null,
-      endTime: null,
-      timeNegotiable: false,
-      applyMethod: null,
-      publishedAt: job.postedAt,
-      deadline: null,
-      closed: false,
-      postedLabel: '',
-      deadlineLabel: '',
-    })),
-  };
-}
-
 function HomeResumeMatch() {
   const { isSignedIn, qa } = useQaResumeScenario();
   const [selectedResumeId, setSelectedResumeId] = useState<number | undefined>();
@@ -126,11 +75,11 @@ function HomeResumeMatch() {
   const isQaSimulation = qa !== null && qa !== 'guest';
   const shouldFailQa = qa === 'match-error' && !hasRetried;
   // 목업 로그인 상태면 회원 번호 '1'을 보내고, 비로그인이면 보내지 않습니다. (#80 공용 함수 기준)
-  const memberId = isSignedIn ? '1' : undefined;
+  const memberId = isSignedIn ? MOCK_MEMBER_ID : undefined;
 
   function getRecommendation(resumeId: number | undefined, signal: AbortSignal) {
     return isQaSimulation
-      ? getQaRecommendation(qa, resumeId, shouldFailQa, signal)
+      ? getQaHomeRecommendation(qa, resumeId, shouldFailQa, signal)
       : getResumeRecommendations({ resumeId }, memberId);
   }
 
@@ -143,13 +92,19 @@ function HomeResumeMatch() {
 
   const baseQuery = useQuery({
     ...queryOptions,
-    queryKey: ['resume-recommendation', 'home', memberId, undefined, qa, shouldFailQa],
+    ...resumeRecommendationOptions({}, memberId),
+    queryKey: isQaSimulation
+      ? ['resume-recommendations', 'qa', 'home', memberId, undefined, qa, shouldFailQa]
+      : resumeRecommendationOptions({}, memberId).queryKey,
     queryFn: ({ signal }) => getRecommendation(undefined, signal),
   });
 
   const query = useQuery({
     ...queryOptions,
-    queryKey: ['resume-recommendation', 'home', memberId, selectedResumeId, qa, shouldFailQa],
+    ...resumeRecommendationOptions({ resumeId: selectedResumeId }, memberId),
+    queryKey: isQaSimulation
+      ? ['resume-recommendations', 'qa', 'home', memberId, selectedResumeId, qa, shouldFailQa]
+      : resumeRecommendationOptions({ resumeId: selectedResumeId }, memberId).queryKey,
     // 이력서를 바꿔 다시 불러오는 동안 이전 추천을 유지해 화면이 깜빡이지 않게 합니다.
     placeholderData: keepPreviousData,
     queryFn: ({ signal }) => getRecommendation(selectedResumeId, signal),

@@ -1,15 +1,6 @@
+import { PAY_LABELS } from '../../data/payTypes.ts';
 import type { ApiJob, JobSearchResponse } from '../../apis/searchJobs.ts';
 import type { SearchJob } from './searchJobs.ts';
-
-const PAY_LABELS: Partial<Record<string, string>> = {
-  HOURLY: '시급',
-  DAILY: '일급',
-  WEEKLY: '주급',
-  MONTHLY: '월급',
-  YEARLY: '연봉',
-  PER_TASK: '건별',
-  PER_CASE: '건별',
-};
 
 const WEEKDAY_LABELS: Partial<Record<string, string>> = {
   MON: '월',
