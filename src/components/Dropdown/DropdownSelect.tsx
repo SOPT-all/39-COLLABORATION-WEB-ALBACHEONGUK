@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useOutsidePointerDown } from '../../hooks/useOutsidePointerDown.ts';
+import { useRef, useState } from 'react';
 import triangleDownIcon from '../../assets/icons/triangle.svg';
 import checkIcon from '../../assets/icons/check.svg';
 
@@ -25,23 +26,9 @@ function DropdownSelect({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    function handleOutsideClick(event: PointerEvent) {
-      const target = event.target;
-
-      if (target instanceof Node && dropdownRef.current && !dropdownRef.current.contains(target)) {
-        setIsOpen(false);
-      }
-    }
-
-    document.addEventListener('pointerdown', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('pointerdown', handleOutsideClick);
-    };
-  }, [isOpen]);
+  useOutsidePointerDown(dropdownRef, isOpen, () => {
+    setIsOpen(false);
+  });
 
   return (
     <div ref={dropdownRef} className="relative flex flex-col" style={{ width }}>
