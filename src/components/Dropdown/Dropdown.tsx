@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useOutsidePointerDown } from '../../hooks/useOutsidePointerDown.ts';
+import { useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import triangleDownIcon from '../../assets/icons/triangle.svg';
 
@@ -40,27 +41,10 @@ function Dropdown({
     onOpenChange?.(nextOpen);
   }
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    function handleOutsideClick(event: PointerEvent) {
-      const target = event.target;
-
-      if (target instanceof Node && dropdownRef.current && !dropdownRef.current.contains(target)) {
-        if (open === undefined) {
-          setInternalOpen(false);
-        }
-
-        onOpenChange?.(false);
-      }
-    }
-
-    document.addEventListener('pointerdown', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('pointerdown', handleOutsideClick);
-    };
-  }, [isOpen, open, onOpenChange]);
+  useOutsidePointerDown(dropdownRef, isOpen, () => {
+    if (open === undefined) setInternalOpen(false);
+    onOpenChange?.(false);
+  });
 
   return (
     <div ref={dropdownRef} className={overlay ? 'relative' : undefined}>

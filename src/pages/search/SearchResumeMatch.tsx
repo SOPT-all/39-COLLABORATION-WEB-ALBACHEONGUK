@@ -1,3 +1,4 @@
+import { toResume } from '../../utils/resume.ts';
 import type { ResumeRecommendationData } from '../../types/resumeRecommendation.ts';
 import SearchErrorIllustration from './SearchErrorIllustration.tsx';
 import ResumeSelector from '../../components/ResumeSelector.tsx';
@@ -68,12 +69,7 @@ function SignedInMatch({ items, recommendation, onSelectResume }: SearchResumeMa
     .filter((resume) =>
       status === 'draft' ? resume.status === 'DRAFT' : resume.status === 'COMPLETED',
     )
-    .map((resume) => ({
-      id: String(resume.resumeId),
-      title: resume.title,
-      desiredRegion: resume.desiredRegionNames.join(', '),
-      updatedAt: resume.modifiedAt.slice(2, 10).replaceAll('-', '.'),
-    }));
+    .map(toResume);
 
   const selectedId = String(recommendation.selectedResume?.resumeId ?? '');
 

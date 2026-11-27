@@ -1,5 +1,5 @@
-import { QA_RESUMES } from '../../data/qaResumes.ts';
-import type { ResumeRecommendationData } from '../../types/resumeRecommendation.ts';
+import { QA_RESUMES } from '../data/qaResumes.ts';
+import type { ResumeRecommendationData } from '../types/resumeRecommendation.ts';
 
 // Only pass qa values validated by useQaResumeScenario's preview environment gate.
 export function getQaResumeRecommendation(
