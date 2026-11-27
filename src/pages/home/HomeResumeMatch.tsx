@@ -14,7 +14,9 @@ import SearchEmptyIllustration from '../search/SearchEmptyIllustration.tsx';
 import SearchErrorIllustration from '../search/SearchErrorIllustration.tsx';
 import { getResumeRecommendations } from '../../apis/resumeRecommendation.ts';
 import type { ResumeRecommendationData } from '../../types/resumeRecommendation.ts';
-import { HOME_MATCH_JOBS, HOME_RESUMES } from './homeResumeFixtures.ts';
+import { HOME_MATCH_JOBS } from './homeResumeFixtures.ts';
+import { QA_RESUMES } from '../../data/qaResumes.ts';
+import { getQaResumeRecommendation } from '../search/qaResumeRecommendation.ts';
 import { RESUME_ACTION_TEXT } from '../search/resumeActionText.ts';
 import { toMatchJobCard, toResume } from './mapResumeRecommendation.ts';
 
@@ -78,33 +80,17 @@ async function getQaRecommendation(
   }
   if (shouldFail) throw new Error('QA 추천 조회 오류');
 
-  const resumes = HOME_RESUMES.map((resume, index) => ({
-    resumeId: index + 1,
-    title: resume.title,
-    status: 'COMPLETED' as const,
-    modifiedAt: `20${resume.updatedAt?.replaceAll('.', '-') ?? ''}`,
-    desiredRegionNames: [resume.desiredRegion],
-  }));
+  const scenario = getQaResumeRecommendation(qa, resumeId);
+  if (scenario) return scenario;
+
+  const resumes = QA_RESUMES.filter((resume) => resume.status === 'COMPLETED');
   const selectedResume = resumes.find((resume) => resume.resumeId === resumeId) ?? resumes[0];
-  const status =
-    qa === 'no-resume'
-      ? 'NO_RESUME'
-      : qa === 'draft-resume'
-        ? 'DRAFT_ONLY'
-        : qa === 'no-match'
-          ? 'NO_RECOMMENDATION'
-          : 'OK';
-  const jobs =
-    status === 'OK'
-      ? selectedResume.resumeId === 2
-        ? HOME_MATCH_JOBS.slice(1)
-        : HOME_MATCH_JOBS
-      : [];
+  const jobs = selectedResume.resumeId === 2 ? HOME_MATCH_JOBS.slice(1) : HOME_MATCH_JOBS;
 
   return {
-    status,
-    selectedResume: status === 'NO_RESUME' ? null : selectedResume,
-    resumes: status === 'NO_RESUME' ? [] : resumes,
+    status: 'OK',
+    selectedResume,
+    resumes,
     jobs: jobs.map((job, index) => ({
       jobId: index + 1,
       exposureType: 'NORMAL',
