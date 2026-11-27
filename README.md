@@ -17,7 +17,13 @@
 
 ## 프로젝트
 
-메인에서 검색 조건을 설정하고, 검색 결과에서 공고를 비교하고 이력서 기반 추천을 확인하는 흐름을 개발합니다.
+메인에서 검색 조건을 설정하고, 검색 결과에서 공고를 비교하며 이력서 기반 추천을 확인할 수 있는 데스크톱 웹입니다.
+
+## 발표·시연·회고
+
+- [발표자료](https://www.figma.com/design/6teyGWa0Uq843zkrtBSDTV?node-id=6-2)
+- [기능 자막이 포함된 시연영상](https://www.figma.com/proto/6teyGWa0Uq843zkrtBSDTV?node-id=125-232&scaling=contain) — 영상만 확대해 재생
+- [웹 2조 최종 회고 · FigJam](https://www.figma.com/board/URXA8pMmgp5wz2A5WvLS0x?node-id=167-174)
 
 ## 데스크탑 웹 2조 팀원
 
@@ -25,13 +31,13 @@
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [<img src="https://avatars.githubusercontent.com/u/110793639?v=4&amp;s=192" width="96" height="96" alt="심민식 GitHub 프로필" />](https://github.com/minsik1014) | [<img src="https://avatars.githubusercontent.com/u/203110950?v=4&amp;s=192" width="96" height="96" alt="손승현 GitHub 프로필" />](https://github.com/son0131) | [<img src="https://avatars.githubusercontent.com/u/130419004?v=4&amp;s=192" width="96" height="96" alt="금고은 GitHub 프로필" />](https://github.com/eunigo) | [<img src="https://avatars.githubusercontent.com/u/109638255?v=4&amp;s=192" width="96" height="96" alt="이지연 GitHub 프로필" />](https://github.com/jiyeoniii) |
 |                                                           [@minsik1014](https://github.com/minsik1014)                                                           |                                                            [@son0131](https://github.com/son0131)                                                             |                                                             [@eunigo](https://github.com/eunigo)                                                             |                                                           [@jiyeoniii](https://github.com/jiyeoniii)                                                            |
-|                                                      검색 결과 조립·공고 목록 조회<br/>공고 행·검색창·헤더                                                       |                                                필터 조립·이력서 조회<br/>프로필·최근 검색·지역 필터·기본 폼 UI                                                |                                                         공통 드롭다운<br/>업직종·근무조건·급여 필터                                                          |                                                 메인 조립·이력서 기반 추천 조회<br/>공고 카드·스크랩·하단 추천                                                  |
+|                                                 메인·검색 화면 통합<br/>검색 API·URL 상태<br/>공통 UI·최근 검색                                                  |                                               공통 폼·지역 필터<br/>프로필 API·이력서 선택<br/>협업 자동화·배포                                               |                                                  드롭다운·조건 필터<br/>공통 추천 API<br/>검색 이력서 매칭                                                   |                                                   공고 카드·표시 UI<br/>메인 이력서 매칭<br/>스크랩·하단 추천                                                   |
 
 작업별 담당·마감·진행 상태는 [노션 역할 분담](https://app.notion.com/p/40b828481af881438bebf8ff47d4afd3)에서 관리합니다.
 
-## 개발 범위
+## 구현 범위
 
-| 흐름      | 구현할 내용                                        | 데이터 기준                     |
+| 흐름      | 구현한 내용                                        | 데이터 기준                     |
 | --------- | -------------------------------------------------- | ------------------------------- |
 | 검색      | 검색어·지역·업직종·근무조건·급여, 선택 태그·초기화 | 적용 조건은 URL로 유지          |
 | 비교      | 목록·총 건수·정렬·진행중 토글·페이지·펼치기        | 공고 조회 API                   |
@@ -42,10 +48,11 @@
 <details>
 <summary>축소한 범위</summary>
 
-- 로그인·공고 지원·지원 확인 팝업·이력서 작성/수정·별도 공고 상세창·위치 권한/IP 추정은 구현하지 않습니다. 로그인과 지원 버튼은 화면에 표시하는 경우 비활성으로 둡니다.
+- 실제 로그인·회원가입 인증, 이력서 작성·관리·수정 화면, 공고 지원·지원 확인 팝업, 공고 상세 화면·상세 이동, 위치 권한·좌표/IP 추정, 이력서 수정일 표시는 구현 범위에서 제외했습니다.
+- 헤더의 로그인·로그아웃은 데모 상태 전환입니다. 비회원 안내의 로그인 버튼·이력서 작성/수정 버튼·지원 버튼은 비활성으로 표시합니다.
 - 하단 추천의 테마·대상 칩은 클릭 상태만 처리하며 실제 공고를 다시 조회하지 않습니다.
 - 알바스토리 이하 영역은 이미지로 대체합니다.
-- 스켈레톤은 후순위이며 기본 로딩·빈 결과·오류 처리를 먼저 구현합니다.
+- 목록·추천의 로딩·빈 결과·오류·재시도를 구분해 표시합니다. 상태 재현용 데이터는 일반 API 응답과 구분합니다.
 
 </details>
 
@@ -62,7 +69,7 @@
   Git · GitHub Actions · Vercel · Node.js · pnpm · ESLint · Prettier
 </p>
 
-- React·TypeScript로 화면을 구성하고, Tailwind CSS의 공통 토큰으로 색상·서체를 맞춥니다.
+- React·TypeScript로 화면을 구성하고, Tailwind CSS의 공통 토큰으로 색상·서체를 맞춥니다. 기본 서체는 Pretendard이며 HG굴린꼬딕씨 문구는 Figma에서 내보낸 SVG로 표시합니다.
 - 검색 조건은 URL, 서버 데이터는 TanStack Query, 공유하는 클라이언트 상태는 Zustand로 관리합니다.
 - GitHub Actions로 코드를 검사하고, Vercel에 배포합니다.
 
@@ -86,7 +93,7 @@ pnpm dev
 ```
 
 nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
-`.env.local`의 `VITE_API_BASE_URL`에는 서버와 합의한 API 기본 주소를 입력합니다. 실제 값은 별도로 공유하며 로컬 환경변수 파일은 커밋하지 않습니다.
+로컬 개발은 기본 서버로 연결하는 프록시가 설정되어 있어 `VITE_API_BASE_URL`을 비워도 실행할 수 있습니다. 다른 서버를 사용할 때는 `.env.local`의 `VITE_API_BASE_URL`에 해당 주소를 입력해 프록시 대상을 바꿉니다. 배포 환경의 API 연결 대상은 `vercel.json`의 rewrite에서 관리하며, 로컬 환경변수 파일은 커밋하지 않습니다.
 
 ## 명령어
 
@@ -104,11 +111,11 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 
 ## 자동 검사·배포
 
-| 구분       | 기준                                                     |
-| ---------- | -------------------------------------------------------- |
-| 코드 검사  | PR과 `main`·`develop` push에서 린트·타입·빌드·포맷 검사  |
-| Preview    | 같은 저장소의 Draft가 아닌 PR에서 검사 후 변경 화면 배포 |
-| Production | `main`에 반영된 코드를 검사 후 운영 환경에 배포          |
+| 구분       | 기준                                                           |
+| ---------- | -------------------------------------------------------------- |
+| 코드 검사  | PR과 `main`·`develop` push에서 린트·타입·테스트·빌드·포맷 검사 |
+| Preview    | 같은 저장소의 Draft가 아닌 PR에서 검사 후 변경 화면 배포       |
+| Production | `main`에 반영된 코드를 검사 후 운영 환경에 배포                |
 
 ```text
 개발: 작업 브랜치 → PR → 자동 검사·Preview → 리뷰·승인 → develop
@@ -116,7 +123,14 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 ```
 
 배포는 GitHub Actions에서 Vercel CLI로 진행합니다. Preview 주소는 해당 Actions 실행의 Summary에서 확인합니다.
-API 환경변수는 Preview·Production 환경에 각각 등록하며, 라우팅 경로로 직접 접근하거나 새로고침해도 앱을 표시하도록 SPA rewrite를 적용합니다.
+배포 환경의 API 요청은 `vercel.json`의 rewrite로 서버에 전달하며, 라우팅 경로로 직접 접근하거나 새로고침해도 앱을 표시하도록 SPA rewrite를 적용합니다.
+
+## 서비스·QA 확인
+
+- [운영 서비스](https://39-collaboration-web-albacheonguk.vercel.app/)에서 검색·필터·정렬·페이지 이동·스크랩·이력서 변경 등 주요 흐름을 확인합니다.
+- 이력서 없음·작성 중·추천 없음·로딩·오류는 [상태별 QA 링크](https://app.notion.com/p/99a828481af882d892fe01d1fb7840ce)에서 확인합니다. 최신 운영 코드와 동일한 소스의 통합 프리뷰를 사용하며, 일부 상태는 재현용 데이터로 표시합니다.
+- `?qa=...`와 `/setup` 확인 화면은 로컬 개발·Vercel Preview 전용이며 운영 빌드에서는 비활성화합니다.
+- 프리뷰 주소는 특정 배포 버전에 고정됩니다. 이후 수정이 자동 반영되지 않으므로 최종 QA 때는 운영과 프리뷰의 기준 커밋을 대조하고 링크를 갱신합니다.
 
 ## 협업 컨벤션
 
@@ -202,7 +216,7 @@ docs: 팀 소개와 개발 범위를 README에 반영
 ```text
 src/
 ├── apis/                 # Axios 클라이언트·요청 함수·QueryClient
-├── assets/               # 이미지·아이콘·폰트
+├── assets/               # 이미지·아이콘·폰트·SVG 문구
 │   └── fonts/
 ├── components/           # 여러 화면에서 재사용하는 컴포넌트
 │   ├── Header.tsx
@@ -218,6 +232,7 @@ src/
 │   ├── font.css
 │   └── theme.css
 ├── types/                # 공통 타입·API 응답 타입
+├── utils/                # 검색 조건·날짜 등 공통 로직
 ├── App.tsx               # 라우팅 구성
 ├── index.css             # 전역 스타일
 └── main.tsx              # 앱 진입점·Provider 연결
@@ -255,13 +270,13 @@ export default JobCard;
 <details>
 <summary>URL·Query·Zustand·내부 상태를 나누는 기준</summary>
 
-| 상태                                           | 관리 위치                                                 |
-| ---------------------------------------------- | --------------------------------------------------------- |
-| 실행한 검색어·필터·정렬·토글·페이지·표시 개수  | URL                                                       |
-| 공고·이력서·추천 API 응답                      | TanStack Query                                            |
-| 여러 영역에서 함께 쓰는 선택 이력서 ID 등      | Zustand                                                   |
-| 드롭다운·팝업 열림, 적용 전 임시 선택, 행 펼침 | 우선 해당 컴포넌트의 `useState`                           |
-| 스크랩·최근 검색                               | 브라우저 저장, 여러 화면의 동기화가 필요하면 store와 연결 |
+| 상태                                                      | 관리 위치                               |
+| --------------------------------------------------------- | --------------------------------------- |
+| 실행한 검색어·필터·정렬·토글·페이지·표시 개수             | URL                                     |
+| 공고·이력서·추천 API 응답                                 | TanStack Query                          |
+| 데모 로그인·이력서 작성 상태, 로그인 안내 표시            | Zustand                                 |
+| 선택 이력서 ID, 드롭다운 열림, 적용 전 임시 선택, 행 펼침 | 우선 해당 컴포넌트의 `useState`         |
+| 스크랩·최근 검색                                          | Zustand로 공유하고 브라우저에 저장·복원 |
 
 - URL 조건과 Query 응답을 Zustand에 중복 저장하지 않습니다.
 - 필터의 `[적용]`은 선택값만 저장하고 `[검색하기]`에서 결과를 갱신합니다.
@@ -276,5 +291,5 @@ export default JobCard;
 - [노션 · 일정·업무 분담·과제](https://app.notion.com/p/40b828481af880c6b072e73b768e4128)
 - [코딩 컨벤션](https://app.notion.com/p/8eb828481af883d79323013b119a0fe2) · [Git · Issue · PR 가이드](https://app.notion.com/p/d35828481af883ffab9101cb84f217d5)
 - [킥오프 FigJam](https://www.figma.com/board/URXA8pMmgp5wz2A5WvLS0x?node-id=0-1)
-- [리디자인](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5) · [디자인 시스템](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-3)
+- [리디자인](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-5) · [디자인 시스템](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=5-4)
 - [화면설계서·기능명세서](https://www.figma.com/design/jNeeo8oqNK0GBPaOXdle0q?node-id=6-11) · [PRD](https://app.notion.com/p/sopt-official/40d1e48dd96080d39db1d023ebbdaf5e)
