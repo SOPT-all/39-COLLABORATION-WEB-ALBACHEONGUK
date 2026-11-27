@@ -2,29 +2,10 @@ import { Route, Routes } from 'react-router';
 import HomePage from './pages/home/HomePage.tsx';
 import SearchPage from './pages/search/SearchPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
-import SetupPage from './pages/setup/SetupPage.tsx';
 import Layout from './components/Layout.tsx';
-import DropdownPreviewPage from './pages/setup/DropdownPreviewPage.tsx';
-import ButtonPreviewPage from './pages/setup/ButtonPreviewPage.tsx';
-import InputPreviewPage from './pages/setup/InputPreviewPage.tsx';
-import CheckboxPreviewPage from './pages/setup/CheckboxPreviewPage.tsx';
-import RadioPreviewPage from './pages/setup/RadioPreviewPage.tsx';
-import JobRowPreviewPage from './pages/setup/JobRowPreviewPage.tsx';
-import JobRowDesignAuditPage from './pages/setup/JobRowDesignAuditPage.tsx';
-import JobCardPreviewPage from './pages/setup/JobCardPreviewPage.tsx';
-import ResumeSelectorPreviewPage from './pages/setup/ResumeSelectorPreviewPage.tsx';
-import ClosedBadgePreviewPage from './pages/setup/ClosedBadgePreviewPage.tsx';
-import FilterTagsPreviewPage from './pages/setup/FilterTagsPreviewPage.tsx';
-import MainProfileCardPreviewPage from './pages/setup/MainProfileCardPreviewPage.tsx';
-import SelectListItemPreviewPage from './pages/setup/SelectListItemPreviewPage.tsx';
-import PopularSearchesPreviewPage from './pages/setup/PopularSearchesPreviewPage.tsx';
-import RecommendPreviewPage from './pages/setup/RecommendPreviewPage.tsx';
-import SalaryTextPreviewPage from './pages/setup/SalaryTextPreviewPage.tsx';
-import ScrapButtonPreviewPage from './pages/setup/ScrapButtonPreviewPage.tsx';
-import SearchBarPreviewPage from './pages/setup/SearchBarPreviewPage.tsx';
-import RecentSearchesPreviewPage from './pages/setup/RecentSearchesPreviewPage.tsx';
-import SelectChipPreviewPage from './pages/setup/SelectChipPreviewPage.tsx';
+import SetupPage from './pages/setup/SetupPage.tsx';
 import HeaderPreviewPage from './pages/setup/HeaderPreviewPage.tsx';
+import { COMPONENT_PREVIEW_ROUTES } from './pages/setup/previewRoutes.tsx';
 
 const canShowComponentPreview =
   import.meta.env.DEV || import.meta.env.VITE_ENABLE_COMPONENT_PREVIEW === 'true';
@@ -35,64 +16,14 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="search" element={<SearchPage />} />
-
-        {canShowComponentPreview && (
-          <Route path="setup/dropdown" element={<DropdownPreviewPage />} />
-        )}
-        {canShowComponentPreview && <Route path="setup/button" element={<ButtonPreviewPage />} />}
-        {canShowComponentPreview && <Route path="setup/input" element={<InputPreviewPage />} />}
-        {canShowComponentPreview && (
-          <Route path="setup/checkbox" element={<CheckboxPreviewPage />} />
-        )}
-        {canShowComponentPreview && <Route path="setup/radio" element={<RadioPreviewPage />} />}
-        {canShowComponentPreview && <Route path="setup/job-row" element={<JobRowPreviewPage />} />}
-        {canShowComponentPreview && (
-          <Route path="setup/job-row/design" element={<JobRowDesignAuditPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/job-card" element={<JobCardPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/closed-badge" element={<ClosedBadgePreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/filter-tags" element={<FilterTagsPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/main-profile-card" element={<MainProfileCardPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/popular-searches" element={<PopularSearchesPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/salary-text" element={<SalaryTextPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/scrap-button" element={<ScrapButtonPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/search-bar" element={<SearchBarPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/recent-searches" element={<RecentSearchesPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/select-chip" element={<SelectChipPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/recommend" element={<RecommendPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/select-list-item" element={<SelectListItemPreviewPage />} />
-        )}
-        {canShowComponentPreview && (
-          <Route path="setup/resume-selector" element={<ResumeSelectorPreviewPage />} />
-        )}
+        {canShowComponentPreview &&
+          COMPONENT_PREVIEW_ROUTES.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       {canShowComponentPreview && <Route path="setup/header" element={<HeaderPreviewPage />} />}
-      {/* Query·Zustand 세팅 확인용 임시 화면 */}
-      <Route path="setup" element={<SetupPage />} />
+      {canShowComponentPreview && <Route path="setup" element={<SetupPage />} />}
     </Routes>
   );
 }

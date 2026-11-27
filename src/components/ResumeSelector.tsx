@@ -1,3 +1,4 @@
+import { useOutsidePointerDown } from '../hooks/useOutsidePointerDown.ts';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import folderIcon from '../assets/icons/resume-selector/ic_document.svg';
@@ -72,23 +73,9 @@ function ResumeSelector({
     }
   }
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    function handleOutsideClick(event: PointerEvent) {
-      const target = event.target;
-
-      if (target instanceof Node && dropdownRef.current && !dropdownRef.current.contains(target)) {
-        setIsOpen(false);
-      }
-    }
-
-    document.addEventListener('pointerdown', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('pointerdown', handleOutsideClick);
-    };
-  }, [isOpen]);
+  useOutsidePointerDown(dropdownRef, isOpen, () => {
+    setIsOpen(false);
+  });
 
   return (
     <section

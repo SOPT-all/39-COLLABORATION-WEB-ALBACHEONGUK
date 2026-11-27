@@ -2,12 +2,6 @@ import coffeeImage from '../../assets/images/home/match-coffee.jpg';
 import starbucksImage from '../../assets/images/home/match-starbucks.jpg';
 import uclImage from '../../assets/images/home/match-ucl.jpg';
 import type { JobCardData } from '../../components/JobCard.tsx';
-import type { Resume } from '../../components/ResumeSelector.tsx';
-
-export const HOME_RESUMES: Resume[] = [
-  { id: 'winter', title: '26년 겨울 알바 이력서', desiredRegion: '강남구', updatedAt: '26.11.15' },
-  { id: 'weekend', title: '주말 알바 이력서', desiredRegion: '서울 광진구', updatedAt: '26.11.10' },
-];
 
 export const HOME_MATCH_JOBS: JobCardData[] = [
   {
