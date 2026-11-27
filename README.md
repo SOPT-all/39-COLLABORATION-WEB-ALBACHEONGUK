@@ -19,6 +19,12 @@
 
 메인에서 검색 조건을 설정하고, 검색 결과에서 공고를 비교하며 이력서 기반 추천을 확인할 수 있는 데스크톱 웹입니다.
 
+## 발표·시연·회고
+
+- [발표자료](https://www.figma.com/design/6teyGWa0Uq843zkrtBSDTV?node-id=6-2)
+- [기능 자막이 포함된 시연영상](https://www.figma.com/proto/6teyGWa0Uq843zkrtBSDTV?node-id=125-232&scaling=contain) — 영상만 확대해 재생
+- [웹 2조 최종 회고 · FigJam](https://www.figma.com/board/URXA8pMmgp5wz2A5WvLS0x?node-id=167-174)
+
 ## 데스크탑 웹 2조 팀원
 
 |                                                                          심민식 · 리드                                                                           |                                                                            손승현                                                                             |                                                                            금고은                                                                            |                                                                             이지연                                                                              |
@@ -87,7 +93,7 @@ pnpm dev
 ```
 
 nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
-`.env.local`의 `VITE_API_BASE_URL`에는 서버와 합의한 API 기본 주소를 입력합니다. 실제 값은 별도로 공유하며 로컬 환경변수 파일은 커밋하지 않습니다.
+로컬 개발은 기본 서버로 연결하는 프록시가 설정되어 있어 `VITE_API_BASE_URL`을 비워도 실행할 수 있습니다. 다른 서버를 사용할 때는 `.env.local`의 `VITE_API_BASE_URL`에 해당 주소를 입력해 프록시 대상을 바꿉니다. 배포 환경의 API 연결 대상은 `vercel.json`의 rewrite에서 관리하며, 로컬 환경변수 파일은 커밋하지 않습니다.
 
 ## 명령어
 
@@ -117,7 +123,7 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 ```
 
 배포는 GitHub Actions에서 Vercel CLI로 진행합니다. Preview 주소는 해당 Actions 실행의 Summary에서 확인합니다.
-API 환경변수는 Preview·Production 환경에 각각 등록하며, 라우팅 경로로 직접 접근하거나 새로고침해도 앱을 표시하도록 SPA rewrite를 적용합니다.
+배포 환경의 API 요청은 `vercel.json`의 rewrite로 서버에 전달하며, 라우팅 경로로 직접 접근하거나 새로고침해도 앱을 표시하도록 SPA rewrite를 적용합니다.
 
 ## 서비스·QA 확인
 
