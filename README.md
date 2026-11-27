@@ -118,8 +118,8 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 | Production | `main`에 반영된 코드를 검사 후 운영 환경에 배포                |
 
 ```text
-개발: 작업 브랜치 → PR → 자동 검사·Preview → 리뷰·승인 → develop
-운영: develop → main 반영 → 자동 검사 → Production 배포
+개발: 작업 브랜치 → PR → 자동 검사·Preview → 리뷰·승인 → Squash → develop
+운영: develop → main PR → 리뷰·승인 → Merge commit → 자동 검사 → Production 배포
 ```
 
 배포는 GitHub Actions에서 Vercel CLI로 진행합니다. Preview 주소는 해당 Actions 실행의 Summary에서 확인합니다.
@@ -136,15 +136,17 @@ nvm을 사용하지 않는 경우 Node.js `22.15.0`을 직접 설치합니다.
 
 `Issue → 작업 브랜치 → PR → 리뷰 → develop → main`
 
-| 항목        | 규칙                                                      |
-| ----------- | --------------------------------------------------------- |
-| 기준 브랜치 | `develop`: 작업 통합 / `main`: 배포 가능한 코드           |
-| 작업 브랜치 | `유형/이슈번호-작업설명` — 소문자·하이픈, `#` 제외        |
-| 커밋        | `유형: 구체적인 변경 내용`                                |
-| PR          | `develop` 대상, `유형: 작업 내용 (#이슈번호)`             |
-| 리뷰        | 작성자 외 3명 전원 요청, 본인 외 1명 이상 승인            |
-| 머지        | 필수 CI 통과·미해결 대화 해소 후 Squash, 작업 브랜치 삭제 |
-| 라벨        | 작성자 이름+이모지와 변경 유형을 함께 적용                |
+| 항목         | 규칙                                                  |
+| ------------ | ----------------------------------------------------- |
+| 기준 브랜치  | `develop`: 작업 통합 / `main`: 배포 가능한 코드       |
+| 작업 브랜치  | `유형/이슈번호-작업설명` — 소문자·하이픈, `#` 제외    |
+| 커밋         | `유형: 구체적인 변경 내용`                            |
+| PR           | `develop` 대상, `유형: 작업 내용 (#이슈번호)`         |
+| 리뷰         | 작성자 외 3명 전원 요청, 본인 외 1명 이상 승인        |
+| 작업 PR 머지 | 작업 브랜치 → `develop`: Squash, 작업 브랜치 삭제     |
+| 배포 PR 머지 | `develop` → `main`: Merge commit, 두 상시 브랜치 유지 |
+| 이력 동기화  | `main` → `develop`: 별도 PR에서 Merge commit          |
+| 라벨         | 작성자 이름+이모지와 변경 유형을 함께 적용            |
 
 <details>
 <summary>Issue·Sub-issue와 브랜치 예시</summary>
@@ -189,7 +191,22 @@ docs: 팀 소개와 개발 범위를 README에 반영
 3. 작업 Issue는 `Closes #번호`로 연결합니다. 상위 Issue는 전체 하위 작업·통합 확인 후 닫습니다.
 4. 작성자 외 3명 모두에게 리뷰를 요청합니다. Draft는 Ready for review 전환 시 요청합니다.
 5. 리뷰 코멘트 앞에 `[P0]`(즉시 수정), `[P1]`(머지 전 수정), `[P2]`(개선 제안)를 붙입니다. 자세한 기준은 [Git · Issue · PR 가이드](https://app.notion.com/p/d35828481af883ffab9101cb84f217d5)에 있습니다.
-6. 본인 외 1명 승인·필수 CI 통과·미해결 대화 해소 후 Squash merge합니다. 이후 작업 브랜치를 삭제합니다.
+6. 본인 외 1명 승인·필수 CI 통과·미해결 대화 해소 후 병합합니다. 작업 브랜치→`develop`은 **Squash and merge**, `develop`→`main` 배포와 `main`→`develop` 이력 동기화는 **Create a merge commit**을 선택합니다. 작업 브랜치만 삭제하며 `main`·`develop`은 유지합니다.
+
+### 배포·상시 브랜치 병합 기준
+
+저장소의 General → Pull Requests와 `main`·`develop` 보호 규칙에서 Squash와 Merge commit을 허용합니다. Rebase merge는 사용하지 않습니다. PR 필수·승인 1명·필수 CI·미해결 대화 해소·강제 push 및 삭제 제한은 유지합니다. 두 병합 방식을 모두 허용하므로 PR의 출발·대상 브랜치를 보고 병합 방식을 확인합니다.
+
+`develop`→`main`을 Squash로 반복 병합하면 `main`의 새 커밋과 `develop`의 원래 커밋이 분리돼, 이미 배포한 파일이 다시 변경 목록에 나오거나 충돌할 수 있습니다. 배포에는 Merge commit을 사용해 두 브랜치의 이력을 연결합니다.
+
+기존 Squash 이력이나 `main`에만 있는 수정이 있다면 다음 순서로 동기화합니다.
+
+1. 최신 `develop`에서 동기화 작업 브랜치를 만들고 `main`을 병합합니다.
+2. 양쪽 변경을 검토해 충돌을 해결하고 diff·검사를 확인합니다. 최신 `develop` 전체를 택하는 방식은 `main`의 변경이 이미 포함됐다는 비교 증거가 있을 때만 사용합니다.
+3. 동기화 브랜치→`develop` PR을 **Merge commit**으로 병합해 `main`의 이력을 연결합니다. 동기화 PR은 일반 작업 PR의 Squash 규칙에서 제외합니다.
+4. `develop`→`main` 배포 PR도 **Merge commit**으로 병합하고 Production 배포를 확인합니다.
+
+설정 변경만으로 기존 이력이 자동 정리되지는 않습니다. 충돌을 없애려고 상시 브랜치를 강제 push하거나 삭제해 다시 만들지 않습니다.
 
 작성자 라벨은 `👻 민식` · `⚽ 승현` · `🍋 고은` · `🍎 지연`, 유형 라벨은 `feat/fix/refactor/style/docs/chore`를 사용합니다.
 자동 검사의 세부 설정은 [CI 워크플로](.github/workflows/ci.yml)에서 관리합니다.
